@@ -2,6 +2,7 @@ import pygame
 import general_classes
 import enemies
 from colors import *
+from enemyPath import *
 
 # Initialize and set clock
 pygame.init()
@@ -17,9 +18,9 @@ pygame.display.set_icon(pygame.image.load('TowerIcon32transparaent.png'))
 
 # Define first enemy
 enemy1 = enemies.Enemy(image_file='runner1.png',
-                       location=(0, 405),
-                       speed=1,
-                       slow=5)
+                       location=(path_nodes[0][0], path_nodes[0][1]),
+                       speed=2,
+                       slow=0)
 
 
 def game_loop():
@@ -39,8 +40,10 @@ def game_loop():
         gameDisplay.fill(white)
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-        enemy1.move()
-        enemy1.show()
+        try:
+            next(enemy1.move())
+        except StopIteration:
+            pass
 
         pygame.display.update()
         clock.tick(60)
