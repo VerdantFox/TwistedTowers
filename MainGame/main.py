@@ -1,8 +1,10 @@
 import pygame
 import general_classes
 import enemies
+import mainLoop
 from colors import *
 from enemyPath import *
+
 
 # Initialize and set clock
 pygame.init()
@@ -19,8 +21,10 @@ pygame.display.set_icon(pygame.image.load('TowerIcon32transparaent.png'))
 # Define first enemy
 enemy1 = enemies.Enemy(image_file='runner1.png',
                        location=(path_nodes[0][0], path_nodes[0][1]),
-                       speed=2,
-                       slow=0)
+                       speed=3)
+
+button1 = general_classes.Button("Continue", 150, 450, 100, 50, action=quit,
+                                 inactive_color=red, active_color=green)
 
 
 def game_loop():
@@ -35,15 +39,15 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit()
-            print(event)
+            # print(event)
 
         gameDisplay.fill(white)
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-        try:
-            next(enemy1.move())
-        except StopIteration:
-            pass
+        next(enemy1.move())
+
+        button1.draw()
+        button1.set_text()
 
         pygame.display.update()
         clock.tick(60)

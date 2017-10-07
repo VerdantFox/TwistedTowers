@@ -15,16 +15,14 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = location
         self.x_position = self.rect.left
         self.feet_y = self.rect.top
-        self.speed = speed
+        self.speed = speed  # Note: speed divisible by 1, 2, 3 (not 4)
         self.slow = slow
         self.next_node = path_nodes[0]
         self.node = 0
 
     def move(self):
         while True:
-            # print("self.node{}".format(self.next_node))
-            # print("     Feet({}, {})".format(self.x_position, self.feet_y))
-            # print(self.node)
+            # Move towards node by self.speed (divisible by 1, 2, 3)
             if self.x_position < self.next_node[0]:
                 self.x_position += self.speed
             if self.x_position > self.next_node[0]:
