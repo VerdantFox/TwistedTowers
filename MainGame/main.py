@@ -1,19 +1,25 @@
 import pygame
-import random
+import general_classes
+import enemies
 from colors import *
 
+# Initialize and set clock
 pygame.init()
-
-display_width = 850
-display_height = 650
-
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-background = pygame.image.load('TowerPathFinal1.png')
-pygame.display.set_caption('Tower Defense')
 clock = pygame.time.Clock()
 
-gameIcon = pygame.image.load('TowerIcon32transparaent.png')
-pygame.display.set_icon(gameIcon)
+# Set constants for game dimensions, background, title and icon
+backgroundImage = general_classes.Background('TowerPathFinal1.png', [0, 0])
+display_width = 850
+display_height = 650
+gameDisplay = pygame.display.set_mode((display_width, display_height))
+pygame.display.set_caption('Tower Defense')
+pygame.display.set_icon(pygame.image.load('TowerIcon32transparaent.png'))
+
+# Define first enemy
+enemy1 = enemies.Enemy(image_file='runner1.png',
+                       location=(0, 405),
+                       speed=1,
+                       slow=5)
 
 
 def game_loop():
@@ -28,8 +34,13 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit()
+            print(event)
 
         gameDisplay.fill(white)
+        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+
+        enemy1.move()
+        enemy1.show()
 
         pygame.display.update()
         clock.tick(60)
