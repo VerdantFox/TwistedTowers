@@ -24,7 +24,7 @@ class Enemy(pygame.sprite.Sprite):
         while True:
             # print("self.node{}".format(self.next_node))
             # print("     Feet({}, {})".format(self.x_position, self.feet_y))
-            print(self.node)
+            # print(self.node)
             if self.x_position < self.next_node[0]:
                 self.x_position += self.speed
             if self.x_position > self.next_node[0]:
@@ -36,7 +36,7 @@ class Enemy(pygame.sprite.Sprite):
 
             # Switch to next node in path if at current node goal
             if (self.x_position, self.feet_y) == self.next_node:
-                if self.node < 17:
+                if self.node < 9:
                     self.node += 1
                     self.next_node = path_nodes[self.node]
 
