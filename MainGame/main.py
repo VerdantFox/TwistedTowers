@@ -8,9 +8,9 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Set constants for game dimensions, background, title and icon
-backgroundImage = general_classes.Background('TowerPathFinal1.png', [0, 0])
-display_width = 850
-display_height = 650
+backgroundImage = general_classes.Background('TowerpathCastle1.PNG', [0, 0])
+display_width = 860
+display_height = 760
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Tower Defense')
 pygame.display.set_icon(pygame.image.load('TowerIcon32transparaent.png'))
