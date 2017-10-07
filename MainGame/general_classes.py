@@ -20,7 +20,7 @@ class Background(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = location
 
 
-class Button:
+class RectButton:
     def __init__(self, x_coord, y_coord, width=100, height=50, message=None,
                  inactive_color=green, active_color=bright_green, action=None,
                  font="Calibri", font_size=20, message_color=black):
@@ -65,9 +65,11 @@ class Button:
         gameDisplay.blit(text_surface, text_rect)
 
 
-class TowerButton(Button):
-    def __init__(self, x_coord, y_coord, radius, inactive_color=brown,
-                 active_color=orange, action=None):
+class TowerButton:
+    def __init__(self, x_coord, y_coord, radius=24, message=None,
+                 inactive_color=brown, active_color=orange, action=None,
+                 font="Calibri", font_size=20, message_color=black):
+        self._message = message
         self._radius = radius
         self._mouse = None
         self._click = None
@@ -76,6 +78,8 @@ class TowerButton(Button):
         self._inactive_color = inactive_color
         self._active_color = active_color
         self._action = action
+        self._font = pygame.font.SysFont(font, font_size)
+        self._message_color = message_color
 
     def draw(self):
         self._mouse = pygame.mouse.get_pos()
@@ -96,3 +100,12 @@ class TowerButton(Button):
                 gameDisplay, self._inactive_color,
                 (self._x_coord, self._y_coord), self._radius)
 
+        if self._message:
+            self.set_text()
+
+    def set_text(self):
+        text_surface = self._font.render(
+            self._message, True, self._message_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (self._x_coord, self._y_coord)
+        gameDisplay.blit(text_surface, text_rect)

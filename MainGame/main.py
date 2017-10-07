@@ -2,7 +2,7 @@ import pygame
 import general_classes
 import enemies
 from colors import *
-from enemyPath import *
+from lists import *
 
 
 # Initialize and set clock
@@ -10,22 +10,24 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Set constants for game dimensions, background, title and icon
-backgroundImage = general_classes.Background('TowerpathCastle1.PNG')
+backgroundImage = general_classes.Background('TowerpathCastle3.png')
 display_width = 860
 display_height = 760
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Tower Defense')
-pygame.display.set_icon(pygame.image.load('TowerIcon32transparaent.png'))
+pygame.display.set_icon(pygame.image.load('TowerpathCastle3.png'))
 
 # Define first enemy
 enemy1 = enemies.Enemy(image_file='runner1.png',
                        location=(path_nodes[0][0], path_nodes[0][1]),
                        speed=3)
 
-button1 = general_classes.Button(150, 450, 100, 50, action=quit,
-                                 inactive_color=red, active_color=green)
-tower1 = general_classes.TowerButton(292, 122, 23,
-                                     action=quit)
+# Set up towers
+towers = []
+for tower_location in tower_locations:
+    x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
+    towers.append(general_classes.TowerButton(
+            x_coord, y_coord, action=quit, message="blah"))
 
 
 def game_loop():
@@ -40,14 +42,13 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit()
-            print(event)
+            # print(event)
 
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
+        for tower in towers:
+            tower.draw()
         next(enemy1.move())
-
-        button1.draw()
-        tower1.draw()
 
         pygame.display.update()
         clock.tick(60)

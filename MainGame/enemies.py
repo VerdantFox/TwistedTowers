@@ -1,5 +1,5 @@
 import pygame
-from enemyPath import *
+from lists import *
 
 # Hard-coding in parameters for our game until better plan devised
 display_width = 860
