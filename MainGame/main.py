@@ -1,7 +1,6 @@
 import pygame
 import general_classes
 import enemies
-import mainLoop
 from colors import *
 from enemyPath import *
 
@@ -11,7 +10,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Set constants for game dimensions, background, title and icon
-backgroundImage = general_classes.Background('TowerpathCastle1.PNG', [0, 0])
+backgroundImage = general_classes.Background('TowerpathCastle1.PNG')
 display_width = 860
 display_height = 760
 gameDisplay = pygame.display.set_mode((display_width, display_height))
@@ -23,8 +22,10 @@ enemy1 = enemies.Enemy(image_file='runner1.png',
                        location=(path_nodes[0][0], path_nodes[0][1]),
                        speed=3)
 
-button1 = general_classes.Button("Continue", 150, 450, 100, 50, action=quit,
+button1 = general_classes.Button(150, 450, 100, 50, action=quit,
                                  inactive_color=red, active_color=green)
+tower1 = general_classes.TowerButton(292, 122, 23,
+                                     action=quit)
 
 
 def game_loop():
@@ -39,15 +40,14 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     quit()
-            # print(event)
+            print(event)
 
-        gameDisplay.fill(white)
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         next(enemy1.move())
 
         button1.draw()
-        button1.set_text()
+        tower1.draw()
 
         pygame.display.update()
         clock.tick(60)
