@@ -3,7 +3,6 @@ import generalClass
 from colors import *
 
 pygame.init()
-clock = pygame.time.Clock()
 pause = False
 
 
@@ -23,8 +22,12 @@ def pause_game():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    unpause()
         unpause_button.draw()
         pygame.display.update()
+
 
 unpause_button = generalClass.RectButton(
     20, 50, message="Resume", inactive_color=red,

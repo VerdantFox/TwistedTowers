@@ -13,6 +13,7 @@ class Background(pygame.sprite.Sprite):
     """Creates background as image_image file"""
 
     def __init__(self, image_file, location=(0, 0)):
+        super().__init__()
         pygame.sprite.Sprite.__init__(self)  # Call Sprite initializer
         # Suppress Error
         self.image = pygame.image.load(image_file)
