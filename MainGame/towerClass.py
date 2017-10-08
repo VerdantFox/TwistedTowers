@@ -35,55 +35,70 @@ class TowerButton(pygame.sprite.Sprite):
         self._action = action
         self._font = pygame.font.SysFont(font, font_size)
         self._message_color = message_color
-        self.upgrade = False
+        self.destroyed = False
         self.upgrade_count = upgrade_count
         self.options_available = options_available
         self.options_timer = 0
 
-    def draw(self, is_main=True, tower_option=None, upgrade_color=blue):
+    def draw_main(self):
         # Get mouse position and listen for left-clicks
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()
-        #
-        if self.upgrade is False:
 
-            # If hovering over a circle
+        if self.destroyed is False:
+            # If hovering over main circle draw circle give click opti
             if (self._x_coord - self._radius
                     < self._mouse[0]
                     < self._x_coord + self._radius
                     and self._y_coord - self._radius
                     < self._mouse[1]
                     < self._y_coord + self._radius):
-
-                # If hovering tower itself, not tower options
-                if is_main:
-                    pygame.draw.circle(
-                        gameDisplay, self._active_color,
-                        (self._x_coord, self._y_coord), self._radius)
-                    if self.options_available:
-                        self.options_timer = 300
-                    if self._click[0] == 1 and self._action is not None:
-                        self._action()
-
-                # If hovering over tower options
-                else:
-                    pygame.draw.circle(
-                        gameDisplay, upgrade_color,
-                        (self._x_coord, self._y_coord + int(1.5 * self._radius)),
-                        int(self._radius * 0.75))
-                    if self._click[0] == 1:
-                        # upgrade_tower(tower_option) #TODO
-                        pass
+                pygame.draw.circle(
+                    gameDisplay, self._active_color,
+                    (self._x_coord, self._y_coord), self._radius)
+                # Set timer for options to be visible
+                if self.options_available:
+                    self.options_timer = 30
+                if self._click[0] == 1 and self._action is not None:
+                    self._action()
             # If not hovering circle, draw inactive circle
             else:
                 pygame.draw.circle(
                     gameDisplay, self._inactive_color,
                     (self._x_coord, self._y_coord), self._radius)
         # Call option menu
-        if self.options_available and is_main:
+        if self.options_available:
             self.options_menu()
+        # Bring up message (optional)
         if self._message:
             self.set_text()
+
+    def draw_options(self, upgrade_non_hover=blue, upgrade_hover=bright_blue):
+        # Get mouse position and listen for left-clicks
+        self._mouse = pygame.mouse.get_pos()
+        self._click = pygame.mouse.get_pressed()
+
+        if self.destroyed is False:
+            # If hovering over a circle (needs fix for each options circle)
+            if (self._x_coord - self._radius
+                    < self._mouse[0]
+                    < self._x_coord + self._radius
+                    and self._y_coord - self._radius
+                    < self._mouse[1]
+                    < self._y_coord + self._radius):
+                pygame.draw.circle(
+                    gameDisplay, upgrade_hover,
+                    (self._x_coord, self._y_coord + int(1.5 * self._radius)),
+                    int(self._radius * 0.75))
+                if self._click[0] == 1:
+                    # upgrade_tower(tower_option) #TODO
+                    pass
+            # If not hovering circle, draw inactive circle
+            else:
+                pygame.draw.circle(
+                    gameDisplay, upgrade_non_hover,
+                    (self._x_coord, self._y_coord + int(1.5 * self._radius)),
+                    int(self._radius * 0.75))
 
     def set_text(self):
         text_surface = self._font.render(
@@ -95,7 +110,7 @@ class TowerButton(pygame.sprite.Sprite):
     def options_menu(self):
         if self.options_timer > 0:
             print(self.options_timer)
-            self.draw(is_main=False)
+            self.draw_options()
             self.options_timer -= 1
 
 

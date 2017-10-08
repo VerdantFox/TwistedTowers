@@ -55,8 +55,8 @@ def game_loop():
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         for tower in towers:
-            tower.draw()
-        basic1.draw()
+            tower.draw_main()
+        basic1.draw_main()
         next(enemy1.move())
         pause_button.draw()
         towers[1].upgrade_count = 1
