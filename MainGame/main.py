@@ -35,7 +35,7 @@ pause_button = generalClass.RectButton(
     20, 20, message="Pause", inactive_color=gray, active_color=white,
     action=helpers.pause_game)
 
-basic1 = towerClass.BasicTower(100, 100)
+basic1 = towerClass.BasicTower(100, 100, option1_message="1", option2_message="2")
 
 
 def game_loop():

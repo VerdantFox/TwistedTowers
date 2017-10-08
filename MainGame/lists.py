@@ -45,7 +45,10 @@ tower_locations = [
 ]
 
 # The direction from a tower options appear
-options_directions = [
-    (0, 1.5),
-    (1.5, 0)
-]
+# (option number, x-offset from main circle center, y-offset)
+circles = [
+    # (0, 0, 0),
+    (1, -.3, 1.4),
+    (2, .98, 1.1),
+    (3, 1.45, -.18),
+    (4, .8, -1.3)]

@@ -23,7 +23,13 @@ class TowerButton(pygame.sprite.Sprite):
     def __init__(self, x_coord, y_coord, radius=24, message=None,
                  inactive_color=light_brown, active_color=orange,
                  font="Comic Sans MS", font_size=20, message_color=black,
-                 upgrade_count=0, options_available=True):
+                 upgrade_count=0, option1_no_hover=yellow,
+                 option1_hover=bright_yellow, option2_no_hover=blue,
+                 option2_hover=bright_blue, option3_no_hover=red,
+                 option3_hover=bright_red, option4_no_hover=green,
+                 option4_hover=bright_green, option1_message=None,
+                 option2_message=None, option3_message=None,
+                 option4_message=None):
         super().__init__()
         self._message = message
         self._radius = radius
@@ -38,6 +44,11 @@ class TowerButton(pygame.sprite.Sprite):
         self.destroyed = False
         self.upgrade_count = upgrade_count
         self.options_timer = 0
+        self.option_hover_list = \
+            [(option1_no_hover, option1_hover, option1_message),
+             (option2_no_hover, option2_hover, option2_message),
+             (option3_no_hover, option3_hover, option3_message),
+             (option4_no_hover, option4_hover, option4_message)]
 
     def draw_main(self):
         # Get mouse position and listen for left-clicks
@@ -67,31 +78,27 @@ class TowerButton(pygame.sprite.Sprite):
         self.options_menu()
         # Bring up message (optional)
         if self._message:
-            self.set_text()
+            self.set_text(self._x_coord, self._y_coord, self._message)
 
-    def draw_options(self, upgrade_non_hover=blue, upgrade_hover=bright_green):
+    def draw_options(self):
         # Already listening for mouse + clicks from draw_main
 
         if self.destroyed is False:
-            global options_directions
             # redefine coordinates and radius for new option's circle
-            for direction in options_directions:
-                x_multiplier, y_multiplier = \
-                    options_directions[options_directions.index(direction)]
-                new_x_coord = self._x_coord + int(x_multiplier * self._radius)
-                new_y_coord = self._y_coord + int(y_multiplier * self._radius)
-                new_radius = int(self._radius * 0.75)
+            for loc in circles:
+                option_number, x_multiplier, y_multiplier = \
+                    circles[circles.index(loc)]
+                no_hover_color, hover_color, option_message = \
+                    self.option_hover_list[option_number-1]
+                x = self._x_coord + int(x_multiplier * self._radius)
+                y = self._y_coord + int(y_multiplier * self._radius)
+                radius = int(self._radius * 0.7)
+
                 # If hovering over a circle (needs fix for each options circle)
-                if (new_x_coord - new_radius
-                        < self._mouse[0]
-                        < new_x_coord + new_radius
-                        and new_y_coord - new_radius
-                        < self._mouse[1]
-                        < new_y_coord + new_radius):
-                    pygame.draw.circle(
-                        gameDisplay, upgrade_hover,
-                        (new_x_coord, new_y_coord),
-                        new_radius)
+
+                if (x - radius < self._mouse[0] < x + radius
+                        and y - radius < self._mouse[1] < y + radius):
+                    pygame.draw.circle(gameDisplay, hover_color, (x, y), radius)
                     self.options_timer = 30
                     if self._click[0] == 1:
                         # upgrade_tower(tower_option) #TODO
@@ -99,15 +106,17 @@ class TowerButton(pygame.sprite.Sprite):
                 # If not hovering circle, draw inactive circle
                 else:
                     pygame.draw.circle(
-                        gameDisplay, upgrade_non_hover,
-                        (new_x_coord, new_y_coord),
-                        new_radius)
+                        gameDisplay, no_hover_color,
+                        (x, y),
+                        radius)
+                if option_message:
+                    self.set_text(x, y, option_message)
 
-    def set_text(self):
+    def set_text(self, x, y, message):
         text_surface = self._font.render(
-            self._message, True, self._message_color)
+            message, True, self._message_color)
         text_rect = text_surface.get_rect()
-        text_rect.center = (self._x_coord, self._y_coord)
+        text_rect.center = (x, y)
         gameDisplay.blit(text_surface, text_rect)
 
     def options_menu(self):
