@@ -43,3 +43,9 @@ tower_locations = [
     (615, 232),     # 24
     (694, 122),     # 25
 ]
+
+# The direction from a tower options appear
+options_directions = [
+    (0, 1.5),
+    (1.5, 0)
+]
