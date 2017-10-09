@@ -36,7 +36,7 @@ class Enemy(pygame.sprite.Sprite):
             if (self.x_position, self.feet_y) == self.next_node:
                 if self.node < 9:
                     self.node += 1
-                    self.next_node = path_nodes[self.node]  # See lists.py
+                    self.next_node = path_nodes[self.node] #
 
             pygame.time.wait(self.slow)
             yield Enemy.show(self)

@@ -43,11 +43,3 @@ tower_locations = [
     (615, 232),     # 24
     (694, 122),     # 25
 ]
-"""
-list = [
-[-.6, 2.8, opt1_no_hov_color, opt1_hov_color, opt1_msg],
-[2, 2.2, opt2_no_hov_color, opt2_hov_color, opt2_msg],
-[3, -.4, opt3_no_hov_color, opt3_hov_color, opt3_msg],
-[1.6, -2.6, opt4_no_hov_color, opt4_hov_color, opt4_msg]
-]
-"""

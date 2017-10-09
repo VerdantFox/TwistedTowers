@@ -34,7 +34,7 @@ towers = []
 for tower_location in tower_locations:  # See lists.py
     x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
     towers.append(towerClass.TowerButton(
-            x_coord, y_coord, upgrade_count=5))
+            x_coord, y_coord, option_count=5))
 
 basic1 = towerClass.BasicTower(100, 100)
 
