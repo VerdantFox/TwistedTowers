@@ -17,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         self.feet_y = self.rect.top
         self.speed = speed  # Note: speed divisible by 1, 2, 3 (not 4)
         self.slow = slow
-        self.next_node = path_nodes[0]
+        self.next_node = path_nodes[0]  # see lists.py
         self.node = 0
 
     def move(self):
@@ -36,7 +36,7 @@ class Enemy(pygame.sprite.Sprite):
             if (self.x_position, self.feet_y) == self.next_node:
                 if self.node < 9:
                     self.node += 1
-                    self.next_node = path_nodes[self.node]
+                    self.next_node = path_nodes[self.node]  # See lists.py
 
             pygame.time.wait(self.slow)
             yield Enemy.show(self)

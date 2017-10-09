@@ -5,7 +5,7 @@ def things_dodged(count):
 
 
 def things(x_coord, y_coord, width, height, color):
-    pygame.draw_main.rect(gameDisplay, color, [x_coord, y_coord, width, height])
+    pygame.set.rect(gameDisplay, color, [x_coord, y_coord, width, height])
 
 
 def car(x, y):
@@ -44,11 +44,11 @@ def button(message, x_coord, y_coord, width, height, inactive_color, active_colo
     click = pygame.mouse.get_pressed()
 
     if x_coord + width > mouse[0] > x_coord and y_coord + height > mouse[1] > y_coord:
-        pygame.draw_main.rect(gameDisplay, active_color, (x_coord, y_coord, width, height))
+        pygame.set.rect(gameDisplay, active_color, (x_coord, y_coord, width, height))
         if click[0] == 1 and action is not None:
             action()
     else:
-        pygame.draw_main.rect(gameDisplay, inactive_color, (x_coord, y_coord, width, height))
+        pygame.set.rect(gameDisplay, inactive_color, (x_coord, y_coord, width, height))
 
     small_text = pygame.font.Font("freesansbold.ttf", 20)
     text_surf, text_rect = text_objects(message, small_text)

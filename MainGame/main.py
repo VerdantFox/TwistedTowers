@@ -19,23 +19,24 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Tower Defense')
 pygame.display.set_icon(pygame.image.load('TowerpathCastle3.png'))
 
-# Define first enemy
-enemy1 = enemies.Enemy(image_file='runner1.png',
-                       location=(path_nodes[0][0], path_nodes[0][1]),
-                       speed=3)
-options = None
-# Set up towers
-towers = []
-for tower_location in tower_locations:
-    x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
-    towers.append(towerClass.TowerButton(
-            x_coord, y_coord, upgrade_count=1))
-
+# Set static buttons
 pause_button = generalClass.RectButton(
     20, 20, message="Pause", inactive_color=gray, active_color=white,
     action=helpers.pause_game)
 
-basic1 = towerClass.BasicTower(100, 100, option1_message="1", option2_message="2")
+# Define first enemy
+enemy1 = enemies.Enemy(image_file='runner1.png',
+                       location=(path_nodes[0][0], path_nodes[0][1]),
+                       speed=3)
+
+# Set up towers
+towers = []
+for tower_location in tower_locations:  # See lists.py
+    x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
+    towers.append(towerClass.TowerButton(
+            x_coord, y_coord, upgrade_count=5))
+
+basic1 = towerClass.BasicTower(100, 100)
 
 
 def game_loop():
@@ -55,12 +56,10 @@ def game_loop():
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         for tower in towers:
-            tower.draw_main()
-        basic1.draw_main()
+            tower.draw()
+        basic1.draw()
         next(enemy1.move())
         pause_button.draw()
-        towers[1].upgrade_count = 1
-        basic1.upgrade_count = 1
 
         pygame.display.update()
         clock.tick(60)
