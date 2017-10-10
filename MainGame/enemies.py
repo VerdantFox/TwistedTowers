@@ -1,16 +1,14 @@
 import pygame
 from lists import *
-
-# Hard-coding in parameters for our game until better plan devised
-display_width = 860
-display_height = 760
-gameDisplay = pygame.display.set_mode((display_width, display_height))
+from gameParameters import gameDisplay
+from enemyPics import basic_enemy
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, image_file, location, speed=1, slow=1):
+    def __init__(self, speed=1, slow=1, frames_to_picswap=10,
+                 location=(path_nodes[0][0], path_nodes[0][1])):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image_file)
+        self.image = basic_enemy[0]
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
         self.x_position = self.rect.left
@@ -19,6 +17,8 @@ class Enemy(pygame.sprite.Sprite):
         self.slow = slow
         self.next_node = path_nodes[0]  # see lists.py
         self.node = 0
+        self.frames_to_picswap = frames_to_picswap
+        self.frame_counter = 0
 
     def move(self):
         while True:
@@ -36,8 +36,17 @@ class Enemy(pygame.sprite.Sprite):
             if (self.x_position, self.feet_y) == self.next_node:
                 if self.node < 9:
                     self.node += 1
-                    self.next_node = path_nodes[self.node] #
+                    self.next_node = path_nodes[self.node]  # See lists
 
+            # Running motion
+            if self.frame_counter < 1:
+                if self.image == basic_enemy[0]:
+                    self.image = basic_enemy[1]
+                elif self.image == basic_enemy[1]:
+                    self.image = basic_enemy[0]
+                self.frame_counter = self.frames_to_picswap
+
+            self.frame_counter -= 1
             pygame.time.wait(self.slow)
             yield Enemy.show(self)
 
