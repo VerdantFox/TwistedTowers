@@ -20,10 +20,14 @@ pause_button = generalClass.RectButton(
 enemy1 = enemies.Enemy()
 
 # Set up towers
-towers = []
+empty_tower = []
+basic_tower = []
 for tower_location in tower_locations:  # See lists.py
     x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
-    towers.append(towerClass.TowerButton(x_coord, y_coord, opt1_msg="basic"))
+    empty_tower.append(towerClass.TowerButton(
+        x_coord, y_coord, opt1_msg="basic", opt1_action="basic"))
+    basic_tower.append(towerClass.BasicTower(
+        x_coord, y_coord, destroy=True, opt1_msg="sell", opt1_action="sell"))
 
 
 basic1 = towerClass.BasicTower(100, 100)
@@ -44,8 +48,25 @@ def game_loop():
 
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-        for tower in towers:
-            tower.draw()
+        for tower in empty_tower:
+            if not tower.destroyed:
+                selected = tower.option_selected
+                tower.draw()
+                if selected == "basic":
+                    basic_tower[empty_tower.index(tower)].destroyed = False
+                    tower.destroyed = True
+                    tower.option_selected = None
+
+        for tower in basic_tower:
+            if not tower.destroyed:
+                selected = tower.option_selected
+                tower.draw()
+                if selected == "sell":
+                    print(selected)
+                    empty_tower[basic_tower.index(tower)].destroyed = False
+                    tower.destroyed = True
+                    print(tower.destroyed)
+                    tower.option_selected = None
 
         basic1.draw()
         next(enemy1.move())

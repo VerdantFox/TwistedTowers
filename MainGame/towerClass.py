@@ -55,9 +55,11 @@ class TowerButton(pygame.sprite.Sprite):
         self._font = font
         self._font_size = font_size
         self.destroyed = destroy
+        self.option_selected = None
         self._options_countdown = 0
         self.set_options_timer = set_options_timer
         self.option_count = option_count
+        self.lockout = 10
         # List == x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
         # Circle list index 0 refers to main circle (tower location)
         self.circle_list = [
@@ -86,8 +88,10 @@ class TowerButton(pygame.sprite.Sprite):
         perform action if clicked,
         show options for a period of set_option_timer"""
 
+        if self.lockout > 0:
+            self.lockout -= 1
         # Parameter for killing tower (destroyed if replaced or sold)
-        if self.destroyed is True:
+        if self.destroyed or self.lockout > 0:
             return None
 
         self._mouse = pygame.mouse.get_pos()
@@ -116,8 +120,12 @@ class TowerButton(pygame.sprite.Sprite):
                         if circle_number == 0:
                             self._options_countdown = int(
                                 self.set_options_timer * 1.5)
-                        # else:
-                        #     self.destroyed = True
+                        else:
+                            if action is not None:
+                                self.option_selected = action
+                                self.lockout = 10
+                                # print(self.option_selected)
+                                # self.destroyed = True
 
 
             # If not hovering circle, draw inactive circle if possible
@@ -132,6 +140,7 @@ class TowerButton(pygame.sprite.Sprite):
                     self.set_text(x, y, msg, msg_col, False)
         if self._options_countdown > 0:
             self._options_countdown -= 1
+
 
     def set_text(self, x, y, msg, msg_color, is_main):
         """Draw text over main or option circles if specified"""

@@ -32,3 +32,6 @@ def pause_game():
 resume_button = generalClass.RectButton(
     20, 50, message="Resume", inactive_color=red,
     active_color=bright_red, action=unpause)
+
+
+# def set_towers():
