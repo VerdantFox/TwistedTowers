@@ -1,5 +1,6 @@
 import pygame
 import generalClass
+import towerClass
 from colors import *
 
 pygame.init()
@@ -34,4 +35,11 @@ resume_button = generalClass.RectButton(
     active_color=bright_red, action=unpause)
 
 
-# def set_towers():
+# def set_towers(tower):
+#     if not tower.destroyed:
+#         selected = tower.option_selected
+#         tower.draw()
+#         if selected == "basic":
+#             basic_tower[empty_tower.index(tower)].destroyed = False
+#             tower.destroyed = True
+#             tower.option_selected = None

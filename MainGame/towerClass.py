@@ -141,7 +141,6 @@ class TowerButton(pygame.sprite.Sprite):
         if self._options_countdown > 0:
             self._options_countdown -= 1
 
-
     def set_text(self, x, y, msg, msg_color, is_main):
         """Draw text over main or option circles if specified"""
         if is_main:
@@ -160,6 +159,42 @@ class TowerButton(pygame.sprite.Sprite):
 
 class BasicTower(TowerButton):
     def __init__(self, x, y, option_count=5, **kwargs):
-        super().__init__(x, y, option_count=5, **kwargs)
+        super().__init__(
+            x, y, option_count=5, opt1_msg="Sell", opt1_action="sell",
+            opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
+            opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
+            opt5_msg="Dark", opt5_action="dark",
+            main_color1=yellow, main_color2=bright_yellow, **kwargs)
         self.option_count = option_count
 
+
+class IceTower(TowerButton):
+    def __init__(self, x, y, option_count=3, **kwargs):
+        super().__init__(
+            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            main_color1=blue, main_color2=bright_blue, **kwargs)
+        self.option_count = option_count
+
+
+class FireTower(TowerButton):
+    def __init__(self, x, y, option_count=3, **kwargs):
+        super().__init__(
+            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            main_color1=red, main_color2=bright_red, **kwargs)
+        self.option_count = option_count
+
+
+class PoisonTower(TowerButton):
+    def __init__(self, x, y, option_count=3, **kwargs):
+        super().__init__(
+            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            main_color1=green, main_color2=bright_green, **kwargs)
+        self.option_count = option_count
+
+
+class DarkTower(TowerButton):
+    def __init__(self, x, y, option_count=3, **kwargs):
+        super().__init__(
+            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            main_color1=purple, main_color2=bright_purple, **kwargs)
+        self.option_count = option_count
