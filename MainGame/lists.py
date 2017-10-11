@@ -43,3 +43,12 @@ tower_locations = [
     (615, 232),     # 24
     (694, 122),     # 25
 ]
+
+action_definitions = {
+    "sell": 0,
+    "basic": 1,
+    "ice": 2,
+    "fire": 3,
+    "poison": 4,
+    "dark": 5
+}
