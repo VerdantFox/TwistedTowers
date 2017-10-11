@@ -25,13 +25,13 @@ for tower_location in tower_locations:  # See lists.py
     x_coord, y_coord = tower_locations[tower_locations.index(tower_location)]
     towers.append(towerClass.TowerButton(x_coord, y_coord, opt1_msg="basic"))
 
-# basic1 = towerClass.BasicTower(100, 100)
+
+basic1 = towerClass.BasicTower(100, 100)
 
 
 def game_loop():
 
-    game_exit = False
-    while not game_exit:
+    while True:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,7 +46,8 @@ def game_loop():
 
         for tower in towers:
             tower.draw()
-        # basic1.draw()
+
+        basic1.draw()
         next(enemy1.move())
         pause_button.draw()
 

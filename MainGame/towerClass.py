@@ -33,8 +33,8 @@ class TowerButton(pygame.sprite.Sprite):
     """
 
     def __init__(
-            self, x, y, radius=24, main_msg=None, set_options_timer=30,
-            main_color1=light_brown, main_color2=orange,
+            self, x, y, radius=24, destroy=False, main_msg=None,
+            set_options_timer=30, main_color1=light_brown, main_color2=orange,
             font="Comic Sans MS", font_size=20, message_color=black,
             option_count=1, opt1_col1=yellow,
             opt1_col2=bright_yellow, opt2_col1=blue,
@@ -44,7 +44,8 @@ class TowerButton(pygame.sprite.Sprite):
             opt5_col2=bright_purple, opt1_msg=None, opt2_msg=None,
             opt3_msg=None, opt4_msg=None, opt5_msg=None, opt1_msg_col=black,
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
-            opt5_msg_col=black):
+            opt5_msg_col=black, opt1_action=None, opt2_action=None,
+            opt3_action=None, opt4_action=None, opt5_action=None):
         super().__init__()
         self._radius = radius
         self._mouse = None
@@ -53,23 +54,29 @@ class TowerButton(pygame.sprite.Sprite):
         self._y = y
         self._font = font
         self._font_size = font_size
-        self.destroyed = False
+        self.destroyed = destroy
         self._options_countdown = 0
         self.set_options_timer = set_options_timer
+        self.option_count = option_count
         # List == x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
         # Circle list index 0 refers to main circle (tower location)
         self.circle_list = [
-            [0, 0, main_color1, main_color2, main_msg, message_color]]
+            [0, 0, main_color1, main_color2, main_msg, message_color, None]]
         # Option list specifies circles (options) to tower location
         self.options_list = [
-            [-0.6, 2.3, opt1_col1, opt1_col2, opt1_msg, opt1_msg_col],
-            [1.3, 1.9, opt2_col1, opt2_col2, opt2_msg, opt2_msg_col],
-            [2.2, 0.25, opt3_col1, opt3_col2, opt3_msg, opt3_msg_col],
-            [1.7, -1.6, opt4_col1, opt4_col2, opt4_msg, opt4_msg_col],
-            [-0.1, -2.2, opt5_col1, opt5_col2, opt5_msg, opt5_msg_col]]
+            [-0.6, 2.3, opt1_col1, opt1_col2,
+             opt1_msg, opt1_msg_col, opt1_action],
+            [1.3, 1.9, opt2_col1, opt2_col2,
+             opt2_msg, opt2_msg_col, opt2_action],
+            [2.2, 0.25, opt3_col1, opt3_col2,
+             opt3_msg, opt3_msg_col, opt3_action],
+            [1.7, -1.6, opt4_col1, opt4_col2,
+             opt4_msg, opt4_msg_col, opt4_action],
+            [-0.1, -2.2, opt5_col1, opt5_col2,
+             opt5_msg, opt5_msg_col, opt5_action]]
         # Append to circle_list as many options as specified by option_count
         for option in self.options_list:
-            if self.options_list.index(option) == option_count:
+            if self.options_list.index(option) == self.option_count:
                 break
             else:
                 self.circle_list.append(option)
@@ -77,7 +84,7 @@ class TowerButton(pygame.sprite.Sprite):
     def draw(self):
         """Draw main and option circles, highlight color if hovered
         perform action if clicked,
-        show options for a period of option_timer"""
+        show options for a period of set_option_timer"""
 
         # Parameter for killing tower (destroyed if replaced or sold)
         if self.destroyed is True:
@@ -89,7 +96,8 @@ class TowerButton(pygame.sprite.Sprite):
         # define relevant variables
         for circle in self.circle_list:
             circle_number = self.circle_list.index(circle)
-            x_offset, y_offset, no_hov_color, hov_color, msg, msg_col = circle
+            x_offset, y_offset, no_hov_color, hov_color, \
+                msg, msg_col, action = circle
             if circle_number == 0:
                 radius = self._radius
             else:
@@ -108,9 +116,10 @@ class TowerButton(pygame.sprite.Sprite):
                         if circle_number == 0:
                             self._options_countdown = int(
                                 self.set_options_timer * 1.5)
-                    else:
-                        # upgrade_tower or sell (option) #TODO
-                        pass
+                        # else:
+                        #     self.destroyed = True
+
+
             # If not hovering circle, draw inactive circle if possible
             else:
                 if circle_number == 0 or self._options_countdown > 0:
@@ -136,7 +145,12 @@ class TowerButton(pygame.sprite.Sprite):
         text_rect.center = (x, y)
         gameDisplay.blit(text_surface, text_rect)
 
+    def sell(self):
+        pass  # TODO
+
 
 class BasicTower(TowerButton):
-    def __init__(self, x, y, **kwargs):
-        super().__init__(x, y, **kwargs)
+    def __init__(self, x, y, option_count=5, **kwargs):
+        super().__init__(x, y, option_count=5, **kwargs)
+        self.option_count = option_count
+
