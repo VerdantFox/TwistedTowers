@@ -17,7 +17,7 @@ pause_button = generalClass.RectButton(
     action=helpers.pause_game)
 
 # Define first enemy
-enemy1 = enemies.Enemy()
+enemy1 = enemies.Enemy(speed=1)
 
 tower_list = []
 

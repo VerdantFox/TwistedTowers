@@ -2,6 +2,7 @@ import pygame
 from lists import *
 from gameParameters import gameDisplay
 from pics import basic_enemy
+import random
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -17,9 +18,12 @@ class Enemy(pygame.sprite.Sprite):
         self.node = 0
         self.frames_to_picswap = frames_to_picswap
         self.frame_counter = 0
+        self.random_counter = 0
 
     def move(self):
-        # Move towards node by self.speed (divisible by 1, 2, 3)
+
+        # Move towards node by self.speed.
+        # Occasionally move randomly side-to side
         if self.rect.left < self.next_node[0]:
             self.rect.left += self.speed
         if self.rect.left > self.next_node[0]:
@@ -30,12 +34,16 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top -= self.speed
 
         # Switch to next node in path if at current node goal
-        # if (self.rect.left, self.rect.top) == self.next_node:
         if self.next_node[0] - 10 < self.rect.left < self.next_node[0] + 10:
             if self.next_node[1] - 10 < self.rect.top < self.next_node[1] + 10:
                 if self.node < 9:
                     self.node += 1
-                    self.next_node = path_nodes[self.node]  # See lists
+                    node_x, node_y = path_nodes[self.node]  # see lists.py
+                    if self.node < 8:
+                        # Introduce some randomness to node locations
+                        node_x += random.randrange(-10, 10)
+                        node_y += random.randrange(-15, 15)
+                    self.next_node = (node_x, node_y)  # See lists
 
         # Running motion
         if self.frame_counter < 1:
