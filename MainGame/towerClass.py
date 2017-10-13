@@ -34,10 +34,10 @@ class TowerButton(pygame.sprite.Sprite):
     """
 
     def __init__(
-            self, location, tower_range=0, button_radius=24, destroy=False, main_msg=None,
-            set_options_timer=30, main_color1=light_brown, main_color2=orange,
-            font="Comic Sans MS", font_size=20, message_color=black,
-            option_count=1, opt1_col1=yellow,
+            self, location, tower_range=0, button_radius=24, destroy=False,
+            main_msg=None, set_options_timer=30, main_color1=light_brown,
+            main_color2=orange, font="Comic Sans MS", font_size=20,
+            message_color=black, option_count=1, opt1_col1=yellow,
             opt1_col2=bright_yellow, opt2_col1=blue,
             opt2_col2=bright_blue, opt3_col1=red,
             opt3_col2=bright_red, opt4_col1=green,

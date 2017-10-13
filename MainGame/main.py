@@ -62,10 +62,12 @@ def game_loop():
                         tower.destroyed = True
                         tower.option_selected = None
                     if pygame.sprite.collide_circle(tower, enemy1):
-                        print("collision at tower {}".format(tower_list.index(sub_list)))
+                        print("collision at tower {}"
+                              .format(tower_list.index(sub_list)))
         basic1.draw()
 
-        next(enemy1.move())
+        # next(enemy1.move())
+        enemy1.move()
         pause_button.draw()
 
         pygame.display.update()
