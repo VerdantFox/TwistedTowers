@@ -11,8 +11,6 @@ class Enemy(pygame.sprite.Sprite):
         self.image = basic_enemy[0]
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
-        self.x_position = self.rect.left
-        self.feet_y = self.rect.top
         self.speed = speed  # Note: speed divisible by 1, 2, 3 (not 4)
         self.slow = slow
         self.next_node = path_nodes[0]  # see lists.py
@@ -23,17 +21,17 @@ class Enemy(pygame.sprite.Sprite):
     def move(self):
         while True:
             # Move towards node by self.speed (divisible by 1, 2, 3)
-            if self.x_position < self.next_node[0]:
-                self.x_position += self.speed
-            if self.x_position > self.next_node[0]:
-                self.x_position -= self.speed
-            if self.feet_y < self.next_node[1]:
-                self.feet_y += self.speed
-            if self.feet_y > self.next_node[1]:
-                self.feet_y -= self.speed
+            if self.rect.left < self.next_node[0]:
+                self.rect.left += self.speed
+            if self.rect.left > self.next_node[0]:
+                self.rect.left -= self.speed
+            if self.rect.top < self.next_node[1]:
+                self.rect.top += self.speed
+            if self.rect.top > self.next_node[1]:
+                self.rect.top -= self.speed
 
             # Switch to next node in path if at current node goal
-            if (self.x_position, self.feet_y) == self.next_node:
+            if (self.rect.left, self.rect.top) == self.next_node:
                 if self.node < 9:
                     self.node += 1
                     self.next_node = path_nodes[self.node]  # See lists
@@ -51,5 +49,5 @@ class Enemy(pygame.sprite.Sprite):
             yield Enemy.show(self)
 
     def show(self):
-        gameDisplay.blit(self.image, (self.x_position - 30,
-                                      self.feet_y - 30))
+        gameDisplay.blit(self.image, (self.rect.left - 30,
+                                      self.rect.top - 30))

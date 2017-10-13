@@ -22,9 +22,10 @@ class Background(pygame.sprite.Sprite):
 
 
 class RectButton:
-    def __init__(self, x_coord, y_coord, width=80, height=30, message=None,
-                 inactive_color=green, active_color=bright_green, action=None,
-                 font="Comic Sans MS", font_size=20, message_color=black):
+    def __init__(self, x_coord, y_coord, width=80, height=30,
+                 message=None, inactive_color=green, active_color=bright_green,
+                 action=None, font="Comic Sans MS", font_size=20,
+                 message_color=black):
         self._mouse = None
         self._click = None
         self._message = message

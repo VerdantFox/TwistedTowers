@@ -1,13 +1,14 @@
 import pygame
 from colors import *
 from gameParameters import gameDisplay
+from enemyPics import basic_enemy
 
 
 class TowerButton(pygame.sprite.Sprite):
     """Base class for tower buttons (circular buttons)
 
     Attributes:
-        x, y:           (Required) positions center of tower circle
+        location:       (Required) tuple(x, y), positions center of tower circle
         radius:         radius of tower, defaults to 24 pixels
         main_msg:       message to display on tower (optional)
         main_color1:    color without mouse hover (default light_brown)
@@ -33,7 +34,7 @@ class TowerButton(pygame.sprite.Sprite):
     """
 
     def __init__(
-            self, x, y, radius=24, destroy=False, main_msg=None,
+            self, location, tower_range=0, button_radius=24, destroy=False, main_msg=None,
             set_options_timer=30, main_color1=light_brown, main_color2=orange,
             font="Comic Sans MS", font_size=20, message_color=black,
             option_count=1, opt1_col1=yellow,
@@ -46,12 +47,16 @@ class TowerButton(pygame.sprite.Sprite):
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
             opt5_msg_col=black, opt1_action=None, opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
+        pygame.sprite.Sprite.__init__(self)
         super().__init__()
-        self._radius = radius
+        self._button_radius = button_radius
+        self.radius = tower_range  # range          # To rename if possible
+        self.image = basic_enemy[0]                 # To fix
+        self.rect = self.image.get_rect()           # To fix
+        self.rect.left, self.rect.top = location    # To fix
         self._mouse = None
         self._click = None
-        self._x = x
-        self._y = y
+        self._x, self._y = location
         self._font = font
         self._font_size = font_size
         self.destroyed = destroy
@@ -103,9 +108,9 @@ class TowerButton(pygame.sprite.Sprite):
             x_offset, y_offset, no_hov_color, hov_color, \
                 msg, msg_col, action = circle
             if circle_number == 0:
-                radius = self._radius
+                radius = self._button_radius
             else:
-                radius = int(self._radius * 0.7)
+                radius = int(self._button_radius * 0.7)
             x = int(self._x + x_offset * radius)
             y = int(self._y + y_offset * radius)
 
@@ -158,9 +163,10 @@ class TowerButton(pygame.sprite.Sprite):
 
 
 class BasicTower(TowerButton):
-    def __init__(self, x, y, option_count=5, **kwargs):
+    def __init__(self, location, option_count=5, **kwargs):
         super().__init__(
-            x, y, option_count=5, opt1_msg="Sell", opt1_action="sell",
+            location, tower_range=100,
+            option_count=5, opt1_msg="Sell", opt1_action="sell",
             opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
             opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
             opt5_msg="Dark", opt5_action="dark",
@@ -169,32 +175,36 @@ class BasicTower(TowerButton):
 
 
 class IceTower(TowerButton):
-    def __init__(self, x, y, option_count=3, **kwargs):
+    def __init__(self, location, option_count=3, **kwargs):
         super().__init__(
-            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            location, tower_range=100,
+            option_count=3, opt1_msg="Sell", opt1_action="sell",
             main_color1=blue, main_color2=bright_blue, **kwargs)
         self.option_count = option_count
 
 
 class FireTower(TowerButton):
-    def __init__(self, x, y, option_count=3, **kwargs):
+    def __init__(self, location, option_count=3, **kwargs):
         super().__init__(
-            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            location, tower_range=100,
+            option_count=3, opt1_msg="Sell", opt1_action="sell",
             main_color1=red, main_color2=bright_red, **kwargs)
         self.option_count = option_count
 
 
 class PoisonTower(TowerButton):
-    def __init__(self, x, y, option_count=3, **kwargs):
+    def __init__(self, location, option_count=3, **kwargs):
         super().__init__(
-            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            location, tower_range=100,
+            option_count=3, opt1_msg="Sell", opt1_action="sell",
             main_color1=green, main_color2=bright_green, **kwargs)
         self.option_count = option_count
 
 
 class DarkTower(TowerButton):
-    def __init__(self, x, y, option_count=3, **kwargs):
+    def __init__(self, location, option_count=3, **kwargs):
         super().__init__(
-            x, y, option_count=3, opt1_msg="Sell", opt1_action="sell",
+            location, tower_range=100,
+            option_count=3, opt1_msg="Sell", opt1_action="sell",
             main_color1=purple, main_color2=bright_purple, **kwargs)
         self.option_count = option_count

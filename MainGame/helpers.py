@@ -1,6 +1,5 @@
 import pygame
 import generalClass
-import towerClass
 from colors import *
 
 pygame.init()
