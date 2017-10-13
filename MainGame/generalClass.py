@@ -68,4 +68,32 @@ class RectButton:
         gameDisplay.blit(text_surface, text_rect)
 
 
+class GameScore:
+    def __init__(self, location, width=90, height=30,
+                 background_color=green,
+                 font="Comic Sans MS", font_size=20,
+                 message_color=black):
+        self.x, self.y = location
+        self.score = 0
+        self._width = width
+        self._height = height
+        self._color1 = background_color
+        self._font = pygame.font.SysFont(font, font_size)
+        self.text_color = message_color
+        self.background = True
+
+    def draw(self):
+        if self.background:
+            pygame.draw.rect(
+                gameDisplay, self._color1,
+                (self.x, self.y, self._width, self._height))
+        self.set_text()
+
+    def set_text(self):
+        text_surface = self._font.render(
+            "Score: " + str(self.score), True, self.text_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = ((self.x + self._width // 2),
+                            (self.y + self._height // 2))
+        gameDisplay.blit(text_surface, text_rect)
 

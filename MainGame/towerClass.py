@@ -239,7 +239,7 @@ class DarkTower(BasicTower):
             main_color2=main_color2)
 
 
-class BasicMissile(pygame.sprite.Sprite):
+class BasicMissile:
     def __init__(self, location):
         super().__init__()
         self.center = pixel  # 1x1pixel img at center
@@ -249,45 +249,51 @@ class BasicMissile(pygame.sprite.Sprite):
         self.x = x
         self.y = y - 50
         self._tower_location = self.x, self.y
-        self.speed = 5
-        self.locked_on = False
+        self.speed = 4
+        self.lock_on = None
         self.destroy = True
         self.radius = 5
         self.fire_rate = 40
         self.fire_counter = 0
+        self.damage = 3
 
     def fire(self, tower, enemy):
-        # If destroyed, check if enemy within tower range.
-        # If in range, un-destroy
-        # print(self.destroy)
+        # Checks, need: fire_count at 0, enemy alive, no missile alive,
+        # Then, if enemy in range of tower, un-destroy missile
         if self.fire_counter < 1:
-            if self.destroy is True:
-                if helpers.collision(tower, enemy):
-                    # print("collision")
-                    self.destroy = False
-                    self.fire_counter = self.fire_rate
-
+            if not enemy.destroy:
+                if self.destroy is True:
+                    if helpers.collision(tower, enemy):
+                        if self.lock_on is None:
+                            self.lock_on = enemy
+                            self.destroy = False
+                            self.fire_counter = self.fire_rate
         if self.fire_counter > 0:
             self.fire_counter -= 1
 
-        # Move missile towards enemy by self.speed and redraw.
+        # Move missile towards locked on enemy by self.speed and redraw.
         if not self.destroy:
-            if self.x < enemy.x:
-                self.x += self.speed
-            if self.x > enemy.x:
-                self.x -= self.speed
-            if self.y < enemy.y:
-                self.y += self.speed
-            if self.y > enemy.y:
-                self.y -= self.speed
-            pygame.draw.circle(
-                gameDisplay, pink, (self.x, self.y), self.radius)
+            if self.lock_on == enemy:
+                if self.x < enemy.x:
+                    self.x += self.speed
+                if self.x > enemy.x:
+                    self.x -= self.speed
+                if self.y < enemy.y:
+                    self.y += self.speed
+                if self.y > enemy.y:
+                    self.y -= self.speed
+                pygame.draw.circle(
+                    gameDisplay, pink, (self.x, self.y), self.radius)
 
-        # Check for collision between missile and enemy
-        # If collision, destroy missile and set its location back to tower
-        if helpers.collision(self, enemy):
-            self.destroy = True
-            self.x, self.y = self._tower_location
-            print("Gotcha, bitch!")
+                # Check for collision between missile and enemy
+                # If collision to locked on target,
+                # destroy missile and set its location back to tower
+                if helpers.collision(self, enemy):
+                    self.destroy = True
+                    self.lock_on = None
+                    self.x, self.y = self._tower_location
+                    if not enemy.destroy:
+                        print("Gotcha, bitch!")
+                        return self.damage
 
 

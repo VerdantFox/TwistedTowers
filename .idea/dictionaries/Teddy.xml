@@ -2,6 +2,7 @@
   <dictionary name="Teddy">
     <words>
       <w>locs</w>
+      <w>respawn</w>
     </words>
   </dictionary>
 </component>

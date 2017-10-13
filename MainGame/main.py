@@ -13,11 +13,15 @@ clock = pygame.time.Clock()
 
 # Set static buttons
 pause_button = generalClass.RectButton(
-    (20, 20), message="Pause", inactive_color=gray, active_color=white,
+    (20, 50), message="Pause", inactive_color=gray, active_color=white,
     action=helpers.pause_game)
 
-# Define first enemy
-enemy1 = enemies.Enemy(speed=1)
+score_board = generalClass.GameScore((20, 20))
+
+enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2, points=5),
+                enemies.Enemy(speed=2), enemies.Enemy(speed=1)]
+
+game_score = 0
 
 tower_list = []
 missile_list = []
@@ -38,7 +42,7 @@ for tower_location in tower_locations:  # See lists.py
 
 
 def game_loop():
-
+    global game_score
     while True:
 
         for event in pygame.event.get():
@@ -66,9 +70,16 @@ def game_loop():
                     if sub_list.index(tower) != 0:
                         missile = missile_list[tower_list.index(
                             sub_list)][0]
-                        missile.fire(tower, enemy1)
+                        for enemy in enemies_list:
+                            damage = missile.fire(tower, enemy)
+                            if damage:
+                                points = enemy.take_damage(damage)
+                                if points:
+                                    score_board.score += points
 
-        enemy1.move()
+        score_board.draw()
+        for enemy in enemies_list:
+            enemy.move()
         pause_button.draw()
 
         pygame.display.update()
