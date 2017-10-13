@@ -9,7 +9,7 @@ class TowerButton(pygame.sprite.Sprite):
 
     Attributes:
         location:       (Required) tuple(x, y), positions center of tower circle
-        radius:         radius of tower, defaults to 24 pixels
+        button_ radius: radius of tower, defaults to 24 pixels
         main_msg:       message to display on tower (optional)
         main_color1:    color without mouse hover (default light_brown)
         main_color2:    color on mouse hover (default orange)
@@ -34,12 +34,12 @@ class TowerButton(pygame.sprite.Sprite):
     """
 
     def __init__(
-            self, location, tower_range=0, button_radius=24, destroy=False,
+            self, location, button_radius=24, destroy=False,
             main_msg=None, set_options_timer=30, main_color1=light_brown,
             main_color2=orange, font="Comic Sans MS", font_size=20,
             message_color=black, option_count=1, opt1_col1=yellow,
-            opt1_col2=bright_yellow, opt2_col1=blue,
-            opt2_col2=bright_blue, opt3_col1=red,
+            opt1_col2=bright_yellow, opt2_col1=teal,
+            opt2_col2=bright_teal, opt3_col1=red,
             opt3_col2=bright_red, opt4_col1=green,
             opt4_col2=bright_green, opt5_col1=purple,
             opt5_col2=bright_purple, opt1_msg=None, opt2_msg=None,
@@ -50,17 +50,12 @@ class TowerButton(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         super().__init__()
         self._button_radius = button_radius
-        self.radius = tower_range  # range          # To rename if possible
-        self.center = pixel                         # 1x1pixel img at center
-        self.image, self.image_width, self.image_height = basicTower1
-        self.rect = self.center.get_rect()
-        self.rect.left, self.rect.top = location
         self._mouse = None
         self._click = None
         self._x, self._y = location
         self._font = font
         self._font_size = font_size
-        self.destroyed = destroy
+        self.destroy = destroy
         self.option_selected = None
         self._options_countdown = 0
         self.set_options_timer = set_options_timer
@@ -97,7 +92,7 @@ class TowerButton(pygame.sprite.Sprite):
         if self.lockout > 0:
             self.lockout -= 1
         # Parameter for killing tower (destroyed if replaced or sold)
-        if self.destroyed or self.lockout > 0:
+        if self.destroy or self.lockout > 0:
             return None
 
         self._mouse = pygame.mouse.get_pos()
@@ -174,14 +169,19 @@ class BasicTower(TowerButton):
             opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
             opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
             opt5_msg="Dark", opt5_action="dark",
-            main_color1=yellow, main_color2=bright_yellow):
+            main_color1=grass_green, main_color2=bright_green):
         super().__init__(
-            location, tower_range=tower_range, destroy=destroy,
+            location, destroy=destroy,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, opt2_msg=opt2_msg, opt2_action=opt2_action,
             opt3_msg=opt3_msg, opt3_action=opt3_action, opt4_msg=opt4_msg,
             opt4_action=opt4_action, opt5_msg=opt5_msg, opt5_action=opt5_action,
             main_color1=main_color1, main_color2=main_color2)
+        self.radius = tower_range  # range          # To rename if possible
+        self.center = pixel                         # 1x1pixel img at center
+        self.image, self.image_width, self.image_height = basicTower1
+        self.rect = self.center.get_rect()
+        self.rect.left, self.rect.top = location
 
     def get_tower_image(self):
         gameDisplay.blit(
@@ -235,3 +235,14 @@ class DarkTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+
+
+class BasicMissile(pygame.sprite.Sprite):
+    def __init__(self, location):
+        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
+        self._missile_radius = 3
+        self._x, self._y = location
+        self.destroy = True
+
+    # def fire(self):

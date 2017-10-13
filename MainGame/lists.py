@@ -44,41 +44,10 @@ path_nodes = [
 #     (694, 122),     # 25
 # ]
 
-# # Tower_locations are arranged bottom left to right then top left to right
-# tower_locations = [
-#     # Bottom first (in order of descending y)
-#     (580, 643),
-#     (681, 637),
-#     (493, 614),
-#     (92, 511),
-#     (214, 505),
-#     (415, 440),
-#     (317, 425),
-#     (402, 347),
-#     (326, 346),
-#     (363, 271),
-#     (779, 451),
-#     (780, 354),
-#     (777, 259),
-#     # Now top (in order of descending y
-#     (604, 483),
-#     (571, 413),
-#     (627, 357),
-#     (142, 347),
-#     (567, 299),
-#     (172, 278),
-#     (615, 232),
-#     (543, 198),
-#     (199, 175),
-#     (461, 123),
-#     (292, 122),
-#     (694, 122),
-#     (386, 107)
-# ]
 
 # Tower_locations are arranged bottom left to right then top left to right
 tower_locations = [
-    # Bottom first (in order of descending y)
+    # Bottom first (in order of ascending y)
     (777, 259),
     (780, 354),
     (779, 451),
@@ -92,7 +61,7 @@ tower_locations = [
     (493, 614),
     (681, 637),
     (580, 643),
-    # Now top (in order of descending y
+    # Now top (in order of ascending y
     (386, 107),
     (292, 122),
     (694, 122),

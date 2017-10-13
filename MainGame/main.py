@@ -53,17 +53,18 @@ def game_loop():
 
         for sub_list in tower_list:
             for tower in sub_list:
-                if not tower.destroyed:
+                if not tower.destroy:
                     selected = tower.option_selected
                     tower_number = action_definitions.get(selected)
                     tower.draw()
                     if selected:
-                        sub_list[tower_number].destroyed = False
-                        tower.destroyed = True
+                        sub_list[tower_number].destroy = False
+                        tower.destroy = True
                         tower.option_selected = None
-                    if pygame.sprite.collide_circle(tower, enemy1):
-                        print("collision at tower {}"
-                              .format(tower_list.index(sub_list)))
+                    if sub_list.index(tower) != 0:
+                        if pygame.sprite.collide_circle(tower, enemy1):
+                            print("collision at tower {}"
+                                  .format(tower_list.index(sub_list)))
         basic1.draw()
 
         enemy1.move()
