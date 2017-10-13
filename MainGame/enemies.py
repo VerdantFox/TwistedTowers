@@ -1,7 +1,7 @@
 import pygame
 from lists import *
 from gameParameters import gameDisplay
-from enemyPics import basic_enemy
+from pics import basic_enemy
 
 
 class Enemy(pygame.sprite.Sprite):

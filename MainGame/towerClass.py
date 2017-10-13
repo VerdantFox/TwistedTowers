@@ -1,7 +1,7 @@
 import pygame
 from colors import *
 from gameParameters import gameDisplay
-from enemyPics import basic_enemy
+from pics import pixel, basicTower1
 
 
 class TowerButton(pygame.sprite.Sprite):
@@ -51,9 +51,10 @@ class TowerButton(pygame.sprite.Sprite):
         super().__init__()
         self._button_radius = button_radius
         self.radius = tower_range  # range          # To rename if possible
-        self.image = basic_enemy[0]                 # To fix
-        self.rect = self.image.get_rect()           # To fix
-        self.rect.left, self.rect.top = location    # To fix
+        self.center = pixel                         # 1x1pixel img at center
+        self.image, self.image_width, self.image_height = basicTower1
+        self.rect = self.center.get_rect()
+        self.rect.left, self.rect.top = location
         self._mouse = None
         self._click = None
         self._x, self._y = location
@@ -119,6 +120,8 @@ class TowerButton(pygame.sprite.Sprite):
                     and y - radius < self._mouse[1] < y + radius):
                 if circle_number == 0 or self._options_countdown > 0:
                     pygame.draw.circle(gameDisplay, hov_color, (x, y), radius)
+                    if circle_number == 0:
+                        self.get_tower_image()
                     if circle_number > 0:
                         self._options_countdown = self.set_options_timer
                     if self._click[0] == 1:
@@ -132,12 +135,14 @@ class TowerButton(pygame.sprite.Sprite):
                                 # print(self.option_selected)
                                 # self.destroyed = True
 
-
             # If not hovering circle, draw inactive circle if possible
             else:
                 if circle_number == 0 or self._options_countdown > 0:
                     pygame.draw.circle(
                         gameDisplay, no_hov_color, (x, y), radius)
+                    if circle_number == 0:
+                        self.get_tower_image()
+
             if msg and (circle_number == 0 or self._options_countdown > 0):
                 if circle_number == 0:
                     self.set_text(x, y, msg, msg_col, True)
@@ -145,6 +150,9 @@ class TowerButton(pygame.sprite.Sprite):
                     self.set_text(x, y, msg, msg_col, False)
         if self._options_countdown > 0:
             self._options_countdown -= 1
+
+    def get_tower_image(self):
+        pass
 
     def set_text(self, x, y, msg, msg_color, is_main):
         """Draw text over main or option circles if specified"""
@@ -158,9 +166,6 @@ class TowerButton(pygame.sprite.Sprite):
         text_rect.center = (x, y)
         gameDisplay.blit(text_surface, text_rect)
 
-    def sell(self):
-        pass  # TODO
-
 
 class BasicTower(TowerButton):
     def __init__(self, location, option_count=5, **kwargs):
@@ -172,6 +177,10 @@ class BasicTower(TowerButton):
             opt5_msg="Dark", opt5_action="dark",
             main_color1=yellow, main_color2=bright_yellow, **kwargs)
         self.option_count = option_count
+
+    def get_tower_image(self):
+        gameDisplay.blit(
+            self.image, (int(self._x - 0.5 * self.image_width), int(self._y - .8 * self.image_height)))
 
 
 class IceTower(TowerButton):
