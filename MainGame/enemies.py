@@ -11,7 +11,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = basic_enemy[0]
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
-        self.speed = speed  # Note: speed divisible by 1, 2, 3 (not 4)
+        self.speed = speed  # Max speed wiggle-room = 10
         self.slow = slow
         self.next_node = path_nodes[0]  # see lists.py
         self.node = 0
@@ -30,10 +30,12 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top -= self.speed
 
         # Switch to next node in path if at current node goal
-        if (self.rect.left, self.rect.top) == self.next_node:
-            if self.node < 9:
-                self.node += 1
-                self.next_node = path_nodes[self.node]  # See lists
+        # if (self.rect.left, self.rect.top) == self.next_node:
+        if self.next_node[0] - 10 < self.rect.left < self.next_node[0] + 10:
+            if self.next_node[1] - 10 < self.rect.top < self.next_node[1] + 10:
+                if self.node < 9:
+                    self.node += 1
+                    self.next_node = path_nodes[self.node]  # See lists
 
         # Running motion
         if self.frame_counter < 1:

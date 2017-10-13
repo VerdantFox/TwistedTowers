@@ -66,7 +66,6 @@ def game_loop():
                               .format(tower_list.index(sub_list)))
         basic1.draw()
 
-        # next(enemy1.move())
         enemy1.move()
         pause_button.draw()
 
