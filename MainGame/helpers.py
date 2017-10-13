@@ -30,15 +30,23 @@ def pause_game():
 
 
 resume_button = generalClass.RectButton(
-    20, 50, message="Resume", inactive_color=red,
+    (20, 50), message="Resume", inactive_color=red,
     active_color=bright_red, action=unpause)
 
 
-# def set_towers(tower):
-#     if not tower.destroyed:
-#         selected = tower.option_selected
-#         tower.draw()
-#         if selected == "basic":
-#             basic_tower[empty_tower.index(tower)].destroyed = False
-#             tower.destroyed = True
-#             tower.option_selected = None
+# Taken from pygame and altered
+def collision(object1, object2):
+    """detect collision between two objects using circles
+
+    collide_circle(left, right): return bool
+
+    Tests for collision between two objects by testing whether two circles
+    centered on the objects overlap. Objects must have a
+    a "radius" attribute, which is used to create the circle.
+    """
+
+    x_distance = object1.x - object2.x
+    y_distance = object1.y - object2.y
+    distance_squared = x_distance ** 2 + y_distance ** 2
+
+    return distance_squared <= (object1.radius + object2.radius) ** 2

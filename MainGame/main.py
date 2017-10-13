@@ -13,13 +13,14 @@ clock = pygame.time.Clock()
 
 # Set static buttons
 pause_button = generalClass.RectButton(
-    20, 20, message="Pause", inactive_color=gray, active_color=white,
+    (20, 20), message="Pause", inactive_color=gray, active_color=white,
     action=helpers.pause_game)
 
 # Define first enemy
 enemy1 = enemies.Enemy(speed=1)
 
 tower_list = []
+missile_list = []
 
 
 for tower_location in tower_locations:  # See lists.py
@@ -33,7 +34,7 @@ for tower_location in tower_locations:  # See lists.py
         towerClass.PoisonTower(location),
         towerClass.DarkTower(location)])
 
-basic1 = towerClass.BasicTower((269, 477))
+    missile_list.append([towerClass.BasicMissile(location)])
 
 
 def game_loop():
@@ -55,6 +56,7 @@ def game_loop():
             for tower in sub_list:
                 if not tower.destroy:
                     selected = tower.option_selected
+                    # See lists.py
                     tower_number = action_definitions.get(selected)
                     tower.draw()
                     if selected:
@@ -62,10 +64,9 @@ def game_loop():
                         tower.destroy = True
                         tower.option_selected = None
                     if sub_list.index(tower) != 0:
-                        if pygame.sprite.collide_circle(tower, enemy1):
-                            print("collision at tower {}"
-                                  .format(tower_list.index(sub_list)))
-        basic1.draw()
+                        missile = missile_list[tower_list.index(
+                            sub_list)][0]
+                        missile.fire(tower, enemy1)
 
         enemy1.move()
         pause_button.draw()

@@ -5,13 +5,12 @@ from pics import basic_enemy
 import random
 
 
-class Enemy(pygame.sprite.Sprite):
+class Enemy:
     def __init__(self, speed=1, slow=1, frames_to_picswap=10,
                  location=(path_nodes[0][0], path_nodes[0][1])):
-        pygame.sprite.Sprite.__init__(self)
         self.image = basic_enemy[0]
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
+        # self.rect = self.image.get_rect()
+        self.x, self.y = location
         self.speed = speed  # Max speed wiggle-room = 10
         self.slow = slow
         self.next_node = path_nodes[0]  # see lists.py
@@ -19,23 +18,23 @@ class Enemy(pygame.sprite.Sprite):
         self.frames_to_picswap = frames_to_picswap
         self.frame_counter = 0
         self.random_counter = 0
+        self.radius = 4
 
     def move(self):
 
         # Move towards node by self.speed.
-        # Occasionally move randomly side-to side
-        if self.rect.left < self.next_node[0]:
-            self.rect.left += self.speed
-        if self.rect.left > self.next_node[0]:
-            self.rect.left -= self.speed
-        if self.rect.top < self.next_node[1]:
-            self.rect.top += self.speed
-        if self.rect.top > self.next_node[1]:
-            self.rect.top -= self.speed
+        if self.x < self.next_node[0]:
+            self.x += self.speed
+        if self.x > self.next_node[0]:
+            self.x -= self.speed
+        if self.y < self.next_node[1]:
+            self.y += self.speed
+        if self.y > self.next_node[1]:
+            self.y -= self.speed
 
         # Switch to next node in path if at current node goal
-        if self.next_node[0] - 10 < self.rect.left < self.next_node[0] + 10:
-            if self.next_node[1] - 10 < self.rect.top < self.next_node[1] + 10:
+        if self.next_node[0] - 10 < self.x < self.next_node[0] + 10:
+            if self.next_node[1] - 10 < self.y < self.next_node[1] + 10:
                 if self.node < 9:
                     self.node += 1
                     node_x, node_y = path_nodes[self.node]  # see lists.py
@@ -58,5 +57,5 @@ class Enemy(pygame.sprite.Sprite):
         Enemy.show(self)
 
     def show(self):
-        gameDisplay.blit(self.image, (self.rect.left - 30,
-                                      self.rect.top - 30))
+        gameDisplay.blit(self.image, (self.x - 30,
+                                      self.y - 30))

@@ -1,4 +1,5 @@
 import pygame
+import helpers
 from colors import *
 from gameParameters import gameDisplay
 from pics import pixel, basicTower1
@@ -52,7 +53,7 @@ class TowerButton(pygame.sprite.Sprite):
         self._button_radius = button_radius
         self._mouse = None
         self._click = None
-        self._x, self._y = location
+        self.x, self.y = location
         self._font = font
         self._font_size = font_size
         self.destroy = destroy
@@ -107,8 +108,8 @@ class TowerButton(pygame.sprite.Sprite):
                 radius = self._button_radius
             else:
                 radius = int(self._button_radius * 0.7)
-            x = int(self._x + x_offset * radius)
-            y = int(self._y + y_offset * radius)
+            x = int(self.x + x_offset * radius)
+            y = int(self.y + y_offset * radius)
 
             # If hovering over a circle
             if (x - radius < self._mouse[0] < x + radius
@@ -177,16 +178,17 @@ class BasicTower(TowerButton):
             opt3_msg=opt3_msg, opt3_action=opt3_action, opt4_msg=opt4_msg,
             opt4_action=opt4_action, opt5_msg=opt5_msg, opt5_action=opt5_action,
             main_color1=main_color1, main_color2=main_color2)
-        self.radius = tower_range  # range          # To rename if possible
-        self.center = pixel                         # 1x1pixel img at center
         self.image, self.image_width, self.image_height = basicTower1
-        self.rect = self.center.get_rect()
-        self.rect.left, self.rect.top = location
+        self.radius = tower_range  # range          # To rename if possible
+
+        # self.center = pixel                         # 1x1pixel img at center
+        # self.rect = self.center.get_rect()
+        # self.rect.left, self.rect.top = location
 
     def get_tower_image(self):
         gameDisplay.blit(
-            self.image, (int(self._x - 0.5 * self.image_width),
-                         int(self._y - .8 * self.image_height)))
+            self.image, (int(self.x - 0.5 * self.image_width),
+                         int(self.y - .8 * self.image_height)))
 
 
 class IceTower(BasicTower):
@@ -239,10 +241,53 @@ class DarkTower(BasicTower):
 
 class BasicMissile(pygame.sprite.Sprite):
     def __init__(self, location):
-        pygame.sprite.Sprite.__init__(self)
         super().__init__()
-        self._missile_radius = 3
-        self._x, self._y = location
+        self.center = pixel  # 1x1pixel img at center
+        self.rect = self.center.get_rect()
+        self.x, self.y = location
+        x, y = location
+        self.x = x
+        self.y = y - 50
+        self._tower_location = self.x, self.y
+        self.speed = 5
+        self.locked_on = False
         self.destroy = True
+        self.radius = 5
+        self.fire_rate = 40
+        self.fire_counter = 0
 
-    # def fire(self):
+    def fire(self, tower, enemy):
+        # If destroyed, check if enemy within tower range.
+        # If in range, un-destroy
+        # print(self.destroy)
+        if self.fire_counter < 1:
+            if self.destroy is True:
+                if helpers.collision(tower, enemy):
+                    # print("collision")
+                    self.destroy = False
+                    self.fire_counter = self.fire_rate
+
+        if self.fire_counter > 0:
+            self.fire_counter -= 1
+
+        # Move missile towards enemy by self.speed and redraw.
+        if not self.destroy:
+            if self.x < enemy.x:
+                self.x += self.speed
+            if self.x > enemy.x:
+                self.x -= self.speed
+            if self.y < enemy.y:
+                self.y += self.speed
+            if self.y > enemy.y:
+                self.y -= self.speed
+            pygame.draw.circle(
+                gameDisplay, pink, (self.x, self.y), self.radius)
+
+        # Check for collision between missile and enemy
+        # If collision, destroy missile and set its location back to tower
+        if helpers.collision(self, enemy):
+            self.destroy = True
+            self.x, self.y = self._tower_location
+            print("Gotcha, bitch!")
+
+

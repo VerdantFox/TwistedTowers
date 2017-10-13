@@ -7,3 +7,9 @@ class BasicTower(TowerButton):
             opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
             opt5_msg="Dark", opt5_action="dark",
             main_color1=yellow, main_color2=bright_yellow, **kwargs)
+
+
+
+        # if pygame.sprite.collide_circle(tower, enemy1):
+        #     missile = missile_list[tower_list.index(
+        #             sub_list)][0]
