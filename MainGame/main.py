@@ -27,16 +27,11 @@ for tower_location in tower_locations:  # See lists.py
     tower_list.append([
         towerClass.TowerButton(     # 0 = Button
             location, opt1_msg="basic", opt1_action="basic"),
-        towerClass.BasicTower(      # 1 = Basic
-            location, destroy=True),
-        towerClass.IceTower(        # 2 = Ice
-            location, destroy=True),
-        towerClass.FireTower(       # 3 = Fire
-            location, destroy=True),
-        towerClass.PoisonTower(     # 4 = Poison
-            location, destroy=True),
-        towerClass.DarkTower(       # 5 = Dark
-            location, destroy=True)])
+        towerClass.BasicTower(location),
+        towerClass.IceTower(location),
+        towerClass.FireTower(location),
+        towerClass.PoisonTower(location),
+        towerClass.DarkTower(location)])
 
 basic1 = towerClass.BasicTower((269, 477))
 
@@ -66,12 +61,9 @@ def game_loop():
                         sub_list[tower_number].destroyed = False
                         tower.destroyed = True
                         tower.option_selected = None
+                    if pygame.sprite.collide_circle(tower, enemy1):
+                        print("collision at tower {}".format(tower_list.index(sub_list)))
         basic1.draw()
-        print(basic1.radius)
-        if pygame.sprite.collide_circle(basic1, enemy1):
-            print("collision")
-        else:
-            print("nope")
 
         next(enemy1.move())
         pause_button.draw()

@@ -168,52 +168,70 @@ class TowerButton(pygame.sprite.Sprite):
 
 
 class BasicTower(TowerButton):
-    def __init__(self, location, option_count=5, **kwargs):
-        super().__init__(
-            location, tower_range=100,
+    def __init__(
+            self, location, tower_range=100, destroy=True,
             option_count=5, opt1_msg="Sell", opt1_action="sell",
             opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
             opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
             opt5_msg="Dark", opt5_action="dark",
-            main_color1=yellow, main_color2=bright_yellow, **kwargs)
-        self.option_count = option_count
+            main_color1=yellow, main_color2=bright_yellow):
+        super().__init__(
+            location, tower_range=tower_range, destroy=destroy,
+            option_count=option_count, opt1_msg=opt1_msg,
+            opt1_action=opt1_action, opt2_msg=opt2_msg, opt2_action=opt2_action,
+            opt3_msg=opt3_msg, opt3_action=opt3_action, opt4_msg=opt4_msg,
+            opt4_action=opt4_action, opt5_msg=opt5_msg, opt5_action=opt5_action,
+            main_color1=main_color1, main_color2=main_color2)
 
     def get_tower_image(self):
         gameDisplay.blit(
-            self.image, (int(self._x - 0.5 * self.image_width), int(self._y - .8 * self.image_height)))
+            self.image, (int(self._x - 0.5 * self.image_width),
+                         int(self._y - .8 * self.image_height)))
 
 
-class IceTower(TowerButton):
-    def __init__(self, location, option_count=3, **kwargs):
+class IceTower(BasicTower):
+    def __init__(
+            self, location, tower_range=100,
+            option_count=1, opt1_msg="Sell", opt1_action="sell",
+            main_color1=blue, main_color2=bright_blue):
         super().__init__(
-            location, tower_range=100,
-            option_count=3, opt1_msg="Sell", opt1_action="sell",
-            main_color1=blue, main_color2=bright_blue, **kwargs)
-        self.option_count = option_count
+            location, tower_range=tower_range,
+            option_count=option_count, opt1_msg=opt1_msg,
+            opt1_action=opt1_action, main_color1=main_color1,
+            main_color2=main_color2)
 
 
-class FireTower(TowerButton):
-    def __init__(self, location, option_count=3, **kwargs):
+class FireTower(BasicTower):
+    def __init__(
+            self, location, tower_range=100,
+            option_count=1, opt1_msg="Sell", opt1_action="sell",
+            main_color1=red, main_color2=bright_red):
         super().__init__(
-            location, tower_range=100,
-            option_count=3, opt1_msg="Sell", opt1_action="sell",
-            main_color1=red, main_color2=bright_red, **kwargs)
-        self.option_count = option_count
+            location, tower_range=tower_range,
+            option_count=option_count, opt1_msg=opt1_msg,
+            opt1_action=opt1_action, main_color1=main_color1,
+            main_color2=main_color2)
 
 
-class PoisonTower(TowerButton):
-    def __init__(self, location, option_count=3, **kwargs):
+class PoisonTower(BasicTower):
+    def __init__(
+            self, location, tower_range=100,
+            option_count=1, opt1_msg="Sell", opt1_action="sell",
+            main_color1=green, main_color2=bright_green):
         super().__init__(
-            location, tower_range=100,
-            option_count=3, opt1_msg="Sell", opt1_action="sell",
-            main_color1=green, main_color2=bright_green, **kwargs)
-        self.option_count = option_count
+            location, tower_range=tower_range,
+            option_count=option_count, opt1_msg=opt1_msg,
+            opt1_action=opt1_action, main_color1=main_color1,
+            main_color2=main_color2)
 
 
-class DarkTower(TowerButton):
-    def __init__(self, location, option_count=3, **kwargs):
+class DarkTower(BasicTower):
+    def __init__(
+            self, location, tower_range=100,
+            option_count=1, opt1_msg="Sell", opt1_action="sell",
+            main_color1=purple, main_color2=bright_purple):
         super().__init__(
-            location, tower_range=100,
-            option_count=3, opt1_msg="Sell", opt1_action="sell",
-            main_color1=purple, main_color2=bright_purple, **kwargs)
-        self.option_count = option_count
+            location, tower_range=tower_range,
+            option_count=option_count, opt1_msg=opt1_msg,
+            opt1_action=opt1_action, main_color1=main_color1,
+            main_color2=main_color2)
