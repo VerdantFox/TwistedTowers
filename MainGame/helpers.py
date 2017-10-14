@@ -29,9 +29,9 @@ def pause_game():
         pygame.display.update()
 
 
-resume_button = generalClass.RectButton(
-    (20, 80), message="Resume", inactive_color=red,
-    active_color=bright_red, action=unpause)
+resume_button = generalClass.Button(
+    (20, 80), message="Resume", color1=red,
+    color2=bright_red, action=unpause)
 
 
 # Taken from pygame and altered

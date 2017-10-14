@@ -58,11 +58,14 @@ class Enemy:
                 if self.node < 9:
                     self.node += 1
                     node_x, node_y = path_nodes[self.node]  # see lists.py
-                    if self.node < 8:
-                        # Introduce some randomness to node locations
-                        node_x += random.randrange(-10, 10)
-                        node_y += random.randrange(-15, 15)
+                    # Introduce some randomness to node locations
+                    node_x += random.randrange(-10, 10)
+                    node_y += random.randrange(-15, 15)
                     self.next_node = (node_x, node_y)  # See lists
+                else:
+                    self.destroy = True
+                    self.x, self.y = path_nodes[0]
+                    return 1
 
         # If enemy is dead
         if self.destroy:

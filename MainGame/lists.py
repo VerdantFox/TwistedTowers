@@ -9,7 +9,8 @@ path_nodes = [
     (516, 542),     # 6
     (684, 526),     # 7
     (696, 236),     # 8
-    (780, 170)      # 9
+    (785, 170),     # 9
+    (800, 170)      # 10 (past castle
 ]
 
 # # Tower_locations are arranged bottom left to right then top left to right
@@ -45,7 +46,7 @@ path_nodes = [
 # ]
 
 
-# Tower_locations are arranged bottom left to right then top left to right
+# Tower_locations are arranged bottom by y, then top by y
 tower_locations = [
     # Bottom first (in order of ascending y)
     (777, 259),
@@ -61,7 +62,7 @@ tower_locations = [
     (493, 614),
     (681, 637),
     (580, 643),
-    # Now top (in order of ascending y
+    # Now top (in order of ascending y)
     (386, 107),
     (292, 122),
     (694, 122),

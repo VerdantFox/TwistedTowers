@@ -5,45 +5,48 @@ import enemies
 import helpers
 from colors import *
 from lists import *
-from gameParameters import backgroundImage, gameDisplay, display_height
-
-# Initialize and set clock
-pygame.init()
-clock = pygame.time.Clock()
-
-# Set static buttons
-pause_button = generalClass.RectButton(
-    (20, 50), message="Pause", inactive_color=gray, active_color=white,
-    action=helpers.pause_game)
-
-score_board = generalClass.GameScore((20, 20))
-
-enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2, points=5),
-                enemies.Enemy(speed=2), enemies.Enemy(speed=1)]
-
-game_score = 0
-funds = generalClass.Money((20, display_height - 60))
-
-tower_list = []
-missile_list = []
+from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
 
-for tower_location in tower_locations:  # See lists.py
-    location = tower_locations[tower_locations.index(tower_location)]
-    tower_list.append([
-        towerClass.TowerButton(     # 0 = Button
-            location, opt1_msg="basic", opt1_action="basic"),
-        towerClass.BasicTower(location),
-        towerClass.IceTower(location),
-        towerClass.FireTower(location),
-        towerClass.PoisonTower(location),
-        towerClass.DarkTower(location)])
-
-    missile_list.append([towerClass.BasicMissile(location)])
-
-
+# Start game loop
 def game_loop():
-    global game_score
+    # Set static buttons
+    pause_button = generalClass.Button(
+        (20, 50), message="Pause", color1=gray, color2=white,
+        action=helpers.pause_game)
+
+    # Set up game rules
+    score_board = generalClass.GameScore((20, 20))
+    funds = generalClass.Money((20, display_height - 90))
+    castle = generalClass.Castle((20, display_height - 60))
+    end_screen = generalClass.EndScreen()
+
+    # Set enemies
+    enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2, points=5),
+                    enemies.Enemy(speed=2), enemies.Enemy(speed=1)]
+
+    # fast tester enemies
+    # enemies_list = [enemies.Enemy(speed=10), enemies.Enemy(speed=10),
+    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
+    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
+    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
+    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10)]
+
+    # Set towers
+    tower_list = []
+    missile_list = []
+    for tower_location in tower_locations:  # See lists.py
+        location = tower_locations[tower_locations.index(tower_location)]
+        tower_list.append([
+            towerClass.TowerButton(  # 0 = Button
+                location, opt1_msg="basic", opt1_action="basic"),
+            towerClass.BasicTower(location),
+            towerClass.IceTower(location),
+            towerClass.FireTower(location),
+            towerClass.PoisonTower(location),
+            towerClass.DarkTower(location)])
+        missile_list.append([towerClass.BasicMissile(location)])
+
     while True:
 
         for event in pygame.event.get():
@@ -58,7 +61,10 @@ def game_loop():
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         for enemy in enemies_list:
-            enemy.move()
+            tower_damage = enemy.move()
+            if tower_damage:
+                if castle.hp > 0:
+                    castle.adjust(-tower_damage)
 
         for sub_list in tower_list:
             for tower in sub_list:
@@ -97,13 +103,17 @@ def game_loop():
                                     if cash:
                                         funds.adjust(cash)
 
-
         funds.draw()
+        castle.draw()
         score_board.draw()
         pause_button.draw()
-
         pygame.display.update()
         clock.tick(60)
+        if castle.game_over:
+            end_screen.score = score_board.score
+            end = end_screen.draw()
+            if end == "play":
+                game_loop()
 
 
 game_loop()
