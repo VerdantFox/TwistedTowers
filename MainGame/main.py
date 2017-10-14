@@ -5,7 +5,7 @@ import enemies
 import helpers
 from colors import *
 from lists import *
-from gameParameters import backgroundImage, gameDisplay
+from gameParameters import backgroundImage, gameDisplay, display_height
 
 # Initialize and set clock
 pygame.init()
@@ -22,6 +22,7 @@ enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2, points=5),
                 enemies.Enemy(speed=2), enemies.Enemy(speed=1)]
 
 game_score = 0
+funds = generalClass.Money((20, display_height - 60))
 
 tower_list = []
 missile_list = []
@@ -56,6 +57,9 @@ def game_loop():
 
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
+        for enemy in enemies_list:
+            enemy.move()
+
         for sub_list in tower_list:
             for tower in sub_list:
                 if not tower.destroy:
@@ -64,22 +68,38 @@ def game_loop():
                     tower_number = action_definitions.get(selected)
                     tower.draw()
                     if selected:
-                        sub_list[tower_number].destroy = False
-                        tower.destroy = True
-                        tower.option_selected = None
+                        new_tower = sub_list[tower_number]
+                        if selected == "sell":
+                            new_tower.destroy = False
+                            tower.destroy = True
+                            tower.option_selected = None
+                            funds.adjust(tower.sell)
+                        else:
+                            if new_tower.buy <= funds.cash:
+                                new_tower.destroy = False
+                                tower.destroy = True
+                                tower.option_selected = None
+                                funds.adjust(-new_tower.buy)
+                            else:
+                                tower.option_selected = None
+                                print("Not enough funds!")
                     if sub_list.index(tower) != 0:
                         missile = missile_list[tower_list.index(
                             sub_list)][0]
                         for enemy in enemies_list:
                             damage = missile.fire(tower, enemy)
                             if damage:
-                                points = enemy.take_damage(damage)
-                                if points:
-                                    score_board.score += points
+                                dead = enemy.take_damage(damage)
+                                if dead:
+                                    points, cash = dead
+                                    if points:
+                                        score_board.score += points
+                                    if cash:
+                                        funds.adjust(cash)
 
+
+        funds.draw()
         score_board.draw()
-        for enemy in enemies_list:
-            enemy.move()
         pause_button.draw()
 
         pygame.display.update()

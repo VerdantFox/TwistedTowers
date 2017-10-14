@@ -179,11 +179,9 @@ class BasicTower(TowerButton):
             opt4_action=opt4_action, opt5_msg=opt5_msg, opt5_action=opt5_action,
             main_color1=main_color1, main_color2=main_color2)
         self.image, self.image_width, self.image_height = basicTower1
-        self.radius = tower_range  # range          # To rename if possible
-
-        # self.center = pixel                         # 1x1pixel img at center
-        # self.rect = self.center.get_rect()
-        # self.rect.left, self.rect.top = location
+        self.radius = tower_range  # range
+        self.buy = 100
+        self.sell = 75
 
     def get_tower_image(self):
         gameDisplay.blit(
@@ -201,6 +199,8 @@ class IceTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.buy = 200
+        self.sell = 150
 
 
 class FireTower(BasicTower):
@@ -213,6 +213,8 @@ class FireTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.buy = 200
+        self.sell = 150
 
 
 class PoisonTower(BasicTower):
@@ -225,6 +227,8 @@ class PoisonTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.buy = 200
+        self.sell = 150
 
 
 class DarkTower(BasicTower):
@@ -237,6 +241,8 @@ class DarkTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.buy = 200
+        self.sell = 150
 
 
 class BasicMissile:
@@ -253,7 +259,7 @@ class BasicMissile:
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.fire_rate = 40
+        self.fire_rate = 100
         self.fire_counter = 0
         self.damage = 3
 
@@ -293,7 +299,6 @@ class BasicMissile:
                     self.lock_on = None
                     self.x, self.y = self._tower_location
                     if not enemy.destroy:
-                        print("Gotcha, bitch!")
                         return self.damage
 
 

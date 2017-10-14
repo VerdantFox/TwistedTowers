@@ -1,8 +1,8 @@
 import pygame
 
 
-basic1 = pygame.image.load('runner1.png')
-basic2 = pygame.image.load('runner2.png')
+basic1 = pygame.image.load('runner1.png'), 40, 40
+basic2 = pygame.image.load('runner2.png'), 40, 40
 
 basic_enemy = [basic1, basic2]
 
