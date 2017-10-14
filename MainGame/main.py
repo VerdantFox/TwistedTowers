@@ -36,16 +36,25 @@ def game_loop():
     tower_list = []
     missile_list = []
     for tower_location in tower_locations:  # See lists.py
-        location = tower_locations[tower_locations.index(tower_location)]
+        # index = tower_locations.index(tower_location)
+        # tower_location = tower_locations[index]
         tower_list.append([
             towerClass.TowerButton(  # 0 = Button
-                location, opt1_msg="basic", opt1_action="basic"),
-            towerClass.BasicTower(location),
-            towerClass.IceTower(location),
-            towerClass.FireTower(location),
-            towerClass.PoisonTower(location),
-            towerClass.DarkTower(location)])
-        missile_list.append([towerClass.BasicMissile(location)])
+                tower_location, opt1_msg="basic", opt1_action="basic"),
+            towerClass.BasicTower(tower_location),
+            towerClass.IceTower(tower_location),
+            towerClass.FireTower(tower_location),
+            towerClass.PoisonTower(tower_location),
+            towerClass.DarkTower(tower_location)])
+        missile_list.append([
+            None,
+            towerClass.BasicMissile(tower_location),
+            towerClass.IceMissile(tower_location),
+            towerClass.FireMissile(tower_location),
+            towerClass.PoisonMissile(tower_location),
+            towerClass.DarkMissile(tower_location)])
+    print(tower_list)
+    print(missile_list)
 
     while True:
 
@@ -61,43 +70,48 @@ def game_loop():
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         for enemy in enemies_list:
-            tower_damage = enemy.move()
-            if tower_damage:
+            castle_damage = enemy.move()
+            if castle_damage:
                 if castle.hp > 0:
-                    castle.adjust(-tower_damage)
+                    castle.adjust(-castle_damage)
 
-        for sub_list in tower_list:
-            for tower in sub_list:
-                if not tower.destroy:
-                    selected = tower.option_selected
-                    # See lists.py
-                    tower_number = action_definitions.get(selected)
-                    tower.draw()
+        for tower_location in tower_list:
+            for current_tower in tower_location:
+                if not current_tower.destroy:
+                    selected = current_tower.option_selected
+                    new_tower_index = actions.get(selected)  # See lists.py
+                    current_tower_index = tower_location.index(current_tower)
                     if selected:
-                        new_tower = sub_list[tower_number]
+                        new_tower = tower_location[new_tower_index]
                         if selected == "sell":
                             new_tower.destroy = False
-                            tower.destroy = True
-                            tower.option_selected = None
-                            funds.adjust(tower.sell)
+                            current_tower.destroy = True
+                            current_tower.option_selected = None
+                            funds.adjust(current_tower.sell)
                         else:
                             if new_tower.buy <= funds.cash:
                                 new_tower.destroy = False
-                                tower.destroy = True
-                                tower.option_selected = None
+                                current_tower.destroy = True
+                                current_tower.option_selected = None
                                 funds.adjust(-new_tower.buy)
                             else:
-                                tower.option_selected = None
+                                current_tower.option_selected = None
                                 print("Not enough funds!")
-                    if sub_list.index(tower) != 0:
-                        missile = missile_list[tower_list.index(
-                            sub_list)][0]
+                    current_tower.draw()
+
+                    if current_tower_index != 0:
+                        tower_position = tower_list.index(tower_location)
+                        missile = \
+                            missile_list[tower_position][current_tower_index]
                         for enemy in enemies_list:
-                            damage = missile.fire(tower, enemy)
-                            if damage:
-                                dead = enemy.take_damage(damage)
-                                if dead:
-                                    points, cash = dead
+                            hit = missile.shoot(current_tower, enemy)
+                            if hit:
+                                damage, specialty = hit
+                                if specialty:
+                                    print(specialty)
+                                kill = enemy.take_damage(damage)
+                                if kill:
+                                    points, cash = kill
                                     if points:
                                         score_board.score += points
                                     if cash:

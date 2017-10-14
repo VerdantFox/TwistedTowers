@@ -5,7 +5,7 @@ from gameParameters import gameDisplay
 from pics import pixel, basicTower1
 
 
-class TowerButton(pygame.sprite.Sprite):
+class TowerButton:
     """Base class for tower buttons (circular buttons)
 
     Attributes:
@@ -182,6 +182,7 @@ class BasicTower(TowerButton):
         self.radius = tower_range  # range
         self.buy = 100
         self.sell = 75
+        self.specialty = None
 
     def get_tower_image(self):
         gameDisplay.blit(
@@ -201,6 +202,7 @@ class IceTower(BasicTower):
             main_color2=main_color2)
         self.buy = 200
         self.sell = 150
+        self.specialty = "ice"
 
 
 class FireTower(BasicTower):
@@ -215,6 +217,7 @@ class FireTower(BasicTower):
             main_color2=main_color2)
         self.buy = 200
         self.sell = 150
+        self.specialty = "fire"
 
 
 class PoisonTower(BasicTower):
@@ -229,6 +232,7 @@ class PoisonTower(BasicTower):
             main_color2=main_color2)
         self.buy = 200
         self.sell = 150
+        self.specialty = "poison"
 
 
 class DarkTower(BasicTower):
@@ -243,13 +247,11 @@ class DarkTower(BasicTower):
             main_color2=main_color2)
         self.buy = 200
         self.sell = 150
+        self.specialty = "dark"
 
 
 class BasicMissile:
     def __init__(self, location):
-        super().__init__()
-        self.center = pixel  # 1x1pixel img at center
-        self.rect = self.center.get_rect()
         self.x, self.y = location
         x, y = location
         self.x = x
@@ -259,23 +261,25 @@ class BasicMissile:
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.fire_rate = 100
-        self.fire_counter = 0
+        self.shoot_rate = 100
+        self.shoot_counter = 0
+        self.missile_color = pink
         self.damage = 3
+        self.specialty = None
 
-    def fire(self, tower, enemy):
+    def shoot(self, tower, enemy):
         # Checks, need: fire_count at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
-        if self.fire_counter < 1:
+        if self.shoot_counter < 1:
             if not enemy.destroy:
                 if self.destroy is True:
                     if helpers.collision(tower, enemy):
                         if self.lock_on is None:
                             self.lock_on = enemy
                             self.destroy = False
-                            self.fire_counter = self.fire_rate
-        if self.fire_counter > 0:
-            self.fire_counter -= 1
+                            self.shoot_counter = self.shoot_rate
+        if self.shoot_counter > 0:
+            self.shoot_counter -= 1
 
         # Move missile towards locked on enemy by self.speed and redraw.
         if not self.destroy:
@@ -289,16 +293,47 @@ class BasicMissile:
                 if self.y > enemy.y:
                     self.y -= self.speed
                 pygame.draw.circle(
-                    gameDisplay, pink, (self.x, self.y), self.radius)
+                    gameDisplay, self.missile_color,
+                    (self.x, self.y), self.radius)
+                hit = self.hit(enemy)
+                if hit:
+                    return hit
 
-                # Check for collision between missile and enemy
-                # If collision to locked on target,
-                # destroy missile and set its location back to tower
-                if helpers.collision(self, enemy):
-                    self.destroy = True
-                    self.lock_on = None
-                    self.x, self.y = self._tower_location
-                    if not enemy.destroy:
-                        return self.damage
+    def hit(self, enemy):
+        # Check for collision between missile and enemy
+        # If collision to locked on target,
+        # destroy missile and set its location back to tower
+        if helpers.collision(self, enemy):
+            self.destroy = True
+            self.lock_on = None
+            self.x, self.y = self._tower_location
+            if not enemy.destroy:
+                return self.damage, self.specialty
 
 
+class IceMissile(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 5
+        self.specialty = "ice"
+
+
+class FireMissile(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 5
+        self.specialty = "fire"
+
+
+class PoisonMissile(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 5
+        self.specialty = "poison"
+
+
+class DarkMissile(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 5
+        self.specialty = "dark"

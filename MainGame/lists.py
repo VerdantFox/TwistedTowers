@@ -78,7 +78,7 @@ tower_locations = [
     (604, 483),
 ]
 
-action_definitions = {
+actions = {
     "sell": 0,
     "basic": 1,
     "ice": 2,
