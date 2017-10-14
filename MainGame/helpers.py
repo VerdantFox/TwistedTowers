@@ -1,6 +1,6 @@
 import pygame
 import generalClass
-from colors import *
+from definitions import *
 
 pygame.init()
 pause = False
@@ -49,4 +49,8 @@ def collision(object1, object2):
     y_distance = object1.y - object2.y
     distance_squared = x_distance ** 2 + y_distance ** 2
 
-    return distance_squared <= (object1.radius + object2.radius) ** 2
+    try:
+        return distance_squared <= \
+               (object1.fire_radius + object2.fire_radius) ** 2
+    except AttributeError:
+        return distance_squared <= (object1.radius + object2.radius) ** 2

@@ -1,6 +1,6 @@
 import pygame
 import helpers
-from colors import *
+from definitions import *
 from gameParameters import gameDisplay
 from pics import pixel, basicTower1
 
@@ -250,6 +250,7 @@ class DarkTower(BasicTower):
         self.specialty = "dark"
 
 
+# Deals up-front damage, reduced by armor
 class BasicMissile:
     def __init__(self, location):
         self.x, self.y = location
@@ -261,10 +262,10 @@ class BasicMissile:
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.shoot_rate = 100
+        self.shoot_rate = 3 * seconds
         self.shoot_counter = 0
-        self.missile_color = pink
-        self.damage = 3
+        self.missile_color = gray
+        self.damage = 5
         self.specialty = None
 
     def shoot(self, tower, enemy):
@@ -311,29 +312,41 @@ class BasicMissile:
                 return self.damage, self.specialty
 
 
+# Slows enemy and deals up-front damage reduced by armor
 class IceMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 5
+        self.damage = 6
+        self.missile_color = blue
         self.specialty = "ice"
 
 
+# Burns catches enemy on fire, dealing damage per second for 3 seconds
+# No up-front damage, DoT burn reduced by armor
+# Enemies on fire will catch other nearby enemies on fire
 class FireMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 5
+        self.damage = 0
+        self.missile_color = red
         self.specialty = "fire"
 
 
+# Deals armor piercing DoT every 5 seconds (no up-front damage)
+# Poison lasts indefinitely
 class PoisonMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 5
+        self.damage = 0
+        self.missile_color = green
         self.specialty = "poison"
+        self.shoot_rate = 5 * seconds
 
 
+# Deals quadruple damage (3/4 as armor piercing)
 class DarkMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 5
+        self.damage = 2
+        self.missile_color = purple
         self.specialty = "dark"

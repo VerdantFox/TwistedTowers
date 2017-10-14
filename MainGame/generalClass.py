@@ -1,5 +1,5 @@
 import pygame
-from colors import *
+from definitions import *
 from gameParameters import backgroundImage, gameDisplay, display_width, \
     display_height, clock
 # import main
@@ -174,9 +174,13 @@ class EndScreen:
         self.score_y = display_height // 2
         self.game_x = display_width // 2
         self.game_y = display_height // 4
+        self.time_x = display_width // 2
+        self.time_y = display_height - 100
         self.score = 0
+        self.time_elapsed = 0  # Game time approximation, based on frames (slow)
         self.game_font = pygame.font.SysFont("Comic Sans MS", 120)
         self.score_font = pygame.font.SysFont("Comic Sans MS", 80)
+        self.time_font = pygame.font.SysFont("Comic Sans MS", 40)
         self.text_color = black
         self.play_button = Button(
             (display_width // 3 - 100, display_height * 2 // 3),
@@ -190,6 +194,8 @@ class EndScreen:
         # pygame.mixer.music.stop()
         # pygame.mixer.Sound.play(castle_falls)
 
+        minutes_elapsed = self.time_elapsed // minutes
+        remaining_seconds = (self.time_elapsed % minutes) // seconds
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -198,11 +204,18 @@ class EndScreen:
 
             gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
+            # Draw "Game Over!" text
             self.set_text(self.game_x, self.game_y, "Game over!",
                           self.game_font)
+            # Draw "Score" text
             self.set_text(self.score_x, self.score_y,
                           "score: {}".format(self.score), self.score_font)
+            # Draw "Time elapsed" text
+            self.set_text(self.time_x, self.time_y, "Time: {0}:{1:02}".format(
+                    minutes_elapsed, remaining_seconds), self.time_font)
+            # Draw quit button
             self.quit_button.draw()
+            # Draw play button
             play = self.play_button.draw()
             if play == "play":
                 return play

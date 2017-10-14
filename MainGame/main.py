@@ -3,7 +3,7 @@ import generalClass
 import towerClass
 import enemies
 import helpers
-from colors import *
+from definitions import *
 from lists import *
 from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
@@ -20,24 +20,24 @@ def game_loop():
     funds = generalClass.Money((20, display_height - 90))
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
+    frames = 0
 
     # Set enemies
-    enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2, points=5),
-                    enemies.Enemy(speed=2), enemies.Enemy(speed=1)]
+    enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2),
+                    enemies.Enemy(speed=1), enemies.Enemy(speed=2)]
 
-    # fast tester enemies
+
+    # # fast tester enemies
     # enemies_list = [enemies.Enemy(speed=10), enemies.Enemy(speed=10),
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10)]
 
-    # Set towers
+    # Set towers and missiles
     tower_list = []
     missile_list = []
     for tower_location in tower_locations:  # See lists.py
-        # index = tower_locations.index(tower_location)
-        # tower_location = tower_locations[index]
         tower_list.append([
             towerClass.TowerButton(  # 0 = Button
                 tower_location, opt1_msg="basic", opt1_action="basic"),
@@ -53,11 +53,10 @@ def game_loop():
             towerClass.FireMissile(tower_location),
             towerClass.PoisonMissile(tower_location),
             towerClass.DarkMissile(tower_location)])
-    print(tower_list)
-    print(missile_list)
 
+    # Actual game loop
     while True:
-
+        frames += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -67,14 +66,30 @@ def game_loop():
                     helpers.pause_game()
             # print(event)
 
+        # show background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
+        # Draw and move enemies
+        # If enemies reach castle, damage castle
         for enemy in enemies_list:
             castle_damage = enemy.move()
+            if enemy.fire:
+                for adjacent in enemies_list:
+                    if adjacent != enemy:
+                        if helpers.collision(enemy, adjacent):
+                            if adjacent.fire_lockout == 0:
+                                print("catch other on fire")
+                                adjacent.fire = 3
+                                adjacent.burned_counter = 3
+                                adjacent.lockout = 4 * seconds
+                                adjacent.fire_lockout = 4 * seconds
+
             if castle_damage:
                 if castle.hp > 0:
                     castle.adjust(-castle_damage)
 
+        # Go through list of towers, drawing towers if not destroyed
+        # Then drawing missiles to match appropriate tower
         for tower_location in tower_list:
             for current_tower in tower_location:
                 if not current_tower.destroy:
@@ -107,15 +122,22 @@ def game_loop():
                             hit = missile.shoot(current_tower, enemy)
                             if hit:
                                 damage, specialty = hit
-                                if specialty:
-                                    print(specialty)
-                                kill = enemy.take_damage(damage)
-                                if kill:
-                                    points, cash = kill
-                                    if points:
-                                        score_board.score += points
-                                    if cash:
-                                        funds.adjust(cash)
+                                if specialty == "ice":
+                                    enemy.ice = 30
+                                if specialty == "poison":
+                                    enemy.poison = 5
+                                if specialty == "fire":
+                                    enemy.fire = 3
+                                    enemy.burned_counter = 3
+                                    enemy.fire_lockout = 4 * seconds
+                                if specialty == "dark":
+                                    enemy.dark = damage * 2
+                                enemy.take_damage(damage)
+                            kill = enemy.check_death()
+                            if kill:
+                                points, cash = kill
+                                score_board.score += points
+                                funds.adjust(cash)
 
         funds.draw()
         castle.draw()
@@ -125,6 +147,7 @@ def game_loop():
         clock.tick(60)
         if castle.game_over:
             end_screen.score = score_board.score
+            end_screen.time_elapsed = frames
             end = end_screen.draw()
             if end == "play":
                 game_loop()

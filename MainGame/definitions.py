@@ -1,3 +1,4 @@
+# Colors
 black = (0, 0, 0)
 gray = (96, 96, 96)
 white = (255, 255, 255)
@@ -18,3 +19,8 @@ teal = (0, 200, 200)
 bright_teal = (100, 255, 255)
 pink = (255, 0, 130)
 orange = (255, 110, 0)
+
+# Time
+seconds = 60
+minutes = 3600
+infinite = 1000000
