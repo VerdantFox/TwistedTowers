@@ -23,7 +23,7 @@ class Enemy:
         self.fire_radius = 20
         self.max_hp = hp
         self.hp = hp
-        self.armor = 10
+        self.armor = 20
         self.damage_reduced = (100 - self.armor) / 100
         self.destroy = False  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
@@ -113,6 +113,10 @@ class Enemy:
                 self.respawn_timer -= 1
             # If respawn timer reaches 0, respawn enemy and reset timer
             elif self.respawn_timer == 0:
+                self.poison = None
+                self.fire = None
+                self.ice = None
+                self.dark = None
                 self.destroy = False
                 self.x, self.y = path_nodes[0]
                 self.node = 0

@@ -2,7 +2,7 @@ import pygame
 import helpers
 from definitions import *
 from gameParameters import gameDisplay
-from pics import pixel, basicTower1
+from pics import basicTower1
 
 
 class TowerButton:
@@ -48,7 +48,6 @@ class TowerButton:
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
             opt5_msg_col=black, opt1_action=None, opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
-        pygame.sprite.Sprite.__init__(self)
         super().__init__()
         self._button_radius = button_radius
         self._mouse = None
@@ -165,7 +164,7 @@ class TowerButton:
 
 class BasicTower(TowerButton):
     def __init__(
-            self, location, tower_range=100, destroy=True,
+            self, location, tower_range=125, destroy=True,
             option_count=5, opt1_msg="Sell", opt1_action="sell",
             opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
             opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
@@ -192,7 +191,7 @@ class BasicTower(TowerButton):
 
 class IceTower(BasicTower):
     def __init__(
-            self, location, tower_range=100,
+            self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
             main_color1=blue, main_color2=bright_blue):
         super().__init__(
@@ -207,7 +206,7 @@ class IceTower(BasicTower):
 
 class FireTower(BasicTower):
     def __init__(
-            self, location, tower_range=100,
+            self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
             main_color1=red, main_color2=bright_red):
         super().__init__(
@@ -222,7 +221,7 @@ class FireTower(BasicTower):
 
 class PoisonTower(BasicTower):
     def __init__(
-            self, location, tower_range=100,
+            self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
             main_color1=green, main_color2=bright_green):
         super().__init__(
@@ -237,7 +236,7 @@ class PoisonTower(BasicTower):
 
 class DarkTower(BasicTower):
     def __init__(
-            self, location, tower_range=100,
+            self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
             main_color1=purple, main_color2=bright_purple):
         super().__init__(
