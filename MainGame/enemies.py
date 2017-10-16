@@ -1,7 +1,7 @@
 import pygame
 import random
 from gameParameters import gameDisplay
-from pics import basic_enemy
+from pics import orc_left
 from definitions import *
 from lists import *
 
@@ -9,7 +9,7 @@ from lists import *
 class Enemy:
     def __init__(self, respawn_wait=120, hp=30, points=1, cash=25,
                  speed=1, slow=0, frames_to_picswap=10, location=path_nodes[0]):
-        self.image, self.image_width, self.image_height = basic_enemy[0]
+        self.image, self.image_width, self.image_height = orc_left[0]
         self.x, self.y = location
         self.speed = speed  # Max speed wiggle-room = 10
         self.slow_initial = slow
@@ -47,6 +47,7 @@ class Enemy:
         # Dark specialties
         self.dark = False
         self.dark_timer = 2 * seconds
+        self.frame = 0
 
     def move(self):
         if not self.destroy:
@@ -64,13 +65,14 @@ class Enemy:
 
                 # Running motion
                 if self.frame_counter < 1:
-                    if self.image == basic_enemy[0][0]:
-                        self.image = basic_enemy[1][0]
-                    elif self.image == basic_enemy[1][0]:
-                        self.image = basic_enemy[0][0]
+                    if self.frame < 6:
+                        self.image = orc_left[self.frame][0]
+                        self.frame += 1
+                        if self.frame > 5:
+                            self.frame = 0
                     self.frame_counter = self.frames_to_picswap
                 if self.frame_counter > 0:
-                    self.frame_counter -= 1
+                    self.frame_counter -= self.speed
                 self.slow_countdown -= self.slow
 
             # Don't move if slow_countdown reaches zero, reset countdown
