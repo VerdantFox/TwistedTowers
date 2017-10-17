@@ -267,7 +267,7 @@ class BasicMissile:
         self.damage = 5
         self.specialty = None
 
-    def shoot(self, tower, enemy):
+    def lock_enemy(self, tower, enemy):
         # Checks, need: fire_count at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:

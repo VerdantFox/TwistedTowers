@@ -96,7 +96,7 @@ class Enemy:
             # Switch to next node in path if at current node goal
             if self.next_node[0] - 10 < self.x < self.next_node[0] + 10:
                 if self.next_node[1] - 10 < self.y < self.next_node[1] + 10:
-                    if self.node < 9:
+                    if self.node < len(path_nodes) - 2:
                         self.node += 1
                         node_x, node_y = path_nodes[self.node]  # see lists.py
                         # Introduce some randomness to node locations
@@ -104,8 +104,14 @@ class Enemy:
                         node_y += random.randrange(-15, 15)
                         self.next_node = (node_x, node_y)  # See lists
                     else:
+                        # Destroy and remove all affects, move to start of path
                         self.destroy = True
+                        self.poison = None
+                        self.ice = None
+                        self.fire = None
+                        self.dark = None
                         self.x, self.y = path_nodes[0]
+                        # Return damage to castle
                         return 1
 
         # If enemy is dead

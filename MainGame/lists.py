@@ -1,18 +1,22 @@
 # Path_nodes are enemy walking path from left to right
 path_nodes = [
-    (-30, 440),     # 0
-    (180, 420),     # 1
-    (220, 374),     # 2
-    (262, 190),     # 3
-    (438, 190),     # 4
-    (485, 320),     # 5
-    (516, 542),     # 6
-    (684, 526),     # 7
-    (696, 236),     # 8
-    (785, 170),     # 9
-    (800, 170)      # 10 (past castle
-]
+    (-30, 440),
+    (180, 420),
+    (220, 374),
+    (235, 210),
+    (262, 190),
+    (438, 190),
+    (485, 320),
+    (485, 500),
+    (516, 542),
+    (666, 542),
+    (684, 510),
+    (696, 236),
+    (705, 200),
+    (785, 170),
+    (800, 170)]
 
+print(len(path_nodes))
 # # Tower_locations are arranged bottom left to right then top left to right
 # tower_locations = [
 #     # Bottom first
