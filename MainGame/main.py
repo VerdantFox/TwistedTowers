@@ -26,7 +26,6 @@ def game_loop():
     enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2),
                     enemies.Enemy(speed=1), enemies.Enemy(speed=2)]
 
-
     # # fast tester enemies
     # enemies_list = [enemies.Enemy(speed=10), enemies.Enemy(speed=10),
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
@@ -64,7 +63,7 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     helpers.pause_game()
-            print(event)
+            # print(event)
 
         # show background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -119,7 +118,8 @@ def game_loop():
                         missile = \
                             missile_list[tower_position][current_tower_index]
                         for enemy in enemies_list:
-                            hit = missile.lock_enemy(current_tower, enemy)
+                            hit = missile.lock_enemy(
+                                current_tower, enemy)
                             if hit:
                                 damage, specialty = hit
                                 if specialty == "ice":

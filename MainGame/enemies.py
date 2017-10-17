@@ -149,7 +149,7 @@ class Enemy:
             self.destroy = True
 
     def health_bar(self):
-        max_width = 10
+        max_width = self.image_width // 2
         if self.hp >= 0:
             damage_width = int(max_width * self.hp // self.max_hp)
         else:

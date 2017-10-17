@@ -60,7 +60,8 @@ class TowerButton:
         self._options_countdown = 0
         self.set_options_timer = set_options_timer
         self.option_count = option_count
-        self.lockout = 10
+        self.lockout = 20
+        self.lockout_timer = self.lockout
         # List == x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
         # Circle list index 0 refers to main circle (tower location)
         self.circle_list = [
@@ -89,10 +90,10 @@ class TowerButton:
         perform action if clicked,
         show options for a period of set_option_timer"""
 
-        if self.lockout > 0:
-            self.lockout -= 1
+        if self.lockout_timer > 0:
+            self.lockout_timer -= 1
         # Parameter for killing tower (destroyed if replaced or sold)
-        if self.destroy or self.lockout > 0:
+        if self.destroy or self.lockout_timer > 0:
             return None
 
         self._mouse = pygame.mouse.get_pos()
@@ -126,7 +127,7 @@ class TowerButton:
                         else:
                             if action is not None:
                                 self.option_selected = action
-                                self.lockout = 10
+                                self.lockout_timer = 10
                                 # print(self.option_selected)
                                 # self.destroyed = True
 
@@ -280,7 +281,10 @@ class BasicMissile:
                             self.shoot_counter = self.shoot_rate
         if self.shoot_counter > 0:
             self.shoot_counter -= 1
+        hit = self.shoot(enemy)
+        return hit
 
+    def shoot(self, enemy):
         # Move missile towards locked on enemy by self.speed and redraw.
         if not self.destroy:
             if self.lock_on == enemy:
@@ -340,6 +344,24 @@ class PoisonMissile(BasicMissile):
         self.missile_color = green
         self.specialty = "poison"
         self.shoot_rate = 5 * seconds
+
+    def lock_enemy(self, tower, enemy):
+        # Checks, need: fire_count at 0, enemy alive, no missile alive,
+        # Then, if enemy in range of tower, un-destroy missile
+        if self.shoot_counter < 1:
+            # Only lock-on if not poisoned
+            if enemy.poison is None:
+                if not enemy.destroy:
+                    if self.destroy is True:
+                        if helpers.collision(tower, enemy):
+                            if self.lock_on is None:
+                                self.lock_on = enemy
+                                self.destroy = False
+                                self.shoot_counter = self.shoot_rate
+        if self.shoot_counter > 0:
+            self.shoot_counter -= 1
+        hit = self.shoot(enemy)
+        return hit
 
 
 # Deals quadruple damage (3/4 as armor piercing)
