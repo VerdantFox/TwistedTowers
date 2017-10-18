@@ -1,7 +1,7 @@
 import pygame
 import random
 from gameParameters import gameDisplay
-from pics import orc_left
+from pics import orc_left, fire_pic, ice_pic, poison_pic
 from definitions import *
 from lists import *
 
@@ -9,37 +9,52 @@ from lists import *
 class Enemy:
     def __init__(self, respawn_wait=120, hp=30, points=1, cash=25,
                  speed=1, slow=0, frames_to_picswap=10, location=path_nodes[0]):
-        self.image, self.image_width, self.image_height = orc_left[0]
+
+        # Position and movement
         self.x, self.y = location
         self.speed = speed  # Max speed wiggle-room = 10
         self.slow_initial = slow
         self.slow = slow
         self.slow_countdown = slow
+        self.right = False
+        self.left = False
+        self.up = False
+        self.down = False
         self.next_node = path_nodes[0]  # see lists.py
         self.node = 0
+
+        # Image manipulation
+        self.image, self.image_width, self.image_height = orc_left[0]
         self.frames_to_picswap = frames_to_picswap
         self.frame_counter = 0
+
+        # Interaction with other objects
         self.radius = 5
         self.fire_radius = 20
+
+        # hp manipulation
         self.max_hp = hp
         self.hp = hp
         self.armor = 20
         self.damage_reduced = (100 - self.armor) / 100
+
+        # Death and destruction ;-)
         self.destroy = False  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
         self.points = points
         self.cash = cash
         self.respawn_wait = respawn_wait
         self.respawn_timer = respawn_wait
+
         # Ice specialties
         self.ice = None
         self.ice_counter = 2 * seconds
         self.ice_countdown = self.ice_counter
         # Fire specialties
         self.fire = None
-        self.burned_counter = 3
+        self.burned_counter = 0
         self.fire_countdown = 1 * seconds
-        self.fire_lockout = 4 * seconds
+        self.fire_lockout = 5 * seconds
         # Poison specialties
         self.poison = None
         self.poison_tick = 0
@@ -56,12 +71,16 @@ class Enemy:
                 # Move towards node by self.speed.
                 if self.x < self.next_node[0]:
                     self.x += self.speed
+                    self.right = True
                 if self.x > self.next_node[0]:
                     self.x -= self.speed
+                    self.left = True
                 if self.y < self.next_node[1]:
                     self.y += self.speed
+                    self.up = True
                 if self.y > self.next_node[1]:
                     self.y -= self.speed
+                    self.down = True
 
                 # Running motion
                 if self.frame_counter < 1:
@@ -133,6 +152,16 @@ class Enemy:
                 self.respawn_timer = self.respawn_wait
 
     def show(self):
+        if self.poison:
+            gameDisplay.blit(
+                poison_pic[0], (self.x - poison_pic[1]*3/4,
+                                self.y - 20))
+        if self.fire:
+            gameDisplay.blit(
+                fire_pic[0], (self.x, self.y - self.image_height // 2 - 20))
+        if self.ice:
+            gameDisplay.blit(
+                ice_pic[0], (self.x, self.y))
         gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                       self.y - self.image_height // 2))
         self.health_bar()
@@ -179,7 +208,6 @@ class Enemy:
         if self.burned_counter > 0:
             if self.fire_countdown == 0:
                 self.take_damage(amount)
-                print("Took fire damage")
                 self.fire_countdown = 1 * seconds
                 self.burned_counter -= 1
             else:

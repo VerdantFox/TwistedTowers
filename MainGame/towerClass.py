@@ -200,7 +200,7 @@ class IceTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
-        self.buy = 200
+        self.buy = 100
         self.sell = 150
         self.specialty = "ice"
 
@@ -215,7 +215,7 @@ class FireTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
-        self.buy = 200
+        self.buy = 100
         self.sell = 150
         self.specialty = "fire"
 
@@ -230,7 +230,7 @@ class PoisonTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
-        self.buy = 200
+        self.buy = 100
         self.sell = 150
         self.specialty = "poison"
 
@@ -245,7 +245,7 @@ class DarkTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
-        self.buy = 200
+        self.buy = 100
         self.sell = 150
         self.specialty = "dark"
 
@@ -262,14 +262,14 @@ class BasicMissile:
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.shoot_rate = 3 * seconds
+        self.shoot_rate = 5 * seconds
         self.shoot_counter = 0
         self.missile_color = gray
         self.damage = 5
         self.specialty = None
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: fire_count at 0, enemy alive, no missile alive,
+        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
             if not enemy.destroy:
@@ -334,6 +334,24 @@ class FireMissile(BasicMissile):
         self.missile_color = red
         self.specialty = "fire"
 
+    def lock_enemy(self, tower, enemy):
+        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
+        # Then, if enemy in range of tower, un-destroy missile
+        if self.shoot_counter < 1:
+            # Only lock-on if not freshly burned
+            if enemy.burned_counter < 2:
+                if not enemy.destroy:
+                    if self.destroy is True:
+                        if helpers.collision(tower, enemy):
+                            if self.lock_on is None:
+                                self.lock_on = enemy
+                                self.destroy = False
+                                self.shoot_counter = self.shoot_rate
+        if self.shoot_counter > 0:
+            self.shoot_counter -= 1
+        hit = self.shoot(enemy)
+        return hit
+
 
 # Deals armor piercing DoT every 5 seconds (no up-front damage)
 # Poison lasts indefinitely
@@ -343,10 +361,10 @@ class PoisonMissile(BasicMissile):
         self.damage = 0
         self.missile_color = green
         self.specialty = "poison"
-        self.shoot_rate = 5 * seconds
+        self.shoot_rate = 8 * seconds
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: fire_count at 0, enemy alive, no missile alive,
+        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
             # Only lock-on if not poisoned

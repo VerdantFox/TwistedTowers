@@ -16,3 +16,7 @@ orc5 = pygame.image.load('Enemies/orcRIGHT5.png'), 50, 58
 orc6 = pygame.image.load('Enemies/orcRIGHT6.png'), 50, 58
 
 orc_left = [orc1, orc2, orc3, orc4, orc5, orc6]
+
+fire_pic = pygame.image.load('Enemies/fire40.png'), 32, 40
+ice_pic = pygame.image.load('Enemies/ice50.png'), 50, 20
+poison_pic = pygame.image.load('Enemies/poisoncloud60.png'), 60, 24

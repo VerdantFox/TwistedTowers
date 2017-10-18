@@ -77,11 +77,9 @@ def game_loop():
                     if adjacent != enemy:
                         if helpers.collision(enemy, adjacent):
                             if adjacent.fire_lockout == 0:
-                                print("catch other on fire")
                                 adjacent.fire = 3
                                 adjacent.burned_counter = 3
-                                adjacent.lockout = 4 * seconds
-                                adjacent.fire_lockout = 4 * seconds
+                                adjacent.fire_lockout = 4.5 * seconds
 
             if castle_damage:
                 if castle.hp > 0:
@@ -129,7 +127,7 @@ def game_loop():
                                 if specialty == "fire":
                                     enemy.fire = 3
                                     enemy.burned_counter = 3
-                                    enemy.fire_lockout = 4 * seconds
+                                    enemy.fire_lockout = 4.5 * seconds
                                 if specialty == "dark":
                                     enemy.dark = damage * 2
                                 enemy.take_damage(damage)
