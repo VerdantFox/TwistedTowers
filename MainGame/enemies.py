@@ -51,10 +51,11 @@ class Enemy:
         self.ice_counter = 2 * seconds
         self.ice_countdown = self.ice_counter
         # Fire specialties
+        self.fireball = False
         self.fire = None
         self.burned_counter = 0
         self.fire_countdown = 1 * seconds
-        self.fire_lockout = 5 * seconds
+        self.fire_lockout = 3 * seconds
         # Poison specialties
         self.poison = None
         self.poison_tick = 0
@@ -128,6 +129,7 @@ class Enemy:
                         self.poison = None
                         self.ice = None
                         self.fire = None
+                        self.fireball = None
                         self.dark = None
                         self.x, self.y = path_nodes[0]
                         # Return damage to castle
@@ -142,6 +144,7 @@ class Enemy:
             elif self.respawn_timer == 0:
                 self.poison = None
                 self.fire = None
+                self.fireball = None
                 self.ice = None
                 self.dark = None
                 self.destroy = False
@@ -214,6 +217,7 @@ class Enemy:
                 self.fire_countdown -= 1
         else:
             self.fire = None
+            self.fireball = False
 
     def poisoned(self, damage_tick):
         if self.poison_tick == 0:

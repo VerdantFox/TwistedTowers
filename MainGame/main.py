@@ -72,14 +72,14 @@ def game_loop():
         # If enemies reach castle, damage castle
         for enemy in enemies_list:
             castle_damage = enemy.move()
-            if enemy.fire:
+            if enemy.fireball:
                 for adjacent in enemies_list:
                     if adjacent != enemy:
                         if helpers.collision(enemy, adjacent):
                             if adjacent.fire_lockout == 0:
                                 adjacent.fire = 3
                                 adjacent.burned_counter = 3
-                                adjacent.fire_lockout = 4.5 * seconds
+                                adjacent.fire_lockout = 3 * seconds
 
             if castle_damage:
                 if castle.hp > 0:
@@ -125,9 +125,10 @@ def game_loop():
                                 if specialty == "poison":
                                     enemy.poison = 5
                                 if specialty == "fire":
+                                    enemy.fireball = True
                                     enemy.fire = 3
                                     enemy.burned_counter = 3
-                                    enemy.fire_lockout = 4.5 * seconds
+                                    enemy.fire_lockout = 3 * seconds
                                 if specialty == "dark":
                                     enemy.dark = damage * 2
                                 enemy.take_damage(damage)
