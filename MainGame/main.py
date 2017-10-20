@@ -22,9 +22,12 @@ def game_loop():
     end_screen = generalClass.EndScreen()
     frames = 0
 
+    # # Single enemy
+    # enemies_list = [enemies.Enemy(speed=1)]
+
     # Set enemies
-    enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=2),
-                    enemies.Enemy(speed=1), enemies.Enemy(speed=2)]
+    enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=1),
+                    enemies.Enemy(speed=1), enemies.Enemy(speed=1)]
 
     # # fast tester enemies
     # enemies_list = [enemies.Enemy(speed=10), enemies.Enemy(speed=10),

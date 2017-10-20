@@ -1,7 +1,7 @@
 import pygame
 import random
 from gameParameters import gameDisplay
-from pics import orc_left, fire_pic, ice_pic, poison_pic
+from pics import orc_list, fire_pic, ice_pic, poison_pic
 from definitions import *
 from lists import *
 
@@ -24,7 +24,7 @@ class Enemy:
         self.node = 0
 
         # Image manipulation
-        self.image, self.image_width, self.image_height = orc_left[0]
+        self.image, self.image_width, self.image_height = orc_list[0][0]
         self.frames_to_picswap = frames_to_picswap
         self.frame_counter = 0
 
@@ -78,22 +78,45 @@ class Enemy:
                     self.left = True
                 if self.y < self.next_node[1]:
                     self.y += self.speed
-                    self.up = True
+                    self.down = True
                 if self.y > self.next_node[1]:
                     self.y -= self.speed
-                    self.down = True
+                    self.up = True
 
-                # Running motion
+                # Change walking frame if frame_counter reaches 0
                 if self.frame_counter < 1:
-                    if self.frame < 6:
-                        self.image = orc_left[self.frame][0]
-                        self.frame += 1
-                        if self.frame > 5:
-                            self.frame = 0
+                    # Determine direction
+                    direction = 2  # Default is right
+                    if self.down and not self.right:
+                        direction = 0
+                        # print("down")
+                    if self.down and self.right:
+                        direction = 1
+                        # print("down-right")
+                    if self.right and not (self.up or self.down):
+                        direction = 2
+                        # print("right")
+                    if self.up and self.right:
+                        direction = 3
+                        # print("up-right")
+                    if self.up and not self.right:
+                        direction = 4
+                        # print("up")
+                    # Change walking frame in direction
+                    self.image = orc_list[direction][self.frame][0]
+
+                    self.frame += 1
+                    if self.frame > len(orc_list[0]) - 1:
+                        self.frame = 0
                     self.frame_counter = self.frames_to_picswap
                 if self.frame_counter > 0:
                     self.frame_counter -= self.speed
                 self.slow_countdown -= self.slow
+
+                self.right = False
+                self.left = False
+                self.up = False
+                self.down = False
 
             # Don't move if slow_countdown reaches zero, reset countdown
             elif self.slow_countdown <= 0:
@@ -145,6 +168,7 @@ class Enemy:
                 self.poison = None
                 self.fire = None
                 self.fireball = None
+                self.burned_counter = 0
                 self.ice = None
                 self.dark = None
                 self.destroy = False
