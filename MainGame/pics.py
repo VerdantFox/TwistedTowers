@@ -8,59 +8,59 @@ ice_pic = pygame.image.load('Enemies/effects/ice50.png'), 50, 20
 poison_pic = pygame.image.load('Enemies/effects/poisoncloud60.png'), 60, 24
 
 # Orc down
-orcdown1 = pygame.image.load('Enemies/orc/sionDOWN1.png'), 60, 60
-orcdown2 = pygame.image.load('Enemies/orc/sionDOWN2.png'), 60, 60
-orcdown3 = pygame.image.load('Enemies/orc/sionDOWN3.png'), 60, 60
-orcdown4 = pygame.image.load('Enemies/orc/sionDOWN4.png'), 60, 60
-orcdown5 = pygame.image.load('Enemies/orc/sionDOWN5.png'), 60, 60
-orcdown6 = pygame.image.load('Enemies/orc/sionDOWN6.png'), 60, 60
-orcdown7 = pygame.image.load('Enemies/orc/sionDOWN7.png'), 60, 60
-orcdown8 = pygame.image.load('Enemies/orc/sionDOWN8.png'), 60, 60
-orcdown9 = pygame.image.load('Enemies/orc/sionDOWN9.png'), 60, 60
+orcdown1 = pygame.image.load('Enemies/orc/sionDOWN1.png')
+orcdown2 = pygame.image.load('Enemies/orc/sionDOWN2.png')
+orcdown3 = pygame.image.load('Enemies/orc/sionDOWN3.png')
+orcdown4 = pygame.image.load('Enemies/orc/sionDOWN4.png')
+orcdown5 = pygame.image.load('Enemies/orc/sionDOWN5.png')
+orcdown6 = pygame.image.load('Enemies/orc/sionDOWN6.png')
+orcdown7 = pygame.image.load('Enemies/orc/sionDOWN7.png')
+orcdown8 = pygame.image.load('Enemies/orc/sionDOWN8.png')
+orcdown9 = pygame.image.load('Enemies/orc/sionDOWN9.png')
 
 # orc down_right
-orcdownright1 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT1.png'), 60, 60
-orcdownright2 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT2.png'), 60, 60
-orcdownright3 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT3.png'), 60, 60
-orcdownright4 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT4.png'), 60, 60
-orcdownright5 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT5.png'), 60, 60
-orcdownright6 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT6.png'), 60, 60
-orcdownright7 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT7.png'), 60, 60
-orcdownright8 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT8.png'), 60, 60
-orcdownright9 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT9.png'), 60, 60
+orcdownright1 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT1.png')
+orcdownright2 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT2.png')
+orcdownright3 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT3.png')
+orcdownright4 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT4.png')
+orcdownright5 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT5.png')
+orcdownright6 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT6.png')
+orcdownright7 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT7.png')
+orcdownright8 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT8.png')
+orcdownright9 = pygame.image.load('Enemies/orc/sionDOWN_RIGHT9.png')
 
 # orc right
-orcright1 = pygame.image.load('Enemies/orc/sionRIGHT1.png'), 60, 60
-orcright2 = pygame.image.load('Enemies/orc/sionRIGHT2.png'), 60, 60
-orcright3 = pygame.image.load('Enemies/orc/sionRIGHT3.png'), 60, 60
-orcright4 = pygame.image.load('Enemies/orc/sionRIGHT4.png'), 60, 60
-orcright5 = pygame.image.load('Enemies/orc/sionRIGHT5.png'), 60, 60
-orcright6 = pygame.image.load('Enemies/orc/sionRIGHT6.png'), 60, 60
-orcright7 = pygame.image.load('Enemies/orc/sionRIGHT7.png'), 60, 60
-orcright8 = pygame.image.load('Enemies/orc/sionRIGHT8.png'), 60, 60
-orcright9 = pygame.image.load('Enemies/orc/sionRIGHT9.png'), 60, 60
+orcright1 = pygame.image.load('Enemies/orc/sionRIGHT1.png')
+orcright2 = pygame.image.load('Enemies/orc/sionRIGHT2.png')
+orcright3 = pygame.image.load('Enemies/orc/sionRIGHT3.png')
+orcright4 = pygame.image.load('Enemies/orc/sionRIGHT4.png')
+orcright5 = pygame.image.load('Enemies/orc/sionRIGHT5.png')
+orcright6 = pygame.image.load('Enemies/orc/sionRIGHT6.png')
+orcright7 = pygame.image.load('Enemies/orc/sionRIGHT7.png')
+orcright8 = pygame.image.load('Enemies/orc/sionRIGHT8.png')
+orcright9 = pygame.image.load('Enemies/orc/sionRIGHT9.png')
 
 # orc up_right
-orcupright1 = pygame.image.load('Enemies/orc/sionUP_RIGHT1.png'), 60, 60
-orcupright2 = pygame.image.load('Enemies/orc/sionUP_RIGHT2.png'), 60, 60
-orcupright3 = pygame.image.load('Enemies/orc/sionUP_RIGHT3.png'), 60, 60
-orcupright4 = pygame.image.load('Enemies/orc/sionUP_RIGHT4.png'), 60, 60
-orcupright5 = pygame.image.load('Enemies/orc/sionUP_RIGHT5.png'), 60, 60
-orcupright6 = pygame.image.load('Enemies/orc/sionUP_RIGHT6.png'), 60, 60
-orcupright7 = pygame.image.load('Enemies/orc/sionUP_RIGHT7.png'), 60, 60
-orcupright8 = pygame.image.load('Enemies/orc/sionUP_RIGHT8.png'), 60, 60
-orcupright9 = pygame.image.load('Enemies/orc/sionUP_RIGHT9.png'), 60, 60
+orcupright1 = pygame.image.load('Enemies/orc/sionUP_RIGHT1.png')
+orcupright2 = pygame.image.load('Enemies/orc/sionUP_RIGHT2.png')
+orcupright3 = pygame.image.load('Enemies/orc/sionUP_RIGHT3.png')
+orcupright4 = pygame.image.load('Enemies/orc/sionUP_RIGHT4.png')
+orcupright5 = pygame.image.load('Enemies/orc/sionUP_RIGHT5.png')
+orcupright6 = pygame.image.load('Enemies/orc/sionUP_RIGHT6.png')
+orcupright7 = pygame.image.load('Enemies/orc/sionUP_RIGHT7.png')
+orcupright8 = pygame.image.load('Enemies/orc/sionUP_RIGHT8.png')
+orcupright9 = pygame.image.load('Enemies/orc/sionUP_RIGHT9.png')
 
 # orc up
-orcup1 = pygame.image.load('Enemies/orc/sionUP1.png'), 60, 60
-orcup2 = pygame.image.load('Enemies/orc/sionUP2.png'), 60, 60
-orcup3 = pygame.image.load('Enemies/orc/sionUP3.png'), 60, 60
-orcup4 = pygame.image.load('Enemies/orc/sionUP4.png'), 60, 60
-orcup5 = pygame.image.load('Enemies/orc/sionUP5.png'), 60, 60
-orcup6 = pygame.image.load('Enemies/orc/sionUP6.png'), 60, 60
-orcup7 = pygame.image.load('Enemies/orc/sionUP7.png'), 60, 60
-orcup8 = pygame.image.load('Enemies/orc/sionUP8.png'), 60, 60
-orcup9 = pygame.image.load('Enemies/orc/sionUP9.png'), 60, 60
+orcup1 = pygame.image.load('Enemies/orc/sionUP1.png')
+orcup2 = pygame.image.load('Enemies/orc/sionUP2.png')
+orcup3 = pygame.image.load('Enemies/orc/sionUP3.png')
+orcup4 = pygame.image.load('Enemies/orc/sionUP4.png')
+orcup5 = pygame.image.load('Enemies/orc/sionUP5.png')
+orcup6 = pygame.image.load('Enemies/orc/sionUP6.png')
+orcup7 = pygame.image.load('Enemies/orc/sionUP7.png')
+orcup8 = pygame.image.load('Enemies/orc/sionUP8.png')
+orcup9 = pygame.image.load('Enemies/orc/sionUP9.png')
 
 orc_list = [
     # down = 0

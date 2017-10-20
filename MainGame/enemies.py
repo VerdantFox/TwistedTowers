@@ -24,7 +24,9 @@ class Enemy:
         self.node = 0
 
         # Image manipulation
-        self.image, self.image_width, self.image_height = orc_list[0][0]
+        self.image = orc_list[0][0]
+        self.image_width = 60
+        self.image_height = 60
         self.frames_to_picswap = frames_to_picswap
         self.frame_counter = 0
 
@@ -89,21 +91,16 @@ class Enemy:
                     direction = 2  # Default is right
                     if self.down and not self.right:
                         direction = 0
-                        # print("down")
                     if self.down and self.right:
                         direction = 1
-                        # print("down-right")
                     if self.right and not (self.up or self.down):
                         direction = 2
-                        # print("right")
                     if self.up and self.right:
                         direction = 3
-                        # print("up-right")
                     if self.up and not self.right:
                         direction = 4
-                        # print("up")
                     # Change walking frame in direction
-                    self.image = orc_list[direction][self.frame][0]
+                    self.image = orc_list[direction][self.frame]
 
                     self.frame += 1
                     if self.frame > len(orc_list[0]) - 1:
