@@ -87,6 +87,9 @@ class GameScore:
                             (self.y + self._height // 2))
         gameDisplay.blit(text_surface, text_rect)
 
+    def adjust(self, amount):
+        self.score += amount
+
 
 class Money:
     def __init__(self, location, width=90, height=30, start_cash=400,

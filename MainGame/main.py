@@ -10,6 +10,8 @@ from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
 # Start game loop
 def game_loop():
+
+    # castle_damage = None
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", color1=gray, color2=white,
@@ -37,8 +39,52 @@ def game_loop():
     #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10)]
 
     # Set towers and missiles
-    tower_list = []
-    missile_list = []
+    bot_tower_list = []
+    bot_missile_list = []
+    top_tower_list = []
+    top_missile_list = []
+
+    set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
+    set_towers(top_tower_locations, top_tower_list, top_missile_list)
+
+    # Actual game loop
+    while True:
+        frames += 1
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    helpers.pause_game()
+            # print(event)
+
+        # Draw background
+        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+        # Draw top towers
+        draw_towers(top_tower_list, top_missile_list, funds,
+                    score_board, enemies_list)
+        # Draw enemies
+        draw_enemies(enemies_list, castle)
+        # Draw bot towers
+        draw_towers(bot_tower_list, bot_missile_list, funds,
+                    score_board, enemies_list)
+
+        funds.draw()
+        castle.draw()
+        score_board.draw()
+        pause_button.draw()
+        pygame.display.update()
+        clock.tick(60)
+        if castle.game_over:
+            end_screen.score = score_board.score
+            end_screen.time_elapsed = frames
+            end = end_screen.draw()
+            if end == "play":
+                game_loop()
+
+
+def set_towers(tower_locations, tower_list, missile_list):
     for tower_location in tower_locations:  # See lists.py
         tower_list.append([
             towerClass.TowerButton(  # 0 = Button
@@ -56,55 +102,8 @@ def game_loop():
             towerClass.PoisonMissile(tower_location),
             towerClass.DarkMissile(tower_location)])
 
-    # Actual game loop
-    while True:
-        frames += 1
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    helpers.pause_game()
-            # print(event)
 
-        # show background
-        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
-
-        # Draw and move enemies
-        # If enemies reach castle, damage castle
-        for enemy in enemies_list:
-            castle_damage = enemy.move()
-            if enemy.fireball:
-                for adjacent in enemies_list:
-                    if adjacent != enemy:
-                        if helpers.collision(enemy, adjacent):
-                            if adjacent.fire_lockout == 0:
-                                adjacent.fire = 3
-                                adjacent.burned_counter = 3
-                                adjacent.fire_lockout = 3 * seconds
-
-            if castle_damage:
-                if castle.hp > 0:
-                    castle.adjust(-castle_damage)
-
-        set_towers(tower_list, missile_list, funds, score_board, enemies_list)
-
-        funds.draw()
-        castle.draw()
-        score_board.draw()
-        pause_button.draw()
-        pygame.display.update()
-        clock.tick(60)
-        if castle.game_over:
-            end_screen.score = score_board.score
-            end_screen.time_elapsed = frames
-            end = end_screen.draw()
-            if end == "play":
-                game_loop()
-
-
-def set_towers(tower_list, missile_list, funds, score_board, enemies_list):
+def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
     # Go through list of towers, drawing towers if not destroyed
     # Then drawing missiles to match appropriate tower
     for tower_location in tower_list:
@@ -155,10 +154,29 @@ def set_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         kill = enemy.check_death()
                         if kill:
                             points, cash = kill
-                            score_board.score += points
+                            score_board.adjust(points)
                             funds.adjust(cash)
 
 
-game_loop()
-pygame.quit()
-quit()
+def draw_enemies(enemies_list, castle):
+    # Draw and move enemies
+    # If enemies reach castle, damage castle
+    for enemy in enemies_list:
+        castle_damage = enemy.move()
+        if enemy.fireball:
+            for adjacent in enemies_list:
+                if adjacent != enemy:
+                    if helpers.collision(enemy, adjacent):
+                        if adjacent.fire_lockout == 0:
+                            adjacent.fire = 3
+                            adjacent.burned_counter = 3
+                            adjacent.fire_lockout = 3 * seconds
+        if castle_damage:
+            if castle.hp > 0:
+                castle.adjust(-castle_damage)
+
+
+if __name__ == "__main__":
+    game_loop()
+    pygame.quit()
+    quit()
