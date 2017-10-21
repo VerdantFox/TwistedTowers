@@ -16,7 +16,6 @@ path_nodes = [
     (785, 170),
     (800, 170)]
 
-print(len(path_nodes))
 # # Tower_locations are arranged bottom left to right then top left to right
 # tower_locations = [
 #     # Bottom first

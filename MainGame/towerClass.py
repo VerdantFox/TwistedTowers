@@ -2,7 +2,7 @@ import pygame
 import helpers
 from definitions import *
 from gameParameters import gameDisplay
-from pics import basicTower1
+from pics import basicTower1, iceTower1, fireTower1, poisonTower1, darkTower1
 
 
 class TowerButton:
@@ -49,6 +49,7 @@ class TowerButton:
             opt5_msg_col=black, opt1_action=None, opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
         super().__init__()
+        self.image = None
         self._button_radius = button_radius
         self._mouse = None
         self._click = None
@@ -117,7 +118,7 @@ class TowerButton:
                 if circle_number == 0 or self._options_countdown > 0:
                     pygame.draw.circle(gameDisplay, hov_color, (x, y), radius)
                     if circle_number == 0:
-                        self.get_tower_image()
+                        self.show_tower_image()
                     if circle_number > 0:
                         self._options_countdown = self.set_options_timer
                     if self._click[0] == 1:
@@ -128,16 +129,20 @@ class TowerButton:
                             if action is not None:
                                 self.option_selected = action
                                 self.lockout_timer = 10
-                                # print(self.option_selected)
-                                # self.destroyed = True
 
             # If not hovering circle, draw inactive circle if possible
             else:
-                if circle_number == 0 or self._options_countdown > 0:
+                if circle_number == 0:
+                    if not self.image:
+                        pygame.draw.circle(
+                            gameDisplay, no_hov_color, (x, y), radius)
+                    if circle_number == 0:
+                        self.show_tower_image()
+                if self._options_countdown > 0:
                     pygame.draw.circle(
                         gameDisplay, no_hov_color, (x, y), radius)
                     if circle_number == 0:
-                        self.get_tower_image()
+                        self.show_tower_image()
 
             if msg and (circle_number == 0 or self._options_countdown > 0):
                 if circle_number == 0:
@@ -147,7 +152,7 @@ class TowerButton:
         if self._options_countdown > 0:
             self._options_countdown -= 1
 
-    def get_tower_image(self):
+    def show_tower_image(self):
         pass
 
     def set_text(self, x, y, msg, msg_color, is_main):
@@ -184,7 +189,7 @@ class BasicTower(TowerButton):
         self.sell = 75
         self.specialty = None
 
-    def get_tower_image(self):
+    def show_tower_image(self):
         gameDisplay.blit(
             self.image, (int(self.x - 0.5 * self.image_width),
                          int(self.y - .8 * self.image_height)))
@@ -200,6 +205,7 @@ class IceTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.image, self.image_width, self.image_height = iceTower1
         self.buy = 100
         self.sell = 150
         self.specialty = "ice"
@@ -215,6 +221,7 @@ class FireTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.image, self.image_width, self.image_height = fireTower1
         self.buy = 100
         self.sell = 150
         self.specialty = "fire"
@@ -230,6 +237,7 @@ class PoisonTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.image, self.image_width, self.image_height = poisonTower1
         self.buy = 100
         self.sell = 150
         self.specialty = "poison"
@@ -245,6 +253,7 @@ class DarkTower(BasicTower):
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2)
+        self.image, self.image_width, self.image_height = darkTower1
         self.buy = 100
         self.sell = 150
         self.specialty = "dark"
