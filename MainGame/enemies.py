@@ -1,21 +1,22 @@
 import pygame
 import random
 from gameParameters import gameDisplay
-from pics import orc_list, fire_pic, ice_pic, poison_pic
+from towerPics import fire_pic, ice_pic, poison_pic
+from orcPics import orc_list
+from spiderPics import spider_list
 from definitions import *
 from lists import *
 
 
 class Enemy:
-    def __init__(self, respawn_wait=120, hp=30, points=1, cash=25,
-                 speed=1, slow=0, frames_to_picswap=10, location=path_nodes[0]):
+    def __init__(self):
 
         # Position and movement
-        self.x, self.y = location
-        self.speed = speed  # Max speed wiggle-room = 10
-        self.slow_initial = slow
-        self.slow = slow
-        self.slow_countdown = slow
+        self.x, self.y = path_nodes[0]
+        self.speed = 1  # Max speed wiggle-room = 10
+        self.slow_initial = 0
+        self.slow = 0
+        self.slow_countdown = 0
         self.right = False
         self.left = False
         self.up = False
@@ -27,7 +28,7 @@ class Enemy:
         self.image = orc_list[0][0]
         self.image_width = 60
         self.image_height = 60
-        self.frames_to_picswap = frames_to_picswap
+        self.frames_to_picswap = 10
         self.frame_counter = 0
 
         # Interaction with other objects
@@ -35,18 +36,17 @@ class Enemy:
         self.fire_radius = 20
 
         # hp manipulation
-        self.max_hp = hp
-        self.hp = hp
-        self.armor = 20
-        self.damage_reduced = (100 - self.armor) / 100
+        self.max_hp = 30
+        self.hp = 30
+        self.armor = 30
 
         # Death and destruction ;-)
         self.destroy = False  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
-        self.points = points
-        self.cash = cash
-        self.respawn_wait = respawn_wait
-        self.respawn_timer = respawn_wait
+        self.points = 5
+        self.cash = 25
+        self.respawn_wait = 120
+        self.respawn_timer = 120
 
         # Ice specialties
         self.ice = None
@@ -99,12 +99,8 @@ class Enemy:
                         direction = 3
                     if self.up and not self.right:
                         direction = 4
-                    # Change walking frame in direction
-                    self.image = orc_list[direction][self.frame]
 
-                    self.frame += 1
-                    if self.frame > len(orc_list[0]) - 1:
-                        self.frame = 0
+                    self.walk(direction)
                     self.frame_counter = self.frames_to_picswap
                 if self.frame_counter > 0:
                     self.frame_counter -= self.speed
@@ -175,6 +171,13 @@ class Enemy:
                 self.hp = self.max_hp
                 self.respawn_timer = self.respawn_wait
 
+    def walk(self, direction):
+        # Change walking frame in direction
+        self.image = orc_list[direction][self.frame]
+        self.frame += 1
+        if self.frame > len(orc_list[0]) - 1:
+            self.frame = 0
+
     def show(self):
         if self.poison:
             gameDisplay.blit(
@@ -192,8 +195,9 @@ class Enemy:
 
     def take_damage(self, damage, armor_shred=False):
         if self.hp > 0:
+            damage_reduced = (100 - self.armor) / 100
             if not armor_shred:
-                self.hp -= damage * self.damage_reduced
+                self.hp -= damage * damage_reduced
             if armor_shred:
                 self.hp -= damage
 
@@ -257,3 +261,24 @@ class Enemy:
             return self.points, self.cash
         else:
             return None
+
+
+class Spider(Enemy):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = spider_list[0][0]
+        self.image_width = 30
+        self.image_height = 30
+        self.frames_to_picswap = 8
+        # hp manipulation
+        self.max_hp = 10
+        self.hp = 10
+        self.armor = 0
+
+    def walk(self, direction):
+        # Change walking frame in direction
+        self.image = spider_list[direction][self.frame]
+        self.frame += 1
+        if self.frame > len(spider_list[0]) - 1:
+            self.frame = 0
