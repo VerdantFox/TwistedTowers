@@ -88,58 +88,7 @@ def game_loop():
                 if castle.hp > 0:
                     castle.adjust(-castle_damage)
 
-        # Go through list of towers, drawing towers if not destroyed
-        # Then drawing missiles to match appropriate tower
-        for tower_location in tower_list:
-            for current_tower in tower_location:
-                if not current_tower.destroy:
-                    selected = current_tower.option_selected
-                    new_tower_index = actions.get(selected)  # See lists.py
-                    current_tower_index = tower_location.index(current_tower)
-                    if selected:
-                        new_tower = tower_location[new_tower_index]
-                        if selected == "sell":
-                            new_tower.destroy = False
-                            current_tower.destroy = True
-                            current_tower.option_selected = None
-                            funds.adjust(current_tower.sell)
-                        else:
-                            if new_tower.buy <= funds.cash:
-                                new_tower.destroy = False
-                                current_tower.destroy = True
-                                current_tower.option_selected = None
-                                funds.adjust(-new_tower.buy)
-                            else:
-                                current_tower.option_selected = None
-                                print("Not enough funds!")
-                    current_tower.draw()
-
-                    if current_tower_index != 0:
-                        tower_position = tower_list.index(tower_location)
-                        missile = \
-                            missile_list[tower_position][current_tower_index]
-                        for enemy in enemies_list:
-                            hit = missile.lock_enemy(
-                                current_tower, enemy)
-                            if hit:
-                                damage, specialty = hit
-                                if specialty == "ice":
-                                    enemy.ice = 30
-                                if specialty == "poison":
-                                    enemy.poison = 5
-                                if specialty == "fire":
-                                    enemy.fireball = True
-                                    enemy.fire = 3
-                                    enemy.burned_counter = 3
-                                    enemy.fire_lockout = 3 * seconds
-                                if specialty == "dark":
-                                    enemy.dark = damage * 2
-                                enemy.take_damage(damage)
-                            kill = enemy.check_death()
-                            if kill:
-                                points, cash = kill
-                                score_board.score += points
-                                funds.adjust(cash)
+        set_towers(tower_list, missile_list, funds, score_board, enemies_list)
 
         funds.draw()
         castle.draw()
@@ -153,6 +102,61 @@ def game_loop():
             end = end_screen.draw()
             if end == "play":
                 game_loop()
+
+
+def set_towers(tower_list, missile_list, funds, score_board, enemies_list):
+    # Go through list of towers, drawing towers if not destroyed
+    # Then drawing missiles to match appropriate tower
+    for tower_location in tower_list:
+        for current_tower in tower_location:
+            if not current_tower.destroy:
+                selected = current_tower.option_selected
+                new_tower_index = actions.get(selected)  # See lists.py
+                current_tower_index = tower_location.index(current_tower)
+                if selected:
+                    new_tower = tower_location[new_tower_index]
+                    if selected == "sell":
+                        new_tower.destroy = False
+                        current_tower.destroy = True
+                        current_tower.option_selected = None
+                        funds.adjust(current_tower.sell)
+                    else:
+                        if new_tower.buy <= funds.cash:
+                            new_tower.destroy = False
+                            current_tower.destroy = True
+                            current_tower.option_selected = None
+                            funds.adjust(-new_tower.buy)
+                        else:
+                            current_tower.option_selected = None
+                            print("Not enough funds!")
+                current_tower.draw()
+
+                if current_tower_index != 0:
+                    tower_position = tower_list.index(tower_location)
+                    missile = \
+                        missile_list[tower_position][current_tower_index]
+                    for enemy in enemies_list:
+                        hit = missile.lock_enemy(
+                            current_tower, enemy)
+                        if hit:
+                            damage, specialty = hit
+                            if specialty == "ice":
+                                enemy.ice = 30
+                            if specialty == "poison":
+                                enemy.poison = 5
+                            if specialty == "fire":
+                                enemy.fireball = True
+                                enemy.fire = 3
+                                enemy.burned_counter = 3
+                                enemy.fire_lockout = 3 * seconds
+                            if specialty == "dark":
+                                enemy.dark = damage * 2
+                            enemy.take_damage(damage)
+                        kill = enemy.check_death()
+                        if kill:
+                            points, cash = kill
+                            score_board.score += points
+                            funds.adjust(cash)
 
 
 game_loop()
