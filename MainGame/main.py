@@ -27,8 +27,12 @@ def game_loop():
     # # Single enemy
     # enemies_list = [enemies.Enemy(speed=1)]
 
-    # Single spider
-    enemies_list = [enemies.Spider()]
+    # # Single spider
+    # enemies_list = [enemies.Spider()]
+
+    # Single wolf
+    enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
+                    enemies.Turtle()]
 
     # # Set enemies
     # enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=1),

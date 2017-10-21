@@ -3,17 +3,19 @@ import random
 from gameParameters import gameDisplay
 from towerPics import fire_pic, ice_pic, poison_pic
 from orcPics import orc_list
+from wolfPics import wolf_list
 from spiderPics import spider_list
+from turtlePics import turtle_list
 from definitions import *
 from lists import *
 
 
-class Enemy:
+class Orc:
     def __init__(self):
 
         # Position and movement
         self.x, self.y = path_nodes[0]
-        self.speed = 1  # Max speed wiggle-room = 10
+        self.speed = .8  # Max speed wiggle-room = 10
         self.slow_initial = 0
         self.slow = 0
         self.slow_countdown = 0
@@ -28,7 +30,7 @@ class Enemy:
         self.image = orc_list[0][0]
         self.image_width = 60
         self.image_height = 60
-        self.frames_to_picswap = 10
+        self.frames_to_picswap = 8
         self.frame_counter = 0
 
         # Interaction with other objects
@@ -38,7 +40,7 @@ class Enemy:
         # hp manipulation
         self.max_hp = 30
         self.hp = 30
-        self.armor = 30
+        self.armor = 40
 
         # Death and destruction ;-)
         self.destroy = False  # Removes body until respawn timer returns to play
@@ -72,16 +74,16 @@ class Enemy:
             # Move only if slow_countdown greater than 0
             if self.slow_countdown > 0:
                 # Move towards node by self.speed.
-                if self.x < self.next_node[0]:
+                if self.x < self.next_node[0] - 5:
                     self.x += self.speed
                     self.right = True
-                if self.x > self.next_node[0]:
+                if self.x > self.next_node[0] + 5:
                     self.x -= self.speed
                     self.left = True
-                if self.y < self.next_node[1]:
+                if self.y < self.next_node[1] - 5:
                     self.y += self.speed
                     self.down = True
-                if self.y > self.next_node[1]:
+                if self.y > self.next_node[1] + 5:
                     self.y -= self.speed
                     self.up = True
 
@@ -263,22 +265,70 @@ class Enemy:
             return None
 
 
-class Spider(Enemy):
+class Spider(Orc):
     def __init__(self):
         super().__init__()
         # Image manipulation
         self.image = spider_list[0][0]
         self.image_width = 30
         self.image_height = 30
-        self.frames_to_picswap = 8
+        self.frames_to_picswap = 6
         # hp manipulation
         self.max_hp = 10
         self.hp = 10
         self.armor = 0
+        # Position and movement
+        self.speed = 1  # Max speed wiggle-room = 10
 
     def walk(self, direction):
         # Change walking frame in direction
         self.image = spider_list[direction][self.frame]
         self.frame += 1
         if self.frame > len(spider_list[0]) - 1:
+            self.frame = 0
+            
+            
+class Wolf(Orc):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = wolf_list[0][0]
+        self.image_width = 50
+        self.image_height = 50
+        self.frames_to_picswap = 10
+        # hp manipulation
+        self.max_hp = 30
+        self.hp = 30
+        self.armor = 25
+        # Position and movement
+        self.speed = 2  # Max speed wiggle-room = 10
+
+    def walk(self, direction):
+        # Change walking frame in direction
+        self.image = wolf_list[direction][self.frame]
+        self.frame += 1
+        if self.frame > len(wolf_list[0]) - 1:
+            self.frame = 0
+
+
+class Turtle(Orc):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = turtle_list[0][0]
+        self.image_width = 50
+        self.image_height = 50
+        self.frames_to_picswap = 8
+        # hp manipulation
+        self.max_hp = 30
+        self.hp = 30
+        self.armor = 80
+        # Position and movement
+        self.speed = .6  # Max speed wiggle-room = 10
+
+    def walk(self, direction):
+        # Change walking frame in direction
+        self.image = turtle_list[direction][self.frame]
+        self.frame += 1
+        if self.frame > len(turtle_list[0]) - 1:
             self.frame = 0
