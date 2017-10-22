@@ -1,7 +1,7 @@
 import pygame
 import random
 from gameParameters import gameDisplay
-from towerPics import fire_pic, ice_pic, poison_pic
+from towerPics import fire_pic, ice_pic, poison_list
 from orcPics import orc_list
 from wolfPics import wolf_list
 from spiderPics import spider_list
@@ -12,7 +12,6 @@ from lists import *
 
 class Orc:
     def __init__(self):
-
         # Position and movement
         self.x, self.y = path_nodes[0]
         self.speed = .8  # Max speed wiggle-room = 10
@@ -32,6 +31,8 @@ class Orc:
         self.image_height = 60
         self.frames_to_picswap = 8
         self.frame_counter = 0
+        self.direction = 2
+        self.poison_loc = ((27, 45), (36, 57), (51, 40), (45, 9), (27, 3))
 
         # Interaction with other objects
         self.radius = 5
@@ -90,28 +91,23 @@ class Orc:
                 # Change walking frame if frame_counter reaches 0
                 if self.frame_counter < 1:
                     # Determine direction
-                    direction = 2  # Default is right
+                    self.direction = 2  # Default is right
                     if self.down and not self.right:
-                        direction = 0
+                        self.direction = 0
                     if self.down and self.right:
-                        direction = 1
+                        self.direction = 1
                     if self.right and not (self.up or self.down):
-                        direction = 2
+                        self.direction = 2
                     if self.up and self.right:
-                        direction = 3
+                        self.direction = 3
                     if self.up and not self.right:
-                        direction = 4
+                        self.direction = 4
 
-                    self.walk(direction)
+                    self.walk()
                     self.frame_counter = self.frames_to_picswap
                 if self.frame_counter > 0:
                     self.frame_counter -= self.speed
                 self.slow_countdown -= self.slow
-
-                self.right = False
-                self.left = False
-                self.up = False
-                self.down = False
 
             # Don't move if slow_countdown reaches zero, reset countdown
             elif self.slow_countdown <= 0:
@@ -153,6 +149,8 @@ class Orc:
                         # Return damage to castle
                         return 1
 
+
+
         # If enemy is dead
         if self.destroy:
             # Start respawn timer countdown
@@ -173,18 +171,21 @@ class Orc:
                 self.hp = self.max_hp
                 self.respawn_timer = self.respawn_wait
 
-    def walk(self, direction):
+        self.right = False
+        self.left = False
+        self.up = False
+        self.down = False
+
+    def walk(self):
         # Change walking frame in direction
-        self.image = orc_list[direction][self.frame]
+        self.image = orc_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(orc_list[0]) - 1:
             self.frame = 0
 
     def show(self):
         if self.poison:
-            gameDisplay.blit(
-                poison_pic[0], (self.x - poison_pic[1]*3/4,
-                                self.y - 20))
+            self.show_poison()
         if self.fire:
             gameDisplay.blit(
                 fire_pic[0], (self.x, self.y - self.image_height // 2 - 20))
@@ -194,6 +195,33 @@ class Orc:
         gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                       self.y - self.image_height // 2))
         self.health_bar()
+
+    def show_poison(self):
+        if self.down and not self.right:    # Down
+            gameDisplay.blit(
+                poison_list[self.direction][0],
+                (self.x - self.poison_loc[0][0],
+                 self.y - self.poison_loc[0][1]))
+        if self.down and self.right:    # Down_right
+            gameDisplay.blit(
+                poison_list[self.direction][0],
+                (self.x - self.poison_loc[1][0],
+                 self.y - self.poison_loc[1][1]))
+        if self.right and not (self.up or self.down):   # Right
+            gameDisplay.blit(
+                poison_list[self.direction][0],
+                (self.x - self.poison_loc[2][0],
+                 self.y - self.poison_loc[2][1]))
+        if self.up and self.right:  # Up_right
+            gameDisplay.blit(
+                poison_list[self.direction][0],
+                (self.x - self.poison_loc[3][0],
+                 self.y - self.poison_loc[3][1]))
+        if self.up and not self.right:  # Up
+            gameDisplay.blit(
+                poison_list[self.direction][0],
+                (self.x - self.poison_loc[4][0],
+                 self.y - self.poison_loc[4][1]))
 
     def take_damage(self, damage, armor_shred=False):
         if self.hp > 0:
@@ -273,6 +301,7 @@ class Spider(Orc):
         self.image_width = 30
         self.image_height = 30
         self.frames_to_picswap = 6
+        self.poison_loc = ((30, 60), (54, 60), (60, 36), (54, 6), (30, 3))
         # hp manipulation
         self.max_hp = 10
         self.hp = 10
@@ -280,14 +309,14 @@ class Spider(Orc):
         # Position and movement
         self.speed = 1  # Max speed wiggle-room = 10
 
-    def walk(self, direction):
+    def walk(self):
         # Change walking frame in direction
-        self.image = spider_list[direction][self.frame]
+        self.image = spider_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(spider_list[0]) - 1:
             self.frame = 0
-            
-            
+
+
 class Wolf(Orc):
     def __init__(self):
         super().__init__()
@@ -296,6 +325,7 @@ class Wolf(Orc):
         self.image_width = 50
         self.image_height = 50
         self.frames_to_picswap = 10
+        self.poison_loc = ((20, 45), (40, 40), (51, 44), (45, 9), (23, 3))
         # hp manipulation
         self.max_hp = 30
         self.hp = 30
@@ -303,9 +333,9 @@ class Wolf(Orc):
         # Position and movement
         self.speed = 2  # Max speed wiggle-room = 10
 
-    def walk(self, direction):
+    def walk(self):
         # Change walking frame in direction
-        self.image = wolf_list[direction][self.frame]
+        self.image = wolf_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(wolf_list[0]) - 1:
             self.frame = 0
@@ -316,19 +346,20 @@ class Turtle(Orc):
         super().__init__()
         # Image manipulation
         self.image = turtle_list[0][0]
-        self.image_width = 50
-        self.image_height = 50
+        self.image_width = 44
+        self.image_height = 44
         self.frames_to_picswap = 8
+        self.poison_loc = ((27, 60), (52, 52), (65, 35), (45, 9), (27, -5))
         # hp manipulation
         self.max_hp = 30
         self.hp = 30
         self.armor = 80
         # Position and movement
-        self.speed = .6  # Max speed wiggle-room = 10
+        self.speed = 1.5  # Max speed wiggle-room = 10
 
-    def walk(self, direction):
+    def walk(self):
         # Change walking frame in direction
-        self.image = turtle_list[direction][self.frame]
+        self.image = turtle_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(turtle_list[0]) - 1:
             self.frame = 0
