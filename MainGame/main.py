@@ -24,32 +24,21 @@ def game_loop():
     end_screen = generalClass.EndScreen()
     frames = 0
 
-    # # Single enemy
+    # # Single orc
     # enemies_list = [enemies.Orc()]
 
     # # Single spider
     # enemies_list = [enemies.Spider()]
 
     # single turtle
-    # enemies_list = [enemies.Turtle()]
+    enemies_list = [enemies.Turtle()]
 
     # # Single wolf
-    enemies_list = [enemies.Wolf()]
+    # enemies_list = [enemies.Wolf()]
 
-    # all enemies
+    # # all enemies
     # enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
     #                 enemies.Turtle()]
-
-    # # Set enemies
-    # enemies_list = [enemies.Enemy(speed=1), enemies.Enemy(speed=1),
-    #                 enemies.Enemy(speed=1), enemies.Enemy(speed=1)]
-
-    # # fast tester enemies
-    # enemies_list = [enemies.Enemy(speed=10), enemies.Enemy(speed=10),
-    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
-    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
-    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10),
-    #                 enemies.Enemy(speed=10), enemies.Enemy(speed=10)]
 
     # Set towers and missiles
     bot_tower_list = []
@@ -153,9 +142,11 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         if hit:
                             damage, specialty = hit
                             if specialty == "ice":
-                                enemy.ice = 30
+                                enemy.ice = True
+                                enemy.ice_countdown = enemy.ice_counter
                             if specialty == "poison":
-                                enemy.poison = 5
+                                enemy.poison = .07
+                                enemy.poison_charges = 5
                             if specialty == "fire":
                                 enemy.fireball = True
                                 enemy.fire = 3

@@ -328,9 +328,10 @@ class BasicMissile:
 class IceMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 6
+        self.damage = 3
         self.missile_color = blue
         self.specialty = "ice"
+        self.shoot_rate = 2.5 * seconds
 
 
 # Burns catches enemy on fire, dealing damage per second for 3 seconds
@@ -377,7 +378,7 @@ class PoisonMissile(BasicMissile):
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
             # Only lock-on if not poisoned
-            if enemy.poison is None:
+            if enemy.poison_charges < 2:
                 if not enemy.destroy:
                     if self.destroy is True:
                         if helpers.collision(tower, enemy):
