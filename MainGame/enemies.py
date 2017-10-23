@@ -14,7 +14,7 @@ class Orc:
     def __init__(self):
         # Position and movement
         self.x, self.y = path_nodes[0]
-        self.base_speed = .8
+        self.base_speed = 1
         self.speed = self.base_speed
         self.right = False
         self.left = False
@@ -147,6 +147,9 @@ class Orc:
                         # Destroy and remove all affects, move to start of path
                         self.destroy = True
                         self.poison = None
+                        self.poison_tick = 0
+                        self.poison_countdown = 0
+                        self.poison_charges = 0
                         self.ice = None
                         self.fire = None
                         self.fireball = None
@@ -163,6 +166,9 @@ class Orc:
             # If respawn timer reaches 0, respawn enemy and reset timer
             elif self.respawn_timer == 0:
                 self.poison = None
+                self.poison_tick = 0
+                self.poison_countdown = 0
+                self.poison_charges = 0
                 self.fire = None
                 self.fireball = None
                 self.burned_counter = 0
@@ -267,7 +273,7 @@ class Orc:
             self.fireball = False
 
     def poisoned(self, percent_hp):
-        if self.poison_charges == 1 and self.poison_tick == 0:
+        if self.poison_charges == 1 and self.poison_tick == 2 * seconds:
             self.stun_duration_countdown = self.stun_duration
             self.stun = True
             print("stunned")
@@ -316,7 +322,7 @@ class Spider(Orc):
         self.hp = 10
         self.armor = 0
         # Position and movement
-        self.base_speed = 1
+        self.base_speed = 1.2
         self.speed = self.base_speed
 
     def walk(self):
@@ -375,7 +381,7 @@ class Turtle(Orc):
         self.hp = 30
         self.armor = 80
         # Position and movement
-        self.base_speed = 2
+        self.base_speed = .8
         self.speed = self.base_speed
 
     def walk(self):

@@ -30,15 +30,15 @@ def game_loop():
     # # Single spider
     # enemies_list = [enemies.Spider()]
 
-    # single turtle
-    enemies_list = [enemies.Turtle()]
+    # # single turtle
+    # enemies_list = [enemies.Turtle()]
 
     # # Single wolf
     # enemies_list = [enemies.Wolf()]
 
-    # # all enemies
-    # enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
-    #                 enemies.Turtle()]
+    # all enemies
+    enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
+                    enemies.Turtle()]
 
     # Set towers and missiles
     bot_tower_list = []

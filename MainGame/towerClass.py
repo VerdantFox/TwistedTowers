@@ -283,8 +283,8 @@ class BasicMissile:
         if self.shoot_counter < 1:
             if not enemy.destroy:
                 if self.destroy is True:
-                    if helpers.collision(tower, enemy):
-                        if self.lock_on is None:
+                    if self.lock_on is None:
+                        if helpers.collision(tower, enemy):
                             self.lock_on = enemy
                             self.destroy = False
                             self.shoot_counter = self.shoot_rate
@@ -352,8 +352,8 @@ class FireMissile(BasicMissile):
             if enemy.burned_counter < 2:
                 if not enemy.destroy:
                     if self.destroy is True:
-                        if helpers.collision(tower, enemy):
-                            if self.lock_on is None:
+                        if self.lock_on is None:
+                            if helpers.collision(tower, enemy):
                                 self.lock_on = enemy
                                 self.destroy = False
                                 self.shoot_counter = self.shoot_rate
@@ -381,8 +381,8 @@ class PoisonMissile(BasicMissile):
             if enemy.poison_charges < 2:
                 if not enemy.destroy:
                     if self.destroy is True:
-                        if helpers.collision(tower, enemy):
-                            if self.lock_on is None:
+                        if self.lock_on is None:
+                            if helpers.collision(tower, enemy):
                                 self.lock_on = enemy
                                 self.destroy = False
                                 self.shoot_counter = self.shoot_rate
