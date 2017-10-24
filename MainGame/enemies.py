@@ -45,8 +45,10 @@ class Orc:
         self.dead = False  # Used to return cash and money
         self.points = 5
         self.cash = 25
-        self.respawn_wait = 120
-        self.respawn_timer = 120
+        self.respawn_timer = 3 * seconds
+        self.respawn_countdown = 3 * seconds
+        self.lives = 3
+        self.added_to_list = False
 
         # Ice specialties
         self.ice_loc = ((-18, 10), (-18, 10), (-18, 10),
@@ -161,10 +163,10 @@ class Orc:
         # If enemy is dead
         if self.destroy:
             # Start respawn timer countdown
-            if self.respawn_timer > 0:
-                self.respawn_timer -= 1
+            if self.respawn_countdown > 0:
+                self.respawn_countdown -= 1
             # If respawn timer reaches 0, respawn enemy and reset timer
-            elif self.respawn_timer == 0:
+            elif self.respawn_countdown <= 0:
                 self.poison = None
                 self.poison_tick = 0
                 self.poison_countdown = 0
@@ -179,7 +181,8 @@ class Orc:
                 self.node = 0
                 self.next_node = path_nodes[0]
                 self.hp = self.max_hp
-                self.respawn_timer = self.respawn_wait
+                self.respawn_countdown = self.respawn_timer + random.randrange(
+                    -2 * seconds, 2 * seconds)
 
         self.right = False
         self.left = False
@@ -297,6 +300,7 @@ class Orc:
 
     def check_death(self):
         if self.dead:
+            self.lives -= 1
             self.dead = False
             return self.points, self.cash
         else:

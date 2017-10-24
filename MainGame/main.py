@@ -5,6 +5,7 @@ import enemies
 import helpers
 from definitions import *
 from lists import *
+from enemyList import enemies_added
 from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
 
@@ -19,13 +20,13 @@ def game_loop():
 
     # Set up game rules
     score_board = generalClass.GameScore((20, 20))
-    funds = generalClass.Money((20, display_height - 90))
+    funds = generalClass.Money((20, display_height - 90), start_cash=500)
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
     frames = 0
 
-    # # Single orc
-    # enemies_list = [enemies.Orc()]
+    # Single orc
+    enemies_list = [enemies.Orc()]
 
     # # Single spider
     # enemies_list = [enemies.Spider()]
@@ -36,11 +37,9 @@ def game_loop():
     # # Single wolf
     # enemies_list = [enemies.Wolf()]
 
-    # all enemies
-    enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
-                    enemies.Turtle()]
-    enemies_list2 = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
-                     enemies.Spider(), enemies.Spider(), enemies.Spider()]
+    # # all enemies
+    # enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
+    #                 enemies.Turtle()]
 
     # Set towers and missiles
     bot_tower_list = []
@@ -50,6 +49,8 @@ def game_loop():
 
     set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
+
+    enemies_added_index = 0
 
     # Actual game loop
     while True:
@@ -63,9 +64,12 @@ def game_loop():
                     helpers.pause_game()
             # print(event)
 
-        if frames == round(1 * minutes):
-            for enemy in enemies_list2:
-                enemies_list.append(enemy)
+        # add new enemies
+        if frames % (60 * seconds) == 0:
+            if enemies_added_index < len(enemies_added):
+                for enemy in enemies_added[enemies_added_index]:
+                    enemies_list.append(enemy)
+                enemies_added_index += 1
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -173,6 +177,8 @@ def draw_enemies(enemies_list, castle):
     # Draw and move enemies
     # If enemies reach castle, damage castle
     for enemy in enemies_list:
+        if enemy.lives == 0:
+            enemies_list.pop(enemies_list.index(enemy))
         castle_damage = enemy.move()
         if enemy.fireball:
             for adjacent in enemies_list:
