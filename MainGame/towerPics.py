@@ -1,10 +1,10 @@
 import pygame
 
-basicTower1 = pygame.image.load('towers/3DBasicTower3.png'), 50, 80
-iceTower1 = pygame.image.load('towers/Icetower3.png'), 50, 80
-fireTower1 = pygame.image.load('towers/firewand1.png'), 50, 80
-poisonTower1 = pygame.image.load('towers/planttower1.png'), 50, 80
-darkTower1 = pygame.image.load('towers/darktower1.png'), 50, 80
+basicTower1 = pygame.image.load('towers/basicTower.png'), 50, 80
+iceTower1 = pygame.image.load('towers/iceTower1.png'), 50, 80
+fireTower1 = pygame.image.load('towers/fireTower1.png'), 50, 80
+poisonTower1 = pygame.image.load('towers/poisonTower1.png'), 50, 80
+darkTower1 = pygame.image.load('towers/darkTower1.png'), 50, 80
 
 fire_pic = pygame.image.load('Enemies/effects/fire40.png'), 32, 40
 ice_pic = pygame.image.load('Enemies/effects/ice50.png'), 50, 20
