@@ -271,7 +271,7 @@ class BasicMissile:
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.shoot_rate = 5 * seconds
+        self.shoot_rate = 2 * seconds
         self.shoot_counter = 0
         self.missile_color = gray
         self.damage = 5
@@ -288,8 +288,6 @@ class BasicMissile:
                             self.lock_on = enemy
                             self.destroy = False
                             self.shoot_counter = self.shoot_rate
-        if self.shoot_counter > 0:
-            self.shoot_counter -= 1
         hit = self.shoot(enemy)
         return hit
 
@@ -323,15 +321,18 @@ class BasicMissile:
             if not enemy.destroy:
                 return self.damage, self.specialty
 
+    def adjust_counters(self):
+        if self.shoot_counter > 0:
+            self.shoot_counter -= 1
+
 
 # Slows enemy and deals up-front damage reduced by armor
 class IceMissile(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 3
+        self.damage = 6
         self.missile_color = blue
         self.specialty = "ice"
-        self.shoot_rate = 2.5 * seconds
 
 
 # Burns catches enemy on fire, dealing damage per second for 3 seconds
@@ -343,6 +344,7 @@ class FireMissile(BasicMissile):
         self.damage = 0
         self.missile_color = red
         self.specialty = "fire"
+        self.shoot_rate = 4 * seconds
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -357,8 +359,6 @@ class FireMissile(BasicMissile):
                                 self.lock_on = enemy
                                 self.destroy = False
                                 self.shoot_counter = self.shoot_rate
-        if self.shoot_counter > 0:
-            self.shoot_counter -= 1
         hit = self.shoot(enemy)
         return hit
 
@@ -371,7 +371,7 @@ class PoisonMissile(BasicMissile):
         self.damage = 0
         self.missile_color = green
         self.specialty = "poison"
-        self.shoot_rate = 8 * seconds
+        self.shoot_rate = 4 * seconds
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -386,8 +386,6 @@ class PoisonMissile(BasicMissile):
                                 self.lock_on = enemy
                                 self.destroy = False
                                 self.shoot_counter = self.shoot_rate
-        if self.shoot_counter > 0:
-            self.shoot_counter -= 1
         hit = self.shoot(enemy)
         return hit
 

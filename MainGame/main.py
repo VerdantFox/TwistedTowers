@@ -39,6 +39,8 @@ def game_loop():
     # all enemies
     enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
                     enemies.Turtle()]
+    enemies_list2 = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                     enemies.Spider(), enemies.Spider(), enemies.Spider()]
 
     # Set towers and missiles
     bot_tower_list = []
@@ -60,6 +62,10 @@ def game_loop():
                 if event.key == pygame.K_ESCAPE:
                     helpers.pause_game()
             # print(event)
+
+        if frames == round(1 * minutes):
+            for enemy in enemies_list2:
+                enemies_list.append(enemy)
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -160,6 +166,7 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                             points, cash = kill
                             score_board.adjust(points)
                             funds.adjust(cash)
+                    missile.adjust_counters()
 
 
 def draw_enemies(enemies_list, castle):

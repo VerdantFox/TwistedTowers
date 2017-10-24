@@ -324,6 +324,8 @@ class Spider(Orc):
         # Position and movement
         self.base_speed = 1.2
         self.speed = self.base_speed
+        # Death
+        self.cash = 5
 
     def walk(self):
         # Change walking frame in direction
@@ -353,6 +355,8 @@ class Wolf(Orc):
         # Position and movement
         self.base_speed = 2
         self.speed = self.base_speed
+        # Death
+        self.cash = 25
 
     def walk(self):
         # Change walking frame in direction
@@ -383,6 +387,8 @@ class Turtle(Orc):
         # Position and movement
         self.base_speed = .8
         self.speed = self.base_speed
+        # Death
+        self.cash = 25
 
     def walk(self):
         # Change walking frame in direction
