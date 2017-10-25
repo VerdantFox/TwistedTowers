@@ -20,10 +20,13 @@ def game_loop():
 
     # Set up game rules
     score_board = generalClass.GameScore((20, 20))
-    funds = generalClass.Money((20, display_height - 90), start_cash=500)
+    funds = generalClass.Money((20, display_height - 90), start_cash=2000)
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
     frames = 0
+
+    # # Blank list
+    # enemies_list = []
 
     # Single orc
     enemies_list = [enemies.Orc()]

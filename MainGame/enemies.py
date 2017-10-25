@@ -1,13 +1,15 @@
-import pygame
 import random
-from gameParameters import gameDisplay
-from towerPics import fire_pic, ice_pic, poison_list
-from orcPics import orc_list
-from wolfPics import wolf_list
-from spiderPics import spider_list
-from turtlePics import turtle_list
+
+import pygame
+
+from Enemies.orc.orcPics import orc_list
+from Enemies.spider.spiderPics import spider_list
+from Enemies.turtle.turtlePics import turtle_list
+from Enemies.wolf.wolfPics import wolf_list
 from definitions import *
+from gameParameters import gameDisplay
 from lists import *
+from towers.towerPics import fire_pic, ice_pic, poison_list, stun_list
 
 
 class Orc:
@@ -27,6 +29,7 @@ class Orc:
         self.image = orc_list[0][0]
         self.image_width = 60
         self.image_height = 60
+        self.initial_frames_to_picswap = 8
         self.frames_to_picswap = 8
         self.frame_counter = 0
         self.direction = 2
@@ -66,6 +69,8 @@ class Orc:
         # Poison specialties
         self.poison_loc = ((-27, -45), (-36, -57), (-51, -40),
                            (-45, -9), (-27, -3))
+        self.stun_loc = ((-10, -40), (-5, -50), (-5, -50),
+                         (-5, -50), (-10, -50))
         self.poison = None
         self.poison_tick = 0
         self.poison_countdown = 0
@@ -73,6 +78,9 @@ class Orc:
         self.stun = False
         self.stun_duration = 1 * seconds
         self.stun_duration_countdown = 1 * seconds
+        self.stun_frameswap_rate = 10
+        self.stun_frame = 0
+        self.stun_framecounter = 0
         # Dark specialties
         self.dark_loc = ()
         self.dark = False
@@ -95,31 +103,32 @@ class Orc:
                 if self.y > self.next_node[1] + 5:
                     self.y -= self.speed
                     self.up = True
+
+                # Change walking frame if frame_counter reaches 0
+                if self.frame_counter < 1:
+                    # Determine direction
+                    self.direction = 2  # Default is right
+                    if self.down and not self.right:
+                        self.direction = 0
+                    if self.down and self.right:
+                        self.direction = 1
+                    if self.right and not (self.up or self.down):
+                        self.direction = 2
+                    if self.up and self.right:
+                        self.direction = 3
+                    if self.up and not self.right:
+                        self.direction = 4
+
+                    self.walk()
+                    self.frame_counter = self.frames_to_picswap
+                if self.frame_counter > 0:
+                    self.frame_counter -= self.speed
+
             if self.stun:
                 if self.stun_duration_countdown == 0:
                     self.stun = False
                 if self.stun_duration_countdown > 0:
                     self.stun_duration_countdown -= 1
-
-            # Change walking frame if frame_counter reaches 0
-            if self.frame_counter < 1:
-                # Determine direction
-                self.direction = 2  # Default is right
-                if self.down and not self.right:
-                    self.direction = 0
-                if self.down and self.right:
-                    self.direction = 1
-                if self.right and not (self.up or self.down):
-                    self.direction = 2
-                if self.up and self.right:
-                    self.direction = 3
-                if self.up and not self.right:
-                    self.direction = 4
-
-                self.walk()
-                self.frame_counter = self.frames_to_picswap
-            if self.frame_counter > 0:
-                self.frame_counter -= self.speed
 
             # Check for special attributes
             if self.ice:
@@ -201,6 +210,8 @@ class Orc:
             self.show_poison()
         if self.fire:
             self.show_fire()
+        if self.stun:
+            self.show_stun()
         if self.ice:
             self.show_ice()
 
@@ -213,6 +224,19 @@ class Orc:
             poison_list[self.direction][0],
             (self.x + self.poison_loc[self.direction][0],
              self.y + self.poison_loc[self.direction][1]))
+
+    def show_stun(self):
+        gameDisplay.blit(
+            stun_list[self.stun_frame][0],
+            (self.x + self.stun_loc[self.direction][0],
+             self.y + self.stun_loc[self.direction][1]))
+
+        self.stun_framecounter -= 1
+        if self.stun_framecounter < 1:
+            self.stun_framecounter = self.stun_frameswap_rate
+            self.stun_frame += 1
+            if self.stun_frame == len(stun_list[0]):
+                self.stun_frame = 0
 
     def show_fire(self):
         gameDisplay.blit(
@@ -257,9 +281,11 @@ class Orc:
     def iced(self):
         if self.ice_countdown > 0:
             self.speed = self.base_speed * .7
+            self.frames_to_picswap = int(self.initial_frames_to_picswap * 1/.7)
             self.ice_countdown -= 1
         else:
             self.speed = self.base_speed
+            self.frames_to_picswap = self.initial_frames_to_picswap
             self.ice = None
             self.ice_countdown = self.ice_counter
 
@@ -321,6 +347,8 @@ class Spider(Orc):
         self.fire_loc = (-20, -45)
         self.poison_loc = ((-30, -60), (-54, -60), (-60, -36),
                            (-54, -6), (-30, -3))
+        self.stun_loc = ((-14, -38), (-14, -38), (-14, -38),
+                         (-14, -38), (-14, -38))
         # hp manipulation
         self.max_hp = 10
         self.hp = 10
@@ -352,6 +380,8 @@ class Wolf(Orc):
                         (-18, 10), (-18, 3))
         self.poison_loc = ((-20, -45), (-40, -40), (-51, -44),
                            (-45, -9), (-23, -3))
+        self.stun_loc = ((-5, -40), (-5, -40), (-5, -40),
+                         (-5, -40), (-5, -50))
         # hp manipulation
         self.max_hp = 30
         self.hp = 30
@@ -384,6 +414,8 @@ class Turtle(Orc):
                         (-22, 10), (-22, 12))
         self.poison_loc = ((-27, -60), (-52, -52), (-65, -35),
                            (-45, -9), (-27, 5))
+        self.stun_loc = ((-10, -45), (-10, -40), (-10, -45),
+                         (-10, -45), (-10, -45))
         # hp manipulation
         self.max_hp = 30
         self.hp = 30

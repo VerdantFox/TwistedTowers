@@ -1,8 +1,10 @@
 import pygame
+
 import helpers
 from definitions import *
 from gameParameters import gameDisplay
-from towerPics import basicTower1, iceTower1, fireTower1, poisonTower1, darkTower1
+from towers.towerPics import basicTower1, iceTower1, fireTower1, poisonTower1, \
+    darkTower1
 
 
 class TowerButton:
