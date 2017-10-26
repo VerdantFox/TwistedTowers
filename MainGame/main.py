@@ -28,8 +28,11 @@ def game_loop():
     # # Blank list
     # enemies_list = []
 
-    # Single orc
-    enemies_list = [enemies.Orc()]
+    # Single lizard
+    enemies_list = [enemies.Lizard()]
+
+    # # Single orc
+    # enemies_list = [enemies.Orc()]
 
     # # Single spider
     # enemies_list = [enemies.Spider()]
@@ -40,9 +43,12 @@ def game_loop():
     # # Single wolf
     # enemies_list = [enemies.Wolf()]
 
+    # # Single Dragon
+    # enemies_list = [enemies.Dragon()]
+
     # # all enemies
     # enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
-    #                 enemies.Turtle()]
+    #                 enemies.Turtle(), enemies.Lizard(), enemies.Dragon()]
 
     # Set towers and missiles
     bot_tower_list = []
@@ -159,7 +165,7 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                                 enemy.ice_countdown = enemy.ice_counter
                             if specialty == "poison":
                                 enemy.poison = .07
-                                enemy.poison_charges = 5
+                                enemy.poison_charges = 2
                             if specialty == "fire":
                                 enemy.fireball = True
                                 enemy.fire = 3

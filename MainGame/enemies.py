@@ -6,6 +6,8 @@ from Enemies.orc.orcPics import orc_list
 from Enemies.spider.spiderPics import spider_list
 from Enemies.turtle.turtlePics import turtle_list
 from Enemies.wolf.wolfPics import wolf_list
+from Enemies.dragon.dragonPics import dragon_list
+from Enemies.lizard.lizardPics import lizard_list
 from definitions import *
 from gameParameters import gameDisplay
 from lists import *
@@ -431,4 +433,76 @@ class Turtle(Orc):
         self.image = turtle_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(turtle_list[0]) - 1:
+            self.frame = 0
+
+
+class Dragon(Orc):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = dragon_list[0][0]
+        self.image_width = 150
+        self.image_height = 150
+        self.frames_to_picswap = 8
+
+        # Damage locations
+        self.ice_loc = ((-5, 30), (-22, 10), (-25, 10),
+                        (-22, 10), (-5, 30))
+        self.poison_loc = ((-15, -80), (-52, -52), (-65, -60),
+                           (-65, -20), (-15, 15))
+        self.stun_loc = ((10, -75), (30, -70), (30, -85),
+                         (30, -85), (0, -95))
+        self.fire_loc = (0, -100)
+
+        # hp manipulation
+        self.max_hp = 300
+        self.hp = 300
+        self.armor = 90
+        # Position and movement
+        self.base_speed = 1
+        self.speed = self.base_speed
+        # Death
+        self.cash = 25
+
+    def walk(self):
+        # Change walking frame in direction
+        self.image = dragon_list[self.direction][self.frame]
+        self.frame += 1
+        if self.frame > len(dragon_list[0]) - 1:
+            self.frame = 0
+
+
+class Lizard(Orc):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = lizard_list[0][0]
+        self.image_width = 80
+        self.image_height = 80
+        self.frames_to_picswap = 8
+
+        # Damage locations
+        self.ice_loc = ((-35, 10), (-35, 10), (-35, 0),
+                        (-22, 10), (-30, 10))
+        self.poison_loc = ((-40, -80), (-52, -52), (-80, -50),
+                           (-65, -20), (-35, 5))
+        self.stun_loc = ((-15, -60), (-15, -60), (-10, -55),
+                         (-15, -65), (-15, -60))
+        self.fire_loc = (-20, -65)
+
+        # hp manipulation
+        self.max_hp = 40
+        self.hp = 40
+        self.armor = 90
+        # Position and movement
+        self.base_speed = 1.2
+        self.speed = self.base_speed
+        # Death
+        self.cash = 25
+
+    def walk(self):
+        # Change walking frame in direction
+        self.image = lizard_list[self.direction][self.frame]
+        self.frame += 1
+        if self.frame > len(lizard_list[0]) - 1:
             self.frame = 0
