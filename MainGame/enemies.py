@@ -41,9 +41,9 @@ class Orc:
         self.fire_radius = 20
 
         # hp manipulation
-        self.max_hp = 30
-        self.hp = 30
-        self.armor = 40
+        self.max_hp = 800
+        self.hp = 800
+        self.armor = 20
 
         # Death and destruction ;-)
         self.destroy = False  # Removes body until respawn timer returns to play
@@ -58,13 +58,13 @@ class Orc:
         # Ice specialties
         self.ice_loc = ((-18, 10), (-18, 10), (-18, 10),
                         (-18, 10), (-18, 3))
-        self.ice = False
+        self.ice1 = False
         self.ice_counter = 2.5 * seconds
         self.ice_countdown = self.ice_counter
         # Fire specialties
         self.fire_loc = (-10, -50)
         self.fireball = False
-        self.fire = None
+        self.fire1 = None
         self.burned_counter = 0
         self.fire_countdown = 1 * seconds
         self.fire_lockout = 3 * seconds
@@ -73,7 +73,7 @@ class Orc:
                            (-45, -9), (-27, -3))
         self.stun_loc = ((-10, -40), (-5, -50), (-5, -50),
                          (-5, -50), (-10, -50))
-        self.poison = None
+        self.poison1 = None
         self.poison_tick = 0
         self.poison_countdown = 0
         self.poison_charges = 0
@@ -85,7 +85,7 @@ class Orc:
         self.stun_framecounter = 0
         # Dark specialties
         self.dark_loc = ()
-        self.dark = False
+        self.dark1 = False
         self.dark_timer = 2 * seconds
         self.frame = 0
 
@@ -133,16 +133,16 @@ class Orc:
                     self.stun_duration_countdown -= 1
 
             # Check for special attributes
-            if self.ice:
+            if self.ice1:
                 self.iced()
-            if self.poison:
-                self.poisoned(self.poison)
-            if self.fire:
-                self.burning(self.fire)
+            if self.poison1:
+                self.poisoned(self.poison1)
+            if self.fire1:
+                self.burning(self.fire1)
             if self.fire_lockout > 0:
                 self.fire_lockout -= 1
-            if self.dark:
-                self.darkness(self.dark)
+            if self.dark1:
+                self.darkness(self.dark1)
 
             self.show()
 
@@ -159,14 +159,14 @@ class Orc:
                     else:
                         # Destroy and remove all affects, move to start of path
                         self.destroy = True
-                        self.poison = None
+                        self.poison1 = None
                         self.poison_tick = 0
                         self.poison_countdown = 0
                         self.poison_charges = 0
-                        self.ice = None
-                        self.fire = None
+                        self.ice1 = None
+                        self.fire1 = None
                         self.fireball = None
-                        self.dark = None
+                        self.dark1 = None
                         self.x, self.y = path_nodes[0]
                         # Return damage to castle
                         return 1
@@ -178,15 +178,15 @@ class Orc:
                 self.respawn_countdown -= 1
             # If respawn timer reaches 0, respawn enemy and reset timer
             elif self.respawn_countdown <= 0:
-                self.poison = None
+                self.poison1 = None
                 self.poison_tick = 0
                 self.poison_countdown = 0
                 self.poison_charges = 0
-                self.fire = None
+                self.fire1 = None
                 self.fireball = None
                 self.burned_counter = 0
-                self.ice = None
-                self.dark = None
+                self.ice1 = None
+                self.dark1 = None
                 self.destroy = False
                 self.x, self.y = path_nodes[0]
                 self.node = 0
@@ -208,13 +208,13 @@ class Orc:
             self.frame = 0
 
     def show(self):
-        if self.poison:
+        if self.poison1:
             self.show_poison()
-        if self.fire:
+        if self.fire1:
             self.show_fire()
         if self.stun:
             self.show_stun()
-        if self.ice:
+        if self.ice1:
             self.show_ice()
 
         gameDisplay.blit(self.image, (self.x - self.image_width // 2,
@@ -288,7 +288,7 @@ class Orc:
         else:
             self.speed = self.base_speed
             self.frames_to_picswap = self.initial_frames_to_picswap
-            self.ice = None
+            self.ice1 = None
             self.ice_countdown = self.ice_counter
 
     def burning(self, amount):
@@ -300,31 +300,32 @@ class Orc:
             else:
                 self.fire_countdown -= 1
         else:
-            self.fire = None
+            self.fire1 = None
             self.fireball = False
 
     def poisoned(self, percent_hp):
         if self.poison_charges == 1 and self.poison_tick == 2 * seconds:
             self.stun_duration_countdown = self.stun_duration
             self.stun = True
-            print("stunned")
 
         poison_damage = percent_hp * self.hp
-        if poison_damage < 1.6:
-            poison_damage = 1.6  # 8 damage minimum
+        if poison_damage < 10:
+            poison_damage = 10  # 8 damage minimum
         if self.poison_charges > 0:
+            # 50% armor shred
             if self.poison_tick == 0:
-                self.take_damage(poison_damage, True)
+                self.take_damage(poison_damage/2, True)
+                self.take_damage(poison_damage/2, False)
                 self.poison_tick = 2 * seconds
                 self.poison_charges -= 1
             else:
                 self.poison_tick -= 1
         else:
-            self.poison = False
+            self.poison1 = False
 
     def darkness(self, damage):
         self.take_damage(damage, True)
-        self.dark = False
+        self.dark1 = False
 
     def check_death(self):
         if self.dead:
@@ -352,8 +353,8 @@ class Spider(Orc):
         self.stun_loc = ((-14, -38), (-14, -38), (-14, -38),
                          (-14, -38), (-14, -38))
         # hp manipulation
-        self.max_hp = 10
-        self.hp = 10
+        self.max_hp = 100
+        self.hp = 100
         self.armor = 0
         # Position and movement
         self.base_speed = 1.2
@@ -385,9 +386,9 @@ class Wolf(Orc):
         self.stun_loc = ((-5, -40), (-5, -40), (-5, -40),
                          (-5, -40), (-5, -50))
         # hp manipulation
-        self.max_hp = 30
-        self.hp = 30
-        self.armor = 25
+        self.max_hp = 240
+        self.hp = 240
+        self.armor = 20
         # Position and movement
         self.base_speed = 2
         self.speed = self.base_speed
@@ -419,9 +420,9 @@ class Turtle(Orc):
         self.stun_loc = ((-10, -45), (-10, -40), (-10, -45),
                          (-10, -45), (-10, -45))
         # hp manipulation
-        self.max_hp = 30
-        self.hp = 30
-        self.armor = 80
+        self.max_hp = 200
+        self.hp = 200
+        self.armor = 90
         # Position and movement
         self.base_speed = .8
         self.speed = self.base_speed
@@ -455,9 +456,9 @@ class Dragon(Orc):
         self.fire_loc = (0, -100)
 
         # hp manipulation
-        self.max_hp = 300
-        self.hp = 300
-        self.armor = 90
+        self.max_hp = 2000
+        self.hp = 2000
+        self.armor = 75
         # Position and movement
         self.base_speed = 1
         self.speed = self.base_speed
@@ -477,8 +478,8 @@ class Lizard(Orc):
         super().__init__()
         # Image manipulation
         self.image = lizard_list[0][0]
-        self.image_width = 80
-        self.image_height = 80
+        self.image_width = 60
+        self.image_height = 60
         self.frames_to_picswap = 8
 
         # Damage locations
@@ -491,9 +492,9 @@ class Lizard(Orc):
         self.fire_loc = (-20, -65)
 
         # hp manipulation
-        self.max_hp = 40
-        self.hp = 40
-        self.armor = 90
+        self.max_hp = 300
+        self.hp = 300
+        self.armor = 50
         # Position and movement
         self.base_speed = 1.2
         self.speed = self.base_speed

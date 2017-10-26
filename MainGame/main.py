@@ -111,10 +111,10 @@ def set_towers(tower_locations, tower_list, missile_list):
             towerClass.TowerButton(  # 0 = Button
                 tower_location, opt1_msg="basic", opt1_action="basic"),
             towerClass.BasicTower(tower_location),
-            towerClass.IceTower(tower_location),
-            towerClass.FireTower(tower_location),
-            towerClass.PoisonTower(tower_location),
-            towerClass.DarkTower(tower_location)])
+            towerClass.IceTower1(tower_location),
+            towerClass.FireTower1(tower_location),
+            towerClass.PoisonTower1(tower_location),
+            towerClass.DarkTower1(tower_location)])
         missile_list.append([
             None,
             towerClass.BasicMissile(tower_location),
@@ -160,20 +160,23 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                             current_tower, enemy)
                         if hit:
                             damage, specialty = hit
-                            if specialty == "ice":
-                                enemy.ice = True
+                            if specialty == "basic":
+                                enemy.take_damage(damage)
+                            if specialty == "ice1":
+                                enemy.take_damage(damage)
+                                enemy.ice1 = True
                                 enemy.ice_countdown = enemy.ice_counter
-                            if specialty == "poison":
-                                enemy.poison = .07
-                                enemy.poison_charges = 2
-                            if specialty == "fire":
+                            if specialty == "poison1":
+                                enemy.poison1 = damage
+                                enemy.poison_charges = 5
+                            if specialty == "fire1":
                                 enemy.fireball = True
-                                enemy.fire = 3
+                                enemy.fire1 = damage
                                 enemy.burned_counter = 3
                                 enemy.fire_lockout = 3 * seconds
-                            if specialty == "dark":
-                                enemy.dark = damage * 2
-                            enemy.take_damage(damage)
+                            if specialty == "dark1":
+                                enemy.take_damage(damage)
+                                enemy.dark1 = damage * 3
                         kill = enemy.check_death()
                         if kill:
                             points, cash = kill
