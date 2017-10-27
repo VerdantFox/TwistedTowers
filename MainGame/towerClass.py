@@ -45,10 +45,10 @@ class TowerButton:
             opt2_col2=bright_teal, opt3_col1=red,
             opt3_col2=bright_red, opt4_col1=green,
             opt4_col2=bright_green, opt5_col1=purple,
-            opt5_col2=bright_purple, opt1_msg=None, opt2_msg=None,
+            opt5_col2=bright_purple, opt1_msg="Basic", opt2_msg=None,
             opt3_msg=None, opt4_msg=None, opt5_msg=None, opt1_msg_col=black,
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
-            opt5_msg_col=black, opt1_action=None, opt2_action=None,
+            opt5_msg_col=black, opt1_action="basic", opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
         self.image = None
         self._button_radius = button_radius
@@ -64,6 +64,9 @@ class TowerButton:
         self.option_count = option_count
         self.lockout = 20
         self.lockout_timer = self.lockout
+        self.option_lockout = self.lockout_timer
+        self.gray_out = False
+        self.tier = 0
         # List == x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
         # Circle list index 0 refers to main circle (tower location)
         self.circle_list = [
@@ -91,9 +94,11 @@ class TowerButton:
         """Draw main and option circles, highlight color if hovered
         perform action if clicked,
         show options for a period of set_option_timer"""
-
+        if self._options_countdown > 0:
+            self._options_countdown -= 1
         if self.lockout_timer > 0:
             self.lockout_timer -= 1
+
         # Parameter for killing tower (destroyed if replaced or sold)
         if self.destroy or self.lockout_timer > 0:
             return None
@@ -110,6 +115,14 @@ class TowerButton:
                 radius = self._button_radius
             else:
                 radius = int(self._button_radius * 0.7)
+                if self.option_lockout > 0:
+                    action = None
+                if self.gray_out:
+                    gray_out = self.gray_options(circle_number)
+                    if gray_out is True:
+                        no_hov_color = gray
+                        hov_color = gray
+
             x = int(self.x + x_offset * radius)
             y = int(self.y + y_offset * radius)
 
@@ -126,10 +139,14 @@ class TowerButton:
                         if circle_number == 0:
                             self._options_countdown = int(
                                 self.set_options_timer * 1.5)
+                            # Prevents accidentally clicking main and
+                            # option_circles at same time
+                            self.option_lockout = True
                         else:
                             if action is not None:
-                                self.option_selected = action
-                                self.lockout_timer = 10
+                                if hov_color != gray:
+                                    self.option_selected = action
+                                    self.lockout_timer = self.lockout
 
             # If not hovering circle, draw inactive circle if possible
             else:
@@ -150,8 +167,15 @@ class TowerButton:
                     self.set_text(x, y, msg, msg_col, True)
                 else:
                     self.set_text(x, y, msg, msg_col, False)
-        if self._options_countdown > 0:
-            self._options_countdown -= 1
+
+        self.option_lockout = False
+
+    @staticmethod
+    def gray_options(circle_number):
+        if circle_number > 0:
+            return True
+        else:
+            return False
 
     def show_tower_image(self):
         pass
@@ -173,9 +197,9 @@ class BasicTower(TowerButton):
     def __init__(
             self, location, tower_range=125, destroy=True,
             option_count=5, opt1_msg="Sell", opt1_action="sell",
-            opt2_msg="Ice", opt2_action="ice", opt3_msg="Fire",
-            opt3_action="fire", opt4_msg="Poison", opt4_action="poison",
-            opt5_msg="Dark", opt5_action="dark",
+            opt2_msg="Ice", opt2_action="ice1", opt3_msg="Fire",
+            opt3_action="fire1", opt4_msg="Poison", opt4_action="poison1",
+            opt5_msg="Dark", opt5_action="dark1",
             main_color1=grass_green, main_color2=bright_green,
             opt1_col1=yellow,
             opt1_col2=bright_yellow, opt2_col1=teal,
@@ -200,12 +224,19 @@ class BasicTower(TowerButton):
         self.radius = tower_range  # range
         self.buy = 100
         self.sell = 75
-        self.specialty = None
+        self.tier = 1
 
     def show_tower_image(self):
         gameDisplay.blit(
             self.image, (int(self.x - 0.5 * self.image_width),
                          int(self.y - .8 * self.image_height)))
+
+    @staticmethod
+    def gray_options(circle_number):
+        if circle_number > 1:
+            return True
+        else:
+            return False
 
 
 class IceTower1(BasicTower):
@@ -223,6 +254,7 @@ class IceTower1(BasicTower):
         self.image, self.image_width, self.image_height = iceTower1
         self.buy = 125
         self.sell = 170
+        self.tier = 2
 
 
 class IceTower2(BasicTower):
@@ -238,6 +270,7 @@ class IceTower2(BasicTower):
         self.image, self.image_width, self.image_height = iceTower2
         self.buy = 150
         self.sell = 280
+        self.tier = 3
 
 
 class FireTower1(BasicTower):
@@ -257,6 +290,7 @@ class FireTower1(BasicTower):
         self.image, self.image_width, self.image_height = fireTower1
         self.buy = 125
         self.sell = 170
+        self.tier = 2
 
 
 class FireTower2(BasicTower):
@@ -272,6 +306,7 @@ class FireTower2(BasicTower):
         self.image, self.image_width, self.image_height = fireTower2
         self.buy = 150
         self.sell = 280
+        self.tier = 3
 
 
 class PoisonTower1(BasicTower):
@@ -291,6 +326,7 @@ class PoisonTower1(BasicTower):
         self.image, self.image_width, self.image_height = poisonTower1
         self.buy = 125
         self.sell = 170
+        self.tier = 2
 
 
 class PoisonTower2(BasicTower):
@@ -306,6 +342,7 @@ class PoisonTower2(BasicTower):
         self.image, self.image_width, self.image_height = poisonTower2
         self.buy = 150
         self.sell = 280
+        self.tier = 3
 
 
 class DarkTower1(BasicTower):
@@ -325,6 +362,7 @@ class DarkTower1(BasicTower):
         self.image, self.image_width, self.image_height = darkTower1
         self.buy = 125
         self.sell = 170
+        self.tier = 2
 
 
 class DarkTower2(BasicTower):
@@ -340,6 +378,7 @@ class DarkTower2(BasicTower):
         self.image, self.image_width, self.image_height = darkTower2
         self.buy = 150
         self.sell = 280
+        self.tier = 3
 
 
 # Deals up-front damage, reduced by armor
@@ -358,7 +397,7 @@ class BasicMissile:
         self.shoot_counter = 0
         self.missile_color = gray
         self.damage = 50
-        self.specialty = "basic1"
+        self.specialty = "basic"
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -410,7 +449,7 @@ class BasicMissile:
 
 
 # Slows enemy and deals up-front damage reduced by armor
-class IceMissile(BasicMissile):
+class IceMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5
@@ -418,13 +457,23 @@ class IceMissile(BasicMissile):
         self.specialty = "ice1"
 
 
+# Slows enemy and deals up-front damage reduced by armor
+class IceMissile2(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 56.25
+        self.missile_color = blue
+        self.specialty = "ice2"
+        self.radius = 6
+
+
 # Burns catches enemy on fire, dealing damage per second for 3 seconds
 # No up-front damage, DoT burn reduced by armor
 # Enemies on fire will catch other nearby enemies on fire
-class FireMissile(BasicMissile):
+class FireMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 15
+        self.damage = 25
         self.missile_color = red
         self.specialty = "fire1"
         self.shoot_rate = 4 * seconds
@@ -446,9 +495,38 @@ class FireMissile(BasicMissile):
         return hit
 
 
+# Burns catches enemy on fire, dealing damage per second for 3 seconds
+# No up-front damage, DoT burn reduced by armor
+# Enemies on fire will catch other nearby enemies on fire
+class FireMissile2(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 37.5
+        self.missile_color = red
+        self.specialty = "fire2"
+        self.shoot_rate = 4 * seconds
+        self.radius = 8
+
+    def lock_enemy(self, tower, enemy):
+        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
+        # Then, if enemy in range of tower, un-destroy missile
+        if self.shoot_counter < 1:
+            # Only lock-on if not freshly burned
+            if enemy.burned_counter < 2:
+                if not enemy.destroy:
+                    if self.destroy is True:
+                        if self.lock_on is None:
+                            if helpers.collision(tower, enemy):
+                                self.lock_on = enemy
+                                self.destroy = False
+                                self.shoot_counter = self.shoot_rate
+        hit = self.shoot(enemy)
+        return hit
+
+
 # Deals armor piercing DoT every 5 seconds (no up-front damage)
 # Poison lasts indefinitely
-class PoisonMissile(BasicMissile):
+class PoisonMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 0.04
@@ -473,10 +551,49 @@ class PoisonMissile(BasicMissile):
         return hit
 
 
-# Deals quadruple damage (3/4 as armor piercing)
-class DarkMissile(BasicMissile):
+# Deals armor piercing DoT every 5 seconds (no up-front damage)
+# Poison lasts indefinitely
+class PoisonMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 18.75
+        self.damage = 0.06
+        self.missile_color = green
+        self.specialty = "poison2"
+        self.shoot_rate = 4 * seconds
+        self.radius = 6
+
+    def lock_enemy(self, tower, enemy):
+        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
+        # Then, if enemy in range of tower, un-destroy missile
+        if self.shoot_counter < 1:
+            # Only lock-on if not poisoned
+            if enemy.poison_charges < 2 or not enemy.poison2:
+                if not enemy.destroy:
+                        if self.destroy is True:
+                            if self.lock_on is None:
+                                if helpers.collision(tower, enemy):
+                                    self.lock_on = enemy
+                                    self.destroy = False
+                                    self.shoot_counter = self.shoot_rate
+        hit = self.shoot(enemy)
+        return hit
+
+
+# Deals quadruple damage (3/4 as armor piercing)
+class DarkMissile1(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 37.5  # 75 / 2 (for 1/2 armor pen)
         self.missile_color = purple
         self.specialty = "dark1"
+
+
+# Deals quadruple damage (3/4 as armor piercing)
+class DarkMissile2(BasicMissile):
+    def __init__(self, location):
+        super().__init__(location)
+        self.damage = 112.5
+        self.missile_color = purple
+        self.specialty = "dark2"
+        self.radius = 6
+

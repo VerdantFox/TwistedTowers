@@ -52,10 +52,14 @@ top_tower_locations = [
 actions = {
     "sell": 0,
     "basic": 1,
-    "ice": 2,
-    "fire": 3,
-    "poison": 4,
-    "dark": 5
+    "ice1": 2,
+    "fire1": 3,
+    "poison1": 4,
+    "dark1": 5,
+    "ice2": 6,
+    "fire2": 7,
+    "poison2": 8,
+    "dark2": 9
 }
 
 

@@ -20,7 +20,7 @@ def game_loop():
 
     # Set up game rules
     score_board = generalClass.GameScore((20, 20))
-    funds = generalClass.Money((20, display_height - 90), start_cash=2000)
+    funds = generalClass.Money((20, display_height - 90), start_cash=3000)
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
     frames = 0
@@ -28,14 +28,15 @@ def game_loop():
     # # Blank list
     # enemies_list = []
 
-    # Single lizard
-    enemies_list = [enemies.Lizard()]
+    # # Single lizard
+    # enemies_list = [enemies.Lizard(), enemies.Lizard(), enemies.Lizard()]
 
     # # Single orc
     # enemies_list = [enemies.Orc()]
 
-    # # Single spider
-    # enemies_list = [enemies.Spider()]
+    # Single spider
+    enemies_list = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                    enemies.Spider(), enemies.Spider()]
 
     # # single turtle
     # enemies_list = [enemies.Turtle()]
@@ -109,19 +110,27 @@ def set_towers(tower_locations, tower_list, missile_list):
     for tower_location in tower_locations:  # See lists.py
         tower_list.append([
             towerClass.TowerButton(  # 0 = Button
-                tower_location, opt1_msg="basic", opt1_action="basic"),
+                tower_location, ),
             towerClass.BasicTower(tower_location),
             towerClass.IceTower1(tower_location),
             towerClass.FireTower1(tower_location),
             towerClass.PoisonTower1(tower_location),
-            towerClass.DarkTower1(tower_location)])
+            towerClass.DarkTower1(tower_location),
+            towerClass.IceTower2(tower_location),
+            towerClass.FireTower2(tower_location),
+            towerClass.PoisonTower2(tower_location),
+            towerClass.DarkTower2(tower_location)])
         missile_list.append([
             None,
             towerClass.BasicMissile(tower_location),
-            towerClass.IceMissile(tower_location),
-            towerClass.FireMissile(tower_location),
-            towerClass.PoisonMissile(tower_location),
-            towerClass.DarkMissile(tower_location)])
+            towerClass.IceMissile1(tower_location),
+            towerClass.FireMissile1(tower_location),
+            towerClass.PoisonMissile1(tower_location),
+            towerClass.DarkMissile1(tower_location),
+            towerClass.IceMissile2(tower_location),
+            towerClass.FireMissile2(tower_location),
+            towerClass.PoisonMissile2(tower_location),
+            towerClass.DarkMissile2(tower_location)])
 
 
 def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
@@ -130,6 +139,21 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
     for tower_location in tower_list:
         for current_tower in tower_location:
             if not current_tower.destroy:
+                if current_tower.tier == 0:
+                    if funds.cash < 100:
+                        current_tower.gray_out = True
+                    else:
+                        current_tower.gray_out = False
+                if current_tower.tier == 1:
+                    if funds.cash < 125:
+                        current_tower.gray_out = True
+                    else:
+                        current_tower.gray_out = False
+                if current_tower.tier == 2:
+                    if funds.cash < 150:
+                        current_tower.gray_out = True
+                    else:
+                        current_tower.gray_out = False
                 selected = current_tower.option_selected
                 new_tower_index = actions.get(selected)  # See lists.py
                 current_tower_index = tower_location.index(current_tower)
@@ -160,23 +184,7 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                             current_tower, enemy)
                         if hit:
                             damage, specialty = hit
-                            if specialty == "basic":
-                                enemy.take_damage(damage)
-                            if specialty == "ice1":
-                                enemy.take_damage(damage)
-                                enemy.ice1 = True
-                                enemy.ice_countdown = enemy.ice_counter
-                            if specialty == "poison1":
-                                enemy.poison1 = damage
-                                enemy.poison_charges = 5
-                            if specialty == "fire1":
-                                enemy.fireball = True
-                                enemy.fire1 = damage
-                                enemy.burned_counter = 3
-                                enemy.fire_lockout = 3 * seconds
-                            if specialty == "dark1":
-                                enemy.take_damage(damage)
-                                enemy.dark1 = damage * 3
+                            enemy.hit(damage, specialty)
                         kill = enemy.check_death()
                         if kill:
                             points, cash = kill
@@ -192,14 +200,21 @@ def draw_enemies(enemies_list, castle):
         if enemy.lives == 0:
             enemies_list.pop(enemies_list.index(enemy))
         castle_damage = enemy.move()
-        if enemy.fireball:
+
+        # Fire stuff
+        if enemy.fireball2:
             for adjacent in enemies_list:
                 if adjacent != enemy:
                     if helpers.collision(enemy, adjacent):
-                        if adjacent.fire_lockout == 0:
-                            adjacent.fire = 3
-                            adjacent.burned_counter = 3
-                            adjacent.fire_lockout = 3 * seconds
+                        adjacent.fire2 = enemy.fire2
+                        adjacent.burned_counter = 3
+        if enemy.fireball1 and not enemy.fireball2:
+            for adjacent in enemies_list:
+                if adjacent != enemy:
+                    if helpers.collision(enemy, adjacent):
+                        adjacent.fire1 = enemy.fire1
+                        adjacent.burned_counter = 3
+
         if castle_damage:
             if castle.hp > 0:
                 castle.adjust(-castle_damage)
