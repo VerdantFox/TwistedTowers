@@ -48,13 +48,13 @@ class Orc:
         self.armor = 20
 
         # Death and destruction ;-)
-        self.destroy = False  # Removes body until respawn timer returns to play
+        self.destroy = True  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
         self.points = 5
         self.cash = 25
-        self.respawn_timer = 3 * seconds
-        self.respawn_countdown = 3 * seconds
-        self.lives = 3
+        self.respawn_timer = random.randint(1, 1.5 * seconds)
+        self.respawn_countdown = self.respawn_timer
+        self.lives = 2  # start dead, need 1 more than that
         self.added_to_list = False
 
         # Ice specialties
@@ -98,6 +98,7 @@ class Orc:
         self.dark_timer = .5 * seconds
 
     def move(self):
+
         if not self.destroy:
             if not self.stun:
                 # Move towards node by self.speed.
@@ -143,7 +144,9 @@ class Orc:
             # Check for special attributes
             if self.ice1 or self.ice2:
                 self.iced()
-            if self.poison1:
+            if self.poison2:
+                self.poisoned(self.poison2)
+            if self.poison1 and not self.poison2:
                 self.poisoned(self.poison1)
             if self.fire1 or self.fire2:
                 self.burning()
@@ -177,6 +180,7 @@ class Orc:
                         self.poison_charges = 0
                         self.ice1 = False
                         self.ice2 = False
+                        self.speed = self.base_speed
                         self.fire1 = None
                         self.fire2 = None
                         self.fireball1 = 0
@@ -193,6 +197,7 @@ class Orc:
                 self.respawn_countdown -= 1
             # If respawn timer reaches 0, respawn enemy and reset timer
             elif self.respawn_countdown <= 0:
+                self.lives -= 1
                 self.poison1 = None
                 self.poison2 = None
                 self.poison_tick = 0
@@ -205,14 +210,14 @@ class Orc:
                 self.burned_counter = 0
                 self.ice1 = False
                 self.ice2 = False
+                self.speed = self.base_speed
                 self.dark = False
                 self.destroy = False
                 self.x, self.y = path_nodes[0]
                 self.node = 0
                 self.next_node = path_nodes[0]
                 self.hp = self.max_hp
-                self.respawn_countdown = self.respawn_timer + random.randrange(
-                    -2 * seconds, 2 * seconds)
+                self.respawn_countdown = self.respawn_timer
 
         self.right = False
         self.left = False
@@ -348,11 +353,11 @@ class Orc:
 
         poison_damage = percent_hp * self.hp
         if self.poison1:
-            if poison_damage < 10:
-                poison_damage = 10
-        if self.poison2:
             if poison_damage < 15:
                 poison_damage = 15
+        if self.poison2:
+            if poison_damage < 22.5:
+                poison_damage = 22.5
         if self.poison_charges > 0:
             # 50% armor shred
             if self.poison_tick == 0:
@@ -368,7 +373,6 @@ class Orc:
 
     def check_death(self):
         if self.dead:
-            self.lives -= 1
             self.dead = False
             return self.points, self.cash
         else:
@@ -531,7 +535,7 @@ class Dragon(Orc):
         self.hp = 2000
         self.armor = 75
         # Position and movement
-        self.base_speed = 1
+        self.base_speed = .6
         self.speed = self.base_speed
         # Death
         self.cash = 25

@@ -529,7 +529,7 @@ class FireMissile2(BasicMissile):
 class PoisonMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 0.04
+        self.damage = 0.06
         self.missile_color = green
         self.specialty = "poison1"
         self.shoot_rate = 4 * seconds
@@ -556,7 +556,7 @@ class PoisonMissile1(BasicMissile):
 class PoisonMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 0.06
+        self.damage = 0.09
         self.missile_color = green
         self.specialty = "poison2"
         self.shoot_rate = 4 * seconds

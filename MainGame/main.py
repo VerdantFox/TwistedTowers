@@ -3,16 +3,15 @@ import generalClass
 import towerClass
 import enemies
 import helpers
+import random
 from definitions import *
 from lists import *
-from enemyList import enemies_added
+
 from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
 
 # Start game loop
 def game_loop():
-
-    # castle_damage = None
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", color1=gray, color2=white,
@@ -25,8 +24,8 @@ def game_loop():
     end_screen = generalClass.EndScreen()
     frames = 0
 
-    # # Blank list
-    # enemies_list = []
+    # Blank list
+    enemies_list = []
 
     # # Single lizard
     # enemies_list = [enemies.Lizard(), enemies.Lizard(), enemies.Lizard()]
@@ -34,9 +33,9 @@ def game_loop():
     # # Single orc
     # enemies_list = [enemies.Orc()]
 
-    # Single spider
-    enemies_list = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
-                    enemies.Spider(), enemies.Spider()]
+    # # Single spider
+    # enemies_list = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+    #                 enemies.Spider(), enemies.Spider()]
 
     # # single turtle
     # enemies_list = [enemies.Turtle()]
@@ -60,8 +59,6 @@ def game_loop():
     set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
 
-    enemies_added_index = 0
-
     # Actual game loop
     while True:
         frames += 1
@@ -72,14 +69,10 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     helpers.pause_game()
-            # print(event)
+            print(event)
 
         # add new enemies
-        if frames % (60 * seconds) == 0:
-            if enemies_added_index < len(enemies_added):
-                for enemy in enemies_added[enemies_added_index]:
-                    enemies_list.append(enemy)
-                enemies_added_index += 1
+        add_enemies(frames, enemies_list)
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -133,6 +126,104 @@ def set_towers(tower_locations, tower_list, missile_list):
             towerClass.DarkMissile2(tower_location)])
 
 
+def add_enemies(frames, enemies_list):
+    picker = 0
+    if frames % (5 * seconds) == 0:
+        # Setting the picker
+        if frames <= 0.33 * minutes:
+            picker = 0
+        if 0.33 * minutes < frames <= .66 * minutes:
+            picker = 1
+        if 0.66 * minutes < frames <= 1 * minutes:
+            picker = random.randint(2, 4)
+        if 1 * minutes < frames <= 2 * minutes:
+            picker = random.randint(3, 7)
+        if 2 * minutes < frames <= 2.8 * minutes:
+            picker = random.randint(8, 12)
+        if 2.8 * minutes < frames <= 3.5 * minutes:
+            picker = -1
+        if frames == 3 * minutes:
+            picker = 13
+        if 3.5 * minutes < frames <= 5 * minutes:
+            picker = random.randint(14, 18)
+        if frames == 4 * minutes:
+            picker = 13
+        if 5 * minutes < frames <= 7 * minutes:
+            picker = random.randint(13, 19)
+        if frames > 7 * minutes:
+            picker = random.randint(14, 20)
+        if frames == 7 * minutes:
+            picker = 20
+
+        # The picks
+        if picker == -1:
+            pass
+        if picker == 0:
+            enemies_list.append(enemies.Spider())
+        elif picker == 1:
+            enemies_list.extend(
+                [enemies.Spider(), enemies.Spider()])
+        elif picker == 2:
+            enemies_list.extend(
+                [enemies.Spider(), enemies.Spider(), enemies.Spider()])
+        elif picker == 3:
+            enemies_list.append(enemies.Lizard())
+        elif picker == 4:
+            enemies_list.append(enemies.Wolf())
+        elif picker == 5:
+            enemies_list.append(enemies.Orc())
+        elif picker == 6:
+            enemies_list.append(enemies.Turtle())
+        elif picker == 7:
+            enemies_list.extend(
+                [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider()])
+        elif picker == 8:
+            enemies_list.extend([enemies.Lizard(), enemies.Lizard()])
+        elif picker == 9:
+            enemies_list.extend([enemies.Wolf(), enemies.Wolf()])
+        elif picker == 10:
+            enemies_list.extend([enemies.Orc(), enemies.Orc()])
+        elif picker == 11:
+            enemies_list.extend([enemies.Turtle(), enemies.Turtle()])
+        elif picker == 12:
+            enemies_list.extend(
+                [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider()])
+        elif picker == 13:
+            enemies_list.append(enemies.Dragon())
+        elif picker == 14:
+            enemies_list.extend([enemies.Lizard(), enemies.Lizard(),
+                                 enemies.Lizard()])
+        elif picker == 15:
+            enemies_list.extend([enemies.Wolf(), enemies.Wolf(),
+                                 enemies.Wolf()])
+        elif picker == 16:
+            enemies_list.extend([enemies.Orc(), enemies.Orc(), enemies.Orc()])
+        elif picker == 17:
+            enemies_list.extend([enemies.Turtle(), enemies.Turtle(),
+                                 enemies.Turtle()])
+        elif picker == 18:
+            enemies_list.extend(
+                [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider()])
+        elif picker == 19:
+            enemies_list.extend(
+                [enemies.Lizard(), enemies.Wolf(), enemies.Orc,
+                 enemies.Turtle, enemies.Spider(), enemies.Spider(),
+                 enemies.Spider()])
+        elif picker == 20:
+            enemies_list.extend([enemies.Dragon(), enemies.Dragon()])
+
+
 def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
     # Go through list of towers, drawing towers if not destroyed
     # Then drawing missiles to match appropriate tower
@@ -180,6 +271,8 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                     missile = \
                         missile_list[tower_position][current_tower_index]
                     for enemy in enemies_list:
+                        if enemy is None:
+                            print("no enemy detected")
                         hit = missile.lock_enemy(
                             current_tower, enemy)
                         if hit:
