@@ -19,6 +19,7 @@ teal = (0, 200, 200)
 bright_teal = (100, 255, 255)
 pink = (255, 0, 130)
 orange = (255, 110, 0)
+bright_orange = (255, 153, 51)
 
 # Time
 seconds = 60

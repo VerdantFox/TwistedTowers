@@ -15,7 +15,7 @@ class Button:
     def __init__(self, location, width=80, height=30,
                  message=None, color1=green, color2=bright_green,
                  action=None, font="Comic Sans MS", font_size=20,
-                 message_color=black):
+                 message_color=black, permanent=False):
         self._mouse = None
         self._click = None
         self._message = message
@@ -27,33 +27,55 @@ class Button:
         self._action = action
         self._font = pygame.font.SysFont(font, font_size)
         self._message_color = message_color
+        self.permanent = permanent
+        self.selected = False
+        self.selected_color = purple
+        self.selected_text_color = white
 
-    def draw(self):
+    def draw(self, *args):
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()
         if (self.x < self._mouse[0] < self.x + self._width
                 and self.y <
                 self._mouse[1] <
                 self.y + self._height):
-            pygame.draw.rect(
-                gameDisplay, self._color2,
-                (self.x, self.y, self._width, self._height))
+            if self.selected:
+                pygame.draw.rect(
+                    gameDisplay, self.selected_color,
+                    (self.x, self.y, self._width, self._height))
+            else:
+                pygame.draw.rect(
+                    gameDisplay, self._color2,
+                    (self.x, self.y, self._width, self._height))
             if self._click[0] == 1 and self._action is not None:
+                if self.permanent:
+                    self.selected = True
+                    for arg in args:
+                        arg.selected = False
                 if isinstance(self._action, str):
                     return self._action
                 else:
                     self._action()
 
         else:
-            pygame.draw.rect(
-                gameDisplay, self._color1,
-                (self.x, self.y, self._width, self._height))
+            if self.selected:
+                pygame.draw.rect(
+                    gameDisplay, self.selected_color,
+                    (self.x, self.y, self._width, self._height))
+            else:
+                pygame.draw.rect(
+                    gameDisplay, self._color1,
+                    (self.x, self.y, self._width, self._height))
         if self._message:
             self.set_text()
 
     def set_text(self):
-        text_surface = self._font.render(
-            self._message, True, self._message_color)
+        if self.selected:
+            text_surface = self._font.render(
+                self._message, True, self.selected_text_color)
+        else:
+            text_surface = self._font.render(
+                self._message, True, self._message_color)
         text_rect = text_surface.get_rect()
         text_rect.center = ((self.x + self._width // 2),
                             (self.y + self._height // 2))
@@ -91,8 +113,40 @@ class GameScore:
         self.score += amount
 
 
+class GameClock:
+    def __init__(self, location, width=120, height=30, background_color=black,
+                 font="Comic Sans MS", font_size=20, message_color=white):
+        self.x, self.y = location
+        self.frames = 0
+        self._width = width
+        self._height = height
+        self._background_color = background_color
+        self._font = pygame.font.SysFont(font, font_size)
+        self.text_color = message_color
+        self.background = True
+
+    def draw(self):
+        if self.background:
+            pygame.draw.rect(
+                gameDisplay, self._background_color,
+                (self.x, self.y, self._width, self._height))
+        self.set_text()
+        self.frames += 1
+
+    def set_text(self):
+        minutes_elapsed = self.frames // minutes
+        remaining_seconds = (self.frames % minutes) // seconds
+        text_surface = self._font.render(
+            "Time: {0}:{1:02}".format(minutes_elapsed, remaining_seconds),
+            True, self.text_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = ((self.x + self._width // 2),
+                            (self.y + self._height // 2))
+        gameDisplay.blit(text_surface, text_rect)
+
+
 class Money:
-    def __init__(self, location, width=90, height=30, start_cash=400,
+    def __init__(self, location, width=100, height=30, start_cash=400,
                  background_color=black, font="Comic Sans MS", font_size=20,
                  message_color=white):
         self.x, self.y = location
@@ -231,3 +285,11 @@ class EndScreen:
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
         gameDisplay.blit(text_surface, text_rect)
+
+
+class Settings:
+    def __init__(self):
+        self.spawn_rate = 5 * seconds
+        self.gold_generation = 1 * seconds
+        self.starting_gold = 1000
+        self.difficulty = 1

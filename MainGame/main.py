@@ -7,22 +7,147 @@ import random
 from definitions import *
 from lists import *
 
-from gameParameters import backgroundImage, gameDisplay, display_height, clock
+from gameParameters import backgroundImage, gameDisplay, display_height, \
+    display_width, clock
+
+
+def intro_loop():
+    play_button = generalClass.Button(
+        (display_width // 3 - 200, display_height * 3 // 4),
+        message="Play", action=game_loop, font_size=40, width=300, height=60)
+    quit_button = generalClass.Button(
+        (display_width * 2 // 3 - 100, display_height * 3 // 4),
+        message="Quit", action=quit, font_size=40, width=300, height=60,
+        color1=red, color2=bright_red)
+    info_button = generalClass.Button(
+        (display_width // 3 - 200, display_height * 2 // 3),
+        message="Encyclopedia", action=info_loop, font_size=40,
+        width=300, height=60, color1=yellow, color2=bright_yellow)
+    settings_button = generalClass.Button(
+        (display_width * 2 // 3 - 100, display_height * 2 // 3),
+        message="Settings", action=settings_loop, font_size=40,
+        width=300, height=60, color1=orange, color2=bright_orange)
+    text = "The time to act is upon us! Lord Darken has set his armies of " \
+           "the damned upon the innocents within StoneBorn Castle. As " \
+           "general of the resistance army it is your duty to direct the " \
+           "building of our static tower defenses. Enlist the help of the " \
+           "magician, Jorah, to erect magical towers to keep our enemies at " \
+           "bay. Our fighters within the keep can hold off only a limited " \
+           "number of enemies before the castle falls. We must hold off this " \
+           "great evil!"
+    font = pygame.font.SysFont('Comic Sans MS', 20, bold=True)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        # Draw background
+        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+        helpers.blit_text(gameDisplay, text, (100, 150), font, margin=100)
+        play_button.draw()
+        quit_button.draw()
+        info_button.draw()
+        settings_button.draw()
+        pygame.display.update()
+        clock.tick(60)
+
+
+def info_loop():
+    pass
+
+
+def settings_loop():
+    return_button = generalClass.Button(
+        (50, 100), message="Return", action=intro_loop, font_size=40,
+        width=200, height=60, color1=orange, color2=bright_orange)
+    easy_button = generalClass.Button(
+        (50, 400), message="Easy", action=easy_settings, font_size=40,
+        width=200, height=60, color1=green, color2=bright_green, permanent=True)
+    medium_button = generalClass.Button(
+        (50, 485), message="Medium", action=medium_settings, font_size=40,
+        width=200, height=60, color1=yellow, color2=bright_yellow,
+        permanent=True)
+    hard_button = generalClass.Button(
+        (50, 570), message="Hard", action=hard_settings, font_size=40,
+        width=200, height=60, color1=red, color2=bright_red, permanent=True)
+    # sound_off_button = generalClass.Button(
+    #     (display_width * 2 // 3 - 100, display_height * 2 // 3),
+    #     message="Hard", action=settings_loop, font_size=40,
+    #     width=300, height=60, color1=orange, color2=bright_orange)
+    # Sound_on_button = generalClass.Button(
+    #     (display_width * 2 // 3 - 100, display_height * 2 // 3),
+    #     message="Hard", action=settings_loop, font_size=40,
+    #     width=300, height=60, color1=orange, color2=bright_orange)
+
+    easy_text = "Enemies will spawn more slowly, passive gold generation up, " \
+                "higher starting gold."
+    medium_text = "Normal spawn, gold generation, and starting gold."
+    hard_text = "Fastest spawn rate, normal gold generation, " \
+                "lower starting gold."
+    font = pygame.font.SysFont('Comic Sans MS', 24, bold=True)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        # Draw background
+        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+        helpers.blit_text(gameDisplay, easy_text, (275, 390),
+                          font, margin=-50)
+        helpers.blit_text(gameDisplay, medium_text, (275, 475),
+                          font, margin=50)
+        helpers.blit_text(gameDisplay, hard_text, (275, 560),
+                          font, margin=50)
+        return_button.draw()
+        easy_button.draw(medium_button, hard_button)
+        medium_button.draw(easy_button, hard_button)
+        hard_button.draw(easy_button, medium_button)
+        pygame.display.update()
+        clock.tick(60)
+
+
+def easy_settings():
+    settings.spawn_rate = 10 * seconds
+    settings.starting_gold = 1600
+    settings.gold_generation = 0.5 * seconds
+    settings.difficulty = 2
+
+
+def medium_settings():
+    settings.spawn_rate = 7 * seconds
+    settings.starting_gold = 1200
+    settings.gold_generation = 1 * seconds
+    settings.difficulty = 1
+
+
+def hard_settings():
+    settings.spawn_rate = 5 * seconds
+    settings.starting_gold = 800
+    settings.gold_generation = 2 * seconds
+    settings.difficulty = 1
 
 
 # Start game loop
-def game_loop(start_cash=1000, enemy_spawn_rate=5*seconds):
+def game_loop():
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", color1=gray, color2=white,
         action=helpers.pause_game)
 
+    # Set game settings
+    start_cash = settings.starting_gold
+    enemy_spawn_rate = settings.spawn_rate
+    passive_money_rate = settings.gold_generation
+    difficulty = settings.difficulty
+
     # Set up game rules
-    score_board = generalClass.GameScore((20, 20))
+    score_board = generalClass.GameScore((140, 20))
+    game_clock = generalClass.GameClock((20, 20))
     funds = generalClass.Money((20, display_height - 90), start_cash=start_cash)
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
-    frames = 0
 
     # Blank list
     enemies_list = []
@@ -61,7 +186,6 @@ def game_loop(start_cash=1000, enemy_spawn_rate=5*seconds):
 
     # Actual game loop
     while True:
-        frames += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -72,7 +196,8 @@ def game_loop(start_cash=1000, enemy_spawn_rate=5*seconds):
             # print(event)
 
         # add new enemies
-        add_enemies(frames, enemies_list, enemy_spawn_rate)
+        add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
+                    difficulty)
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -88,16 +213,17 @@ def game_loop(start_cash=1000, enemy_spawn_rate=5*seconds):
         funds.draw()
         castle.draw()
         score_board.draw()
+        game_clock.draw()
         pause_button.draw()
         pygame.display.update()
         clock.tick(60)
         if castle.game_over:
             end_screen.score = score_board.score
-            end_screen.time_elapsed = frames
+            end_screen.time_elapsed = game_clock.frames
             end = end_screen.draw()
             if end == "play":
                 game_loop()
-        if frames % (1 * seconds) == 0:
+        if game_clock.frames % passive_money_rate == 0:
             funds.adjust(1)
 
 
@@ -128,33 +254,34 @@ def set_towers(tower_locations, tower_list, missile_list):
             towerClass.DarkMissile2(tower_location)])
 
 
-def add_enemies(frames, enemies_list, enemy_spawn_rate):
+def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
     picker = 0
     if frames % enemy_spawn_rate == 0:
+        min_rate = minutes * difficulty
         # Setting the picker
-        if frames <= 0.33 * minutes:
+        if frames <= 0.33 * min_rate:
             picker = 0
-        if 0.33 * minutes < frames <= .66 * minutes:
+        if 0.33 * min_rate < frames <= .66 * min_rate:
             picker = 1
-        if 0.66 * minutes < frames <= 1 * minutes:
-            picker = random.randint(2, 4)
-        if 1 * minutes < frames <= 2 * minutes:
+        if 0.66 * min_rate < frames <= 1 * min_rate:
+            picker = random.randint(2, 3)
+        if 1 * min_rate < frames <= 2 * min_rate:
             picker = random.randint(3, 7)
-        if 2 * minutes < frames <= 2.8 * minutes:
+        if 2 * min_rate < frames <= 2.8 * min_rate:
             picker = random.randint(8, 12)
-        if 2.8 * minutes < frames <= 3.5 * minutes:
+        if 2.8 * min_rate < frames <= 3.5 * min_rate:
             picker = -1
-        if frames == 3 * minutes:
+        if frames == 3 * min_rate:
             picker = 13
-        if 3.5 * minutes < frames <= 5 * minutes:
+        if 3.5 * min_rate < frames <= 5 * min_rate:
             picker = random.randint(14, 18)
-        if frames == 4 * minutes:
+        if frames == 4 * min_rate:
             picker = 13
-        if 5 * minutes < frames <= 7 * minutes:
+        if 5 * min_rate < frames <= 7 * min_rate:
             picker = random.randint(13, 19)
-        if frames > 7 * minutes:
+        if frames > 7 * min_rate:
             picker = random.randint(14, 20)
-        if frames == 7 * minutes:
+        if frames == 7 * min_rate:
             picker = 20
 
         # The picks
@@ -316,6 +443,7 @@ def draw_enemies(enemies_list, castle):
 
 
 if __name__ == "__main__":
-    game_loop()
+    settings = generalClass.Settings()
+    intro_loop()
     pygame.quit()
     quit()

@@ -61,6 +61,7 @@ class Orc:
         self.dead_image_countdown = 0
         self.dead_x = 0
         self.dead_y = 0
+        self.dead_font = pygame.font.SysFont("Comic Sans MS", 14, bold=True)
 
         # Ice specialties
         self.ice_loc = ((-18, 10), (-18, 10), (-18, 10),
@@ -203,6 +204,14 @@ class Orc:
                     self.dead_image, (self.dead_x - self.image_width // 2,
                                       self.dead_y - self.image_height // 2))
                 self.dead_image_countdown -= 1
+            # Show money earned
+            if self.dead_image_countdown > 3 * seconds:
+                text_surface = self.dead_font.render(
+                    "${}".format(self.cash), True, yellow)
+                text_rect = text_surface.get_rect()
+                text_rect.center = (self.dead_x, self.dead_y-30)
+                gameDisplay.blit(text_surface, text_rect)
+
             # Start respawn timer countdown
             if self.respawn_countdown > 0:
                 self.respawn_countdown -= 1
