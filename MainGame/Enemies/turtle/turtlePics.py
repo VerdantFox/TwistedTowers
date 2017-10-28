@@ -1,5 +1,9 @@
 import pygame
 
+# turtle dead
+turtledead = pygame.image.load('Enemies/turtle/ramDEAD.png')
+
+
 # turtle down
 turtledown1 = pygame.image.load('Enemies/turtle/ramDOWN1.png')
 turtledown2 = pygame.image.load('Enemies/turtle/ramDOWN2.png')

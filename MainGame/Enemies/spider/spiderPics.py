@@ -1,5 +1,8 @@
 import pygame
 
+# Spider dead
+spiderdead = pygame.image.load('Enemies/spider/eliseDEAD.png')
+
 # spider down
 spiderdown1 = pygame.image.load('Enemies/spider/eliseDOWN1.png')
 spiderdown2 = pygame.image.load('Enemies/spider/eliseDOWN2.png')

@@ -1,5 +1,9 @@
 import pygame
 
+# Orc Dead
+orcdead = pygame.image.load('Enemies/orc/sionDEAD.png')
+
+
 # Orc down
 orcdown1 = pygame.image.load('Enemies/orc/sionDOWN1.png')
 orcdown2 = pygame.image.load('Enemies/orc/sionDOWN2.png')

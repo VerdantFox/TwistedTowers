@@ -1,5 +1,8 @@
 import pygame
 
+# Dragon DEAD
+dragondead = pygame.image.load('Enemies/dragon/dragonDEAD.png')
+
 # dragon down
 dragondown1 = pygame.image.load('Enemies/dragon/dragonDOWN1.png')
 dragondown2 = pygame.image.load('Enemies/dragon/dragonDOWN2.png')

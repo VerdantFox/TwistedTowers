@@ -11,7 +11,7 @@ from gameParameters import backgroundImage, gameDisplay, display_height, clock
 
 
 # Start game loop
-def game_loop():
+def game_loop(start_cash=1000, enemy_spawn_rate=5*seconds):
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", color1=gray, color2=white,
@@ -19,7 +19,7 @@ def game_loop():
 
     # Set up game rules
     score_board = generalClass.GameScore((20, 20))
-    funds = generalClass.Money((20, display_height - 90), start_cash=3000)
+    funds = generalClass.Money((20, display_height - 90), start_cash=start_cash)
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
     frames = 0
@@ -69,10 +69,10 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     helpers.pause_game()
-            print(event)
+            # print(event)
 
         # add new enemies
-        add_enemies(frames, enemies_list)
+        add_enemies(frames, enemies_list, enemy_spawn_rate)
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
@@ -97,6 +97,8 @@ def game_loop():
             end = end_screen.draw()
             if end == "play":
                 game_loop()
+        if frames % (1 * seconds) == 0:
+            funds.adjust(1)
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -126,9 +128,9 @@ def set_towers(tower_locations, tower_list, missile_list):
             towerClass.DarkMissile2(tower_location)])
 
 
-def add_enemies(frames, enemies_list):
+def add_enemies(frames, enemies_list, enemy_spawn_rate):
     picker = 0
-    if frames % (5 * seconds) == 0:
+    if frames % enemy_spawn_rate == 0:
         # Setting the picker
         if frames <= 0.33 * minutes:
             picker = 0
@@ -263,7 +265,6 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                             funds.adjust(-new_tower.buy)
                         else:
                             current_tower.option_selected = None
-                            print("Not enough funds!")
                 current_tower.draw()
 
                 if current_tower_index != 0:
@@ -271,18 +272,19 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                     missile = \
                         missile_list[tower_position][current_tower_index]
                     for enemy in enemies_list:
-                        if enemy is None:
-                            print("no enemy detected")
                         hit = missile.lock_enemy(
                             current_tower, enemy)
                         if hit:
                             damage, specialty = hit
                             enemy.hit(damage, specialty)
-                        kill = enemy.check_death()
-                        if kill:
-                            points, cash = kill
-                            score_board.adjust(points)
-                            funds.adjust(cash)
+                        try:    # Crashed once here 7 mins in ("no self given")
+                            kill = enemy.check_death()
+                            if kill:
+                                points, cash = kill
+                                score_board.adjust(points)
+                                funds.adjust(cash)
+                        except TypeError:
+                            print("kill error")
                     missile.adjust_counters()
 
 

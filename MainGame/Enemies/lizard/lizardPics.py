@@ -1,5 +1,9 @@
 import pygame
 
+# lizard dead
+lizarddead = pygame.image.load('Enemies/lizard/renDEAD.png')
+
+
 # lizard down
 lizarddown1 = pygame.image.load('Enemies/lizard/renDOWN1.png')
 lizarddown2 = pygame.image.load('Enemies/lizard/renDOWN2.png')

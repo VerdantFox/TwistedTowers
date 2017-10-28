@@ -1,5 +1,8 @@
 import pygame
 
+# Wolf dead
+wolfdead = pygame.image.load('Enemies/wolf/wwDEAD.png')
+
 # wolf down
 wolfdown1 = pygame.image.load('Enemies/wolf/wwDOWN1.png')
 wolfdown2 = pygame.image.load('Enemies/wolf/wwDOWN2.png')

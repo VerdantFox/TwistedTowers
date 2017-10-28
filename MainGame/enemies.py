@@ -2,12 +2,12 @@ import random
 
 import pygame
 
-from Enemies.orc.orcPics import orc_list
-from Enemies.spider.spiderPics import spider_list
-from Enemies.turtle.turtlePics import turtle_list
-from Enemies.wolf.wolfPics import wolf_list
-from Enemies.dragon.dragonPics import dragon_list
-from Enemies.lizard.lizardPics import lizard_list
+from Enemies.orc.orcPics import orc_list, orcdead
+from Enemies.spider.spiderPics import spider_list, spiderdead
+from Enemies.turtle.turtlePics import turtle_list, turtledead
+from Enemies.wolf.wolfPics import wolf_list, wolfdead
+from Enemies.dragon.dragonPics import dragon_list, dragondead
+from Enemies.lizard.lizardPics import lizard_list, lizarddead
 from definitions import *
 from gameParameters import gameDisplay
 from lists import *
@@ -51,11 +51,16 @@ class Orc:
         self.destroy = True  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
         self.points = 5
-        self.cash = 25
-        self.respawn_timer = random.randint(1, 1.5 * seconds)
+        self.cash = 75
+        self.respawn_timer = random.randint(5 * seconds, 6.75 * seconds)
         self.respawn_countdown = self.respawn_timer
         self.lives = 2  # start dead, need 1 more than that
         self.added_to_list = False
+        self.dead_image = orcdead
+        self.dead_image_timer = 4 * seconds
+        self.dead_image_countdown = 0
+        self.dead_x = 0
+        self.dead_y = 0
 
         # Ice specialties
         self.ice_loc = ((-18, 10), (-18, 10), (-18, 10),
@@ -192,6 +197,12 @@ class Orc:
 
         # If enemy is dead
         if self.destroy:
+            # Show body
+            if self.dead_image_countdown > 0:
+                gameDisplay.blit(
+                    self.dead_image, (self.dead_x - self.image_width // 2,
+                                      self.dead_y - self.image_height // 2))
+                self.dead_image_countdown -= 1
             # Start respawn timer countdown
             if self.respawn_countdown > 0:
                 self.respawn_countdown -= 1
@@ -284,6 +295,9 @@ class Orc:
                 self.hp -= damage
 
         if self.hp <= 0:
+            self.dead_x = self.x
+            self.dead_y = self.y
+            self.dead_image_countdown = self.dead_image_timer
             self.dead = True
             self.destroy = True
 
@@ -435,7 +449,9 @@ class Spider(Orc):
         self.base_speed = 1.2
         self.speed = self.base_speed
         # Death
-        self.cash = 5
+        self.cash = 8
+        self.dead_image = spiderdead
+
 
     def walk(self):
         # Change walking frame in direction
@@ -468,7 +484,8 @@ class Wolf(Orc):
         self.base_speed = 2
         self.speed = self.base_speed
         # Death
-        self.cash = 25
+        self.cash = 50
+        self.dead_image = wolfdead
 
     def walk(self):
         # Change walking frame in direction
@@ -502,49 +519,14 @@ class Turtle(Orc):
         self.base_speed = .8
         self.speed = self.base_speed
         # Death
-        self.cash = 25
+        self.cash = 75
+        self.dead_image = turtledead
 
     def walk(self):
         # Change walking frame in direction
         self.image = turtle_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(turtle_list[0]) - 1:
-            self.frame = 0
-
-
-class Dragon(Orc):
-    def __init__(self):
-        super().__init__()
-        # Image manipulation
-        self.image = dragon_list[0][0]
-        self.image_width = 150
-        self.image_height = 150
-        self.frames_to_picswap = 8
-
-        # Damage locations
-        self.ice_loc = ((-5, 30), (-22, 10), (-25, 10),
-                        (-22, 10), (-5, 30))
-        self.poison_loc = ((-15, -80), (-52, -52), (-65, -60),
-                           (-65, -20), (-15, 15))
-        self.stun_loc = ((10, -75), (30, -70), (30, -85),
-                         (30, -85), (0, -95))
-        self.fire_loc = (0, -100)
-
-        # hp manipulation
-        self.max_hp = 2000
-        self.hp = 2000
-        self.armor = 75
-        # Position and movement
-        self.base_speed = .6
-        self.speed = self.base_speed
-        # Death
-        self.cash = 25
-
-    def walk(self):
-        # Change walking frame in direction
-        self.image = dragon_list[self.direction][self.frame]
-        self.frame += 1
-        if self.frame > len(dragon_list[0]) - 1:
             self.frame = 0
 
 
@@ -574,11 +556,49 @@ class Lizard(Orc):
         self.base_speed = 1.2
         self.speed = self.base_speed
         # Death
-        self.cash = 25
+        self.cash = 50
+        self.dead_image = lizarddead
 
     def walk(self):
         # Change walking frame in direction
         self.image = lizard_list[self.direction][self.frame]
         self.frame += 1
         if self.frame > len(lizard_list[0]) - 1:
+            self.frame = 0
+
+
+class Dragon(Orc):
+    def __init__(self):
+        super().__init__()
+        # Image manipulation
+        self.image = dragon_list[0][0]
+        self.image_width = 150
+        self.image_height = 150
+        self.frames_to_picswap = 8
+
+        # Damage locations
+        self.ice_loc = ((-5, 30), (-22, 10), (-25, 10),
+                        (-22, 10), (-5, 30))
+        self.poison_loc = ((-15, -80), (-52, -52), (-65, -60),
+                           (-65, -20), (-15, 15))
+        self.stun_loc = ((10, -75), (30, -70), (30, -85),
+                         (30, -85), (0, -95))
+        self.fire_loc = (0, -100)
+
+        # hp manipulation
+        self.max_hp = 2000
+        self.hp = 2000
+        self.armor = 75
+        # Position and movement
+        self.base_speed = .6
+        self.speed = self.base_speed
+        # Death
+        self.cash = 750
+        self.dead_image = dragondead
+
+    def walk(self):
+        # Change walking frame in direction
+        self.image = dragon_list[self.direction][self.frame]
+        self.frame += 1
+        if self.frame > len(dragon_list[0]) - 1:
             self.frame = 0
