@@ -15,17 +15,19 @@ from towers.towerPics import fire_pic, ice_pic, poison_list, stun_list
 
 
 class Orc:
-    def __init__(self):
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
         # Position and movement
-        self.x, self.y = path_nodes[0]
+        self.x, self.y = location
         self.base_speed = 1
         self.speed = self.base_speed
         self.right = False
         self.left = False
         self.up = False
         self.down = False
-        self.next_node = path_nodes[0]  # see lists.py
+        self.next_node = next_node  # see lists.py
         self.node = 0
+        self.stationary = stationary
 
         # Image manipulation
         self.image = orc_list[0][0]
@@ -48,7 +50,7 @@ class Orc:
         self.armor = 20
 
         # Death and destruction ;-)
-        self.destroy = True  # Removes body until respawn timer returns to play
+        self.destroy = destroy  # Removes body until respawn timer returns to play
         self.dead = False  # Used to return cash and money
         self.points = 5
         self.cash = 75
@@ -107,19 +109,20 @@ class Orc:
 
         if not self.destroy:
             if not self.stun:
-                # Move towards node by self.speed.
-                if self.x < self.next_node[0] - 5:
-                    self.x += self.speed
-                    self.right = True
-                if self.x > self.next_node[0] + 5:
-                    self.x -= self.speed
-                    self.left = True
-                if self.y < self.next_node[1] - 5:
-                    self.y += self.speed
-                    self.down = True
-                if self.y > self.next_node[1] + 5:
-                    self.y -= self.speed
-                    self.up = True
+                if not self.stationary:
+                    # Move towards node by self.speed.
+                    if self.x < self.next_node[0] - 5:
+                        self.x += self.speed
+                        self.right = True
+                    if self.x > self.next_node[0] + 5:
+                        self.x -= self.speed
+                        self.left = True
+                    if self.y < self.next_node[1] - 5:
+                        self.y += self.speed
+                        self.down = True
+                    if self.y > self.next_node[1] + 5:
+                        self.y -= self.speed
+                        self.up = True
 
                 # Change walking frame if frame_counter reaches 0
                 if self.frame_counter < 1:
@@ -413,11 +416,11 @@ class Orc:
             self.ice2 = True
             self.ice2_countdown = self.ice_counter
         if specialty == "fire1":
-            self.fireball1 = 0.2 * seconds
+            self.fireball1 = int(0.05 * seconds)
             self.fire1 = damage
             self.burned_counter = 3
         if specialty == "fire2":
-            self.fireball2 = 1 * seconds
+            self.fireball2 = int(2.9 * seconds)
             self.fire_radius = self.initial_fire_radius * 2
             self.fire2 = damage
             self.burned_counter = 3
@@ -435,8 +438,10 @@ class Orc:
 
 
 class Spider(Orc):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
+        super().__init__(location=location, next_node=next_node,
+                         stationary=stationary, destroy=destroy)
         # Image manipulation
         self.image = spider_list[0][0]
         self.image_width = 30
@@ -461,7 +466,6 @@ class Spider(Orc):
         self.cash = 8
         self.dead_image = spiderdead
 
-
     def walk(self):
         # Change walking frame in direction
         self.image = spider_list[self.direction][self.frame]
@@ -471,8 +475,10 @@ class Spider(Orc):
 
 
 class Wolf(Orc):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
+        super().__init__(location=location, next_node=next_node,
+                         stationary=stationary, destroy=destroy)
         # Image manipulation
         self.image = wolf_list[0][0]
         self.image_width = 50
@@ -505,8 +511,10 @@ class Wolf(Orc):
 
 
 class Turtle(Orc):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
+        super().__init__(location=location, next_node=next_node,
+                         stationary=stationary, destroy=destroy)
         # Image manipulation
         self.image = turtle_list[0][0]
         self.image_width = 44
@@ -540,8 +548,10 @@ class Turtle(Orc):
 
 
 class Lizard(Orc):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
+        super().__init__(location=location, next_node=next_node,
+                         stationary=stationary, destroy=destroy)
         # Image manipulation
         self.image = lizard_list[0][0]
         self.image_width = 60
@@ -577,8 +587,10 @@ class Lizard(Orc):
 
 
 class Dragon(Orc):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
+                 stationary=False, destroy=True):
+        super().__init__(location=location, next_node=next_node,
+                         stationary=stationary, destroy=destroy)
         # Image manipulation
         self.image = dragon_list[0][0]
         self.image_width = 150

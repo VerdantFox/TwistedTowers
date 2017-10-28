@@ -2,37 +2,6 @@ import pygame
 import generalClass
 from definitions import *
 
-pygame.init()
-pause = False
-
-
-def unpause():
-    global pause
-    pause = False
-
-
-def pause_game():
-
-    global pause
-    pause = True
-    # pygame.mixer.music.pause()
-    while pause:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    unpause()
-        resume_button.draw()
-        pygame.display.update()
-
-
-resume_button = generalClass.Button(
-    (20, 80), message="Resume", color1=red,
-    color2=bright_red, action=unpause)
-
 
 # Taken from pygame and altered
 def collision(object1, object2):

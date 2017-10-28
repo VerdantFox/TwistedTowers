@@ -244,13 +244,13 @@ class IceTower1(BasicTower):
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             opt2_msg="Tier 2", opt2_action="ice2",
-            main_color1=blue, main_color2=bright_blue):
+            main_color1=blue, main_color2=bright_blue, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2, opt2_msg=opt2_msg,
-            opt2_action=opt2_action)
+            opt2_action=opt2_action, destroy=destroy)
         self.image, self.image_width, self.image_height = iceTower1
         self.buy = 125
         self.sell = 170
@@ -261,12 +261,12 @@ class IceTower2(BasicTower):
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
-            main_color1=blue, main_color2=bright_blue):
+            main_color1=blue, main_color2=bright_blue, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
-            main_color2=main_color2)
+            main_color2=main_color2, destroy=destroy)
         self.image, self.image_width, self.image_height = iceTower2
         self.buy = 150
         self.sell = 280
@@ -279,14 +279,14 @@ class FireTower1(BasicTower):
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=red, main_color2=bright_red,
             opt2_msg="Tier 2", opt2_action="fire2", opt2_col1=red,
-            opt2_col2=bright_red):
+            opt2_col2=bright_red, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2, opt2_msg=opt2_msg,
             opt2_action=opt2_action, opt2_col1=opt2_col1,
-            opt2_col2=opt2_col2)
+            opt2_col2=opt2_col2, destroy=destroy)
         self.image, self.image_width, self.image_height = fireTower1
         self.buy = 125
         self.sell = 170
@@ -297,12 +297,12 @@ class FireTower2(BasicTower):
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
-            main_color1=red, main_color2=bright_red):
+            main_color1=red, main_color2=bright_red, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
-            main_color2=main_color2)
+            main_color2=main_color2, destroy=destroy)
         self.image, self.image_width, self.image_height = fireTower2
         self.buy = 150
         self.sell = 280
@@ -315,14 +315,14 @@ class PoisonTower1(BasicTower):
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=green, main_color2=bright_green,
             opt2_msg="Tier 2", opt2_action="poison2", opt2_col1=green,
-            opt2_col2=bright_green):
+            opt2_col2=bright_green, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2, opt2_msg=opt2_msg,
             opt2_action=opt2_action, opt2_col1=opt2_col1,
-            opt2_col2=opt2_col2)
+            opt2_col2=opt2_col2, destroy=destroy)
         self.image, self.image_width, self.image_height = poisonTower1
         self.buy = 125
         self.sell = 170
@@ -333,12 +333,12 @@ class PoisonTower2(BasicTower):
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
-            main_color1=red, main_color2=bright_red):
+            main_color1=red, main_color2=bright_red, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
-            main_color2=main_color2)
+            main_color2=main_color2, destroy=destroy)
         self.image, self.image_width, self.image_height = poisonTower2
         self.buy = 150
         self.sell = 280
@@ -351,14 +351,14 @@ class DarkTower1(BasicTower):
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=purple, main_color2=bright_purple,
             opt2_msg="Tier 2", opt2_action="dark2", opt2_col1=purple,
-            opt2_col2=bright_purple):
+            opt2_col2=bright_purple, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
             main_color2=main_color2, opt2_msg=opt2_msg,
             opt2_action=opt2_action, opt2_col1=opt2_col1,
-            opt2_col2=opt2_col2)
+            opt2_col2=opt2_col2, destroy=destroy)
         self.image, self.image_width, self.image_height = darkTower1
         self.buy = 125
         self.sell = 170
@@ -369,12 +369,12 @@ class DarkTower2(BasicTower):
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
-            main_color1=red, main_color2=bright_red):
+            main_color1=red, main_color2=bright_red, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
             option_count=option_count, opt1_msg=opt1_msg,
             opt1_action=opt1_action, main_color1=main_color1,
-            main_color2=main_color2)
+            main_color2=main_color2, destroy=destroy)
         self.image, self.image_width, self.image_height = darkTower2
         self.buy = 150
         self.sell = 280
@@ -403,13 +403,16 @@ class BasicMissile:
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
-            if not enemy.destroy:
-                if self.destroy is True:
-                    if self.lock_on is None:
-                        if helpers.collision(tower, enemy):
-                            self.lock_on = enemy
-                            self.destroy = False
-                            self.shoot_counter = self.shoot_rate
+            try:    # Had an error in late game ('orc' has not att. 'destroy')
+                if not enemy.destroy:
+                    if self.destroy is True:
+                        if self.lock_on is None:
+                            if helpers.collision(tower, enemy):
+                                self.lock_on = enemy
+                                self.destroy = False
+                                self.shoot_counter = self.shoot_rate
+            except AttributeError:
+                print("error locking on")
         hit = self.shoot(enemy)
         return hit
 
@@ -453,7 +456,7 @@ class IceMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5
-        self.missile_color = blue
+        self.missile_color = bright_blue
         self.specialty = "ice1"
 
 
@@ -462,7 +465,7 @@ class IceMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 56.25
-        self.missile_color = blue
+        self.missile_color = bright_teal
         self.specialty = "ice2"
         self.radius = 6
 
@@ -476,7 +479,7 @@ class FireMissile1(BasicMissile):
         self.damage = 25
         self.missile_color = red
         self.specialty = "fire1"
-        self.shoot_rate = 4 * seconds
+        self.shoot_rate = 3 * seconds
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -502,9 +505,9 @@ class FireMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5
-        self.missile_color = red
+        self.missile_color = bright_red
         self.specialty = "fire2"
-        self.shoot_rate = 4 * seconds
+        self.shoot_rate = 3 * seconds
         self.radius = 8
 
     def lock_enemy(self, tower, enemy):
@@ -529,10 +532,10 @@ class FireMissile2(BasicMissile):
 class PoisonMissile1(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 0.06
+        self.damage = 0.05
         self.missile_color = green
         self.specialty = "poison1"
-        self.shoot_rate = 4 * seconds
+        self.shoot_rate = 3 * seconds
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -556,10 +559,10 @@ class PoisonMissile1(BasicMissile):
 class PoisonMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
-        self.damage = 0.09
-        self.missile_color = green
+        self.damage = 0.10
+        self.missile_color = bright_green
         self.specialty = "poison2"
-        self.shoot_rate = 4 * seconds
+        self.shoot_rate = 3 * seconds
         self.radius = 6
 
     def lock_enemy(self, tower, enemy):
@@ -567,14 +570,17 @@ class PoisonMissile2(BasicMissile):
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
             # Only lock-on if not poisoned
-            if enemy.poison_charges < 2 or not enemy.poison2:
-                if not enemy.destroy:
-                        if self.destroy is True:
-                            if self.lock_on is None:
-                                if helpers.collision(tower, enemy):
-                                    self.lock_on = enemy
-                                    self.destroy = False
-                                    self.shoot_counter = self.shoot_rate
+            try:
+                if enemy.poison_charges < 2 or not enemy.poison2:
+                    if not enemy.destroy:
+                            if self.destroy is True:
+                                if self.lock_on is None:
+                                    if helpers.collision(tower, enemy):
+                                        self.lock_on = enemy
+                                        self.destroy = False
+                                        self.shoot_counter = self.shoot_rate
+            except AttributeError:  # Received this error in late game
+                print("error no poison_charges")
         hit = self.shoot(enemy)
         return hit
 
@@ -593,7 +599,7 @@ class DarkMissile2(BasicMissile):
     def __init__(self, location):
         super().__init__(location)
         self.damage = 112.5
-        self.missile_color = purple
+        self.missile_color = bright_purple
         self.specialty = "dark2"
         self.radius = 6
 

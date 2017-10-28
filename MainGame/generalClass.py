@@ -31,10 +31,14 @@ class Button:
         self.selected = False
         self.selected_color = purple
         self.selected_text_color = white
+        self.clickable = True
+        self.unclickable_timer = 0.3 * seconds
+        self.unclickable_countdown = 0
 
     def draw(self, *args):
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()
+        # If mouse hovering button
         if (self.x < self._mouse[0] < self.x + self._width
                 and self.y <
                 self._mouse[1] <
@@ -48,15 +52,19 @@ class Button:
                     gameDisplay, self._color2,
                     (self.x, self.y, self._width, self._height))
             if self._click[0] == 1 and self._action is not None:
-                if self.permanent:
-                    self.selected = True
-                    for arg in args:
-                        arg.selected = False
-                if isinstance(self._action, str):
-                    return self._action
-                else:
-                    self._action()
+                if self.clickable:
+                    self.clickable = False
+                    self.unclickable_countdown = self.unclickable_timer
+                    if self.permanent:
+                        self.selected = True
+                        for arg in args:
+                            arg.selected = False
+                    if isinstance(self._action, str):
+                        return self._action
+                    else:
+                        self._action()
 
+        # If mouse not hovering over button
         else:
             if self.selected:
                 pygame.draw.rect(
@@ -68,6 +76,13 @@ class Button:
                     (self.x, self.y, self._width, self._height))
         if self._message:
             self.set_text()
+
+        # Can button be clicked?
+        if self.unclickable_countdown > 0:
+            self.unclickable_countdown -= 1
+            self.clickable = False
+        else:
+            self.clickable = True
 
     def set_text(self):
         if self.selected:
@@ -83,7 +98,7 @@ class Button:
 
 
 class GameScore:
-    def __init__(self, location, width=90, height=30, background_color=green,
+    def __init__(self, location, width=120, height=30, background_color=green,
                  font="Comic Sans MS", font_size=20, message_color=black):
         self.x, self.y = location
         self.score = 0
@@ -293,3 +308,6 @@ class Settings:
         self.gold_generation = 1 * seconds
         self.starting_gold = 1000
         self.difficulty = 1
+
+# class TowerInfo:
+#     def __init__(self):
