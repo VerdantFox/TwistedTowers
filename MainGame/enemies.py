@@ -623,3 +623,11 @@ class Dragon(Orc):
         self.frame += 1
         if self.frame > len(dragon_list[0]) - 1:
             self.frame = 0
+
+
+class Mage:
+    def __init__(self):
+        self.image =
+
+    def spell(self):
+
