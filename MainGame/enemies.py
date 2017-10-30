@@ -8,6 +8,7 @@ from Enemies.turtle.turtlePics import turtle_list, turtledead
 from Enemies.wolf.wolfPics import wolf_list, wolfdead
 from Enemies.dragon.dragonPics import dragon_list, dragondead
 from Enemies.lizard.lizardPics import lizard_list, lizarddead
+from Enemies.mage.magePics import mage_spell_list, magestanding
 from definitions import *
 from gameParameters import gameDisplay
 from lists import *
@@ -212,7 +213,7 @@ class Orc:
                 text_surface = self.dead_font.render(
                     "${}".format(self.cash), True, yellow)
                 text_rect = text_surface.get_rect()
-                text_rect.center = (self.dead_x, self.dead_y-30)
+                text_rect.center = (self.dead_x, self.dead_y - 30)
                 gameDisplay.blit(text_surface, text_rect)
 
             # Start respawn timer countdown
@@ -351,7 +352,7 @@ class Orc:
         else:
             self.speed = self.base_speed * multiplier
             self.frames_to_picswap = int(
-                self.initial_frames_to_picswap * 1/multiplier)
+                self.initial_frames_to_picswap * 1 / multiplier)
 
     def burning(self):
         if self.burned_counter > 0:
@@ -387,8 +388,8 @@ class Orc:
         if self.poison_charges > 0:
             # 50% armor shred
             if self.poison_tick == 0:
-                self.take_damage(poison_damage/2, True)
-                self.take_damage(poison_damage/2, False)
+                self.take_damage(poison_damage / 2, True)
+                self.take_damage(poison_damage / 2, False)
                 self.poison_tick = 2 * seconds
                 self.poison_charges -= 1
             else:
@@ -403,7 +404,7 @@ class Orc:
             return self.points, self.cash
         else:
             return None
-    
+
     def hit(self, damage, specialty):
         if specialty == "basic":
             self.take_damage(damage)
@@ -627,7 +628,85 @@ class Dragon(Orc):
 
 class Mage:
     def __init__(self):
-        self.image =
+        # Animation
+        self.image = magestanding
+        self.frame_counter = 0
+        self.frame = 0
+        self.image_width = 60
+        self.image_height = 60
+        self.frames_to_picswap = 10
+        self.spell_cast_length = len(mage_spell_list[0]) * self.frames_to_picswap
+        self.spell_cast_countdown = 0
 
-    def spell(self):
+        # Position
+        self.x, self.y = (330, 45)
+
+        # Spell
+        self.cast = False
+        self.radius = 10
+        self.spell_length = 5 * seconds
+        self.spell_countdown = 0
+        self.thickness = 10
+
+        # Win
+        self.stop_spawn = False
+        self.pop_enemies_counter = 4 * seconds
+        self.win = False
+
+    def draw(self, game_frames):
+        self.image = magestanding
+        if game_frames != 0 and game_frames % (20 * seconds) == 0:
+            self.spell_cast_countdown = self.spell_cast_length
+            self.frame = 0
+            self.radius = 10
+
+        if self.spell_cast_countdown > 0:
+            if self.frame_counter > 0:
+                self.frame_counter -= 1
+            else:
+                if self.frame < len(mage_spell_list[0]) - 1:
+                    self.frame += 1
+                self.frame_counter = self.frames_to_picswap
+
+            self.image = mage_spell_list[0][self.frame]
+            self.spell_cast_countdown -= 1
+        if self.image == mage_spell_list[0][10]:
+            self.stop_spawn = True
+            self.cast = True
+
+            self.spell_countdown = self.spell_length
+
+        gameDisplay.blit(self.image, (self.x - self.image_width // 2,
+                                      self.y - self.image_height // 2))
+
+        if 9 < self.radius < 1000 and self.cast:
+            self.radius += 10
+            # thickness = 0
+            if self.radius > self.thickness:
+                pygame.draw.circle(gameDisplay, blue, (self.x, self.y),
+                                   self.radius, self.thickness)
+            # thickness = 1
+            if self.radius - self.thickness > self.thickness * 2:
+                pygame.draw.circle(
+                    gameDisplay, bright_blue, (self.x, self.y),
+                    self.radius-self.thickness, self.thickness * 2)
+            # thickness = 1 + 2 = 3
+            if self.radius - self.thickness * 3 > self.thickness * 3:
+                pygame.draw.circle(
+                    gameDisplay, teal, (self.x, self.y),
+                    self.radius - self.thickness * 3, self.thickness * 3)
+            # thickness = 1 + 2 + 3 = 6
+            if self.radius - self.thickness * 6 > self.thickness * 6:
+                pygame.draw.circle(
+                    gameDisplay, bright_teal, (self.x, self.y),
+                    self.radius - self.thickness * 6, self.thickness * 6)
+            self.spell_countdown -= 1
+        else:
+            self.cast = False
+            self.radius = 10
+
+        if self.stop_spawn and self.pop_enemies_counter > 0:
+            self.pop_enemies_counter -= 1
+
+
 

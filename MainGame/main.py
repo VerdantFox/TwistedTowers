@@ -509,6 +509,9 @@ def game_loop():
     set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
 
+    # Set mage
+    mage = enemies.Mage()
+
     # Actual game loop
     while True:
         for event in pygame.event.get():
@@ -520,12 +523,14 @@ def game_loop():
                     pause_game()
             # print(event)
 
-        # add new enemies
-        add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
-                    difficulty)
-
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+
+        # add new enemies
+        if not mage.stop_spawn:
+            add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
+                        difficulty)
+
         # Draw top towers
         draw_towers(top_tower_list, top_missile_list, funds,
                     score_board, enemies_list)
@@ -534,6 +539,9 @@ def game_loop():
         # Draw bot towers
         draw_towers(bot_tower_list, bot_missile_list, funds,
                     score_board, enemies_list)
+
+        # Draw in mage
+        draw_mage(mage, game_clock, score_board, funds, enemies_list)
 
         funds.draw()
         castle.draw()
@@ -765,6 +773,24 @@ def draw_enemies(enemies_list, castle):
         if castle_damage:
             if castle.hp > 0:
                 castle.adjust(-castle_damage)
+
+
+def draw_mage(mage, game_clock, score_board, funds, enemies_list):
+    mage.draw(game_clock.frames)
+    for enemy in enemies_list:
+        if helpers.collision(mage, enemy):
+            if not enemy.destroy:
+                enemy.take_damage(3000, True)
+        try:  # Crashed once here 7 mins in ("no self given")
+            kill = enemy.check_death()
+            if kill:
+                points, cash = kill
+                score_board.adjust(points)
+                funds.adjust(cash)
+        except TypeError:
+            print("kill error")
+        if mage.pop_enemies_counter == 0:
+            enemies_list.pop(enemies_list.index(enemy))
 
 
 if __name__ == "__main__":
