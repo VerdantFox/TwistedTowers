@@ -1,14 +1,16 @@
 import random
 
 import pygame
+import helpers
 
+from gameText import mage_speeches
 from Enemies.orc.orcPics import orc_list, orcdead
 from Enemies.spider.spiderPics import spider_list, spiderdead
 from Enemies.turtle.turtlePics import turtle_list, turtledead
 from Enemies.wolf.wolfPics import wolf_list, wolfdead
 from Enemies.dragon.dragonPics import dragon_list, dragondead
 from Enemies.lizard.lizardPics import lizard_list, lizarddead
-from Enemies.mage.magePics import mage_spell_list, magestanding
+from Enemies.mage.magePics import mage_list, magestanding
 from definitions import *
 from gameParameters import gameDisplay
 from lists import *
@@ -51,10 +53,10 @@ class Orc:
         self.armor = 20
 
         # Death and destruction ;-)
-        self.destroy = destroy  # Removes body until respawn timer returns to play
+        self.destroy = destroy  # Removes live body
         self.dead = False  # Used to return cash and money
-        self.points = 5
         self.cash = 75
+        self.points = self.cash // 3
         self.respawn_timer = random.randint(5 * seconds, 6.75 * seconds)
         self.respawn_countdown = self.respawn_timer
         self.lives = 2  # start dead, need 1 more than that
@@ -465,6 +467,7 @@ class Spider(Orc):
         self.speed = self.base_speed
         # Death
         self.cash = 8
+        self.points = self.cash // 3
         self.dead_image = spiderdead
 
     def walk(self):
@@ -501,6 +504,7 @@ class Wolf(Orc):
         self.speed = self.base_speed
         # Death
         self.cash = 50
+        self.points = self.cash // 3
         self.dead_image = wolfdead
 
     def walk(self):
@@ -538,6 +542,7 @@ class Turtle(Orc):
         self.speed = self.base_speed
         # Death
         self.cash = 75
+        self.points = self.cash // 3
         self.dead_image = turtledead
 
     def walk(self):
@@ -577,6 +582,7 @@ class Lizard(Orc):
         self.speed = self.base_speed
         # Death
         self.cash = 50
+        self.points = self.cash // 3
         self.dead_image = lizarddead
 
     def walk(self):
@@ -616,6 +622,7 @@ class Dragon(Orc):
         self.speed = self.base_speed
         # Death
         self.cash = 750
+        self.points = self.cash // 3
         self.dead_image = dragondead
 
     def walk(self):
@@ -634,12 +641,13 @@ class Mage:
         self.frame = 0
         self.image_width = 60
         self.image_height = 60
-        self.frames_to_picswap = 10
-        self.spell_cast_length = len(mage_spell_list[0]) * self.frames_to_picswap
+        self.frames_to_picswap = 4
+        self.spell_cast_length = len(mage_list[0]) * self.frames_to_picswap
         self.spell_cast_countdown = 0
 
         # Position
-        self.x, self.y = (330, 45)
+        self.x, self.y = (340, -65)
+        self.end_x, self.end_y = (340, 75)
 
         # Spell
         self.cast = False
@@ -653,60 +661,128 @@ class Mage:
         self.pop_enemies_counter = 4 * seconds
         self.win = False
 
-    def draw(self, game_frames):
-        self.image = magestanding
-        if game_frames != 0 and game_frames % (20 * seconds) == 0:
-            self.spell_cast_countdown = self.spell_cast_length
-            self.frame = 0
-            self.radius = 10
+        # Walking
+        self.walking = False
 
-        if self.spell_cast_countdown > 0:
+        # Speech
+        self.wait = False
+        self.speech = False
+        self.speech1 = False
+        self.wait_counter = 1 * seconds
+        self.speech_timer = 3 * seconds
+        self.speech_counter = self.speech_timer
+        self.speech_index = 0
+        self.font = pygame.font.SysFont('Comic Sans MS', 16, bold=True)
+
+    def draw(self, game_frames):
+        if game_frames > 2 * seconds:
+            self.walking = True
+            gameDisplay.blit(self.image, (self.x - self.image_width // 2,
+                                          self.y - self.image_height // 2))
+
+        # Walk south
+        if self.walking:
+            # Animation
             if self.frame_counter > 0:
                 self.frame_counter -= 1
             else:
-                if self.frame < len(mage_spell_list[0]) - 1:
-                    self.frame += 1
+                self.image = mage_list[0][self.frame]
+                self.frame += 1
+                if self.frame > len(mage_list[0]) - 1:
+                    self.frame = 0
                 self.frame_counter = self.frames_to_picswap
 
-            self.image = mage_spell_list[0][self.frame]
-            self.spell_cast_countdown -= 1
-        if self.image == mage_spell_list[0][10]:
-            self.stop_spawn = True
-            self.cast = True
+            # Motion
+            if self.y < self.end_y:
+                self.y += 1
+            else:
+                self.walking = False
+                self.wait = True
+                # self.speech = True
+                self.image = magestanding
 
-            self.spell_countdown = self.spell_length
+        if self.wait:
+            self.wait_counter -= 1
+            if self.wait_counter == 0:
+                self.wait = False
+                self.speech = True
 
-        gameDisplay.blit(self.image, (self.x - self.image_width // 2,
-                                      self.y - self.image_height // 2))
+        if self.speech:
+            if self.speech_counter > 0:
+                self.speech_counter -= 1
+            else:
+                if self.speech_index < len(mage_speeches) - 1:
+                    self.speech_index += 1
+                self.speech_counter = self.speech_timer
 
-        if 9 < self.radius < 1000 and self.cast:
-            self.radius += 10
-            # thickness = 0
-            if self.radius > self.thickness:
-                pygame.draw.circle(gameDisplay, blue, (self.x, self.y),
-                                   self.radius, self.thickness)
-            # thickness = 1
-            if self.radius - self.thickness > self.thickness * 2:
-                pygame.draw.circle(
-                    gameDisplay, bright_blue, (self.x, self.y),
-                    self.radius-self.thickness, self.thickness * 2)
-            # thickness = 1 + 2 = 3
-            if self.radius - self.thickness * 3 > self.thickness * 3:
-                pygame.draw.circle(
-                    gameDisplay, teal, (self.x, self.y),
-                    self.radius - self.thickness * 3, self.thickness * 3)
-            # thickness = 1 + 2 + 3 = 6
-            if self.radius - self.thickness * 6 > self.thickness * 6:
-                pygame.draw.circle(
-                    gameDisplay, bright_teal, (self.x, self.y),
-                    self.radius - self.thickness * 6, self.thickness * 6)
-            self.spell_countdown -= 1
-        else:
-            self.cast = False
-            self.radius = 10
+            # White talking bubble
+            pygame.draw.polygon(gameDisplay, white, (
+                (self.x + 5, self.y - 15), (380, 5),
+                (420, 5), (420, 57), (410, 15), (380, 15)))
+            pygame.draw.rect(gameDisplay, white,
+                             (420, 5, 250, 52))
+            # Text
+            helpers.blit_text(gameDisplay, mage_speeches[self.speech_index],
+                              (425, 6), self.font, margin=180)
 
-        if self.stop_spawn and self.pop_enemies_counter > 0:
-            self.pop_enemies_counter -= 1
+
+
+
+
+
+
+
+        #     self.spell_cast_countdown = self.spell_cast_length
+        #     self.frame = 0
+        #     self.radius = 10
+        #
+        # if self.spell_cast_countdown > 0:
+        #     if self.frame_counter > 0:
+        #         self.frame_counter -= 1
+        #     else:
+        #         if self.frame < len(mage_list[2]) - 1:
+        #             self.frame += 1
+        #         self.frame_counter = self.frames_to_picswap
+        #
+        #     self.image = mage_list[2][self.frame]
+        #     self.spell_cast_countdown -= 1
+        # if self.image == mage_list[2][10]:
+        #     self.stop_spawn = True
+        #     self.cast = True
+        #
+        #     self.spell_countdown = self.spell_length
+        #
+        # gameDisplay.blit(self.image, (self.x - self.image_width // 2,
+        #                               self.y - self.image_height // 2))
+        #
+        # if 9 < self.radius < 1000 and self.cast:
+        #     self.radius += 10
+        #     # thickness = 0
+        #     if self.radius > self.thickness:
+        #         pygame.draw.circle(gameDisplay, blue, (self.x, self.y),
+        #                            self.radius, self.thickness)
+        #     # thickness = 1
+        #     if self.radius - self.thickness > self.thickness * 2:
+        #         pygame.draw.circle(
+        #             gameDisplay, bright_blue, (self.x, self.y),
+        #             self.radius-self.thickness, self.thickness * 2)
+        #     # thickness = 1 + 2 = 3
+        #     if self.radius - self.thickness * 3 > self.thickness * 3:
+        #         pygame.draw.circle(
+        #             gameDisplay, teal, (self.x, self.y),
+        #             self.radius - self.thickness * 3, self.thickness * 3)
+        #     # thickness = 1 + 2 + 3 = 6
+        #     if self.radius - self.thickness * 6 > self.thickness * 6:
+        #         pygame.draw.circle(
+        #             gameDisplay, bright_teal, (self.x, self.y),
+        #             self.radius - self.thickness * 6, self.thickness * 6)
+        #     self.spell_countdown -= 1
+        # else:
+        #     self.cast = False
+        #     self.radius = 10
+        #
+        # if self.stop_spawn and self.pop_enemies_counter > 0:
+        #     self.pop_enemies_counter -= 1
 
 
 
