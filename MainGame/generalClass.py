@@ -242,12 +242,10 @@ class Castle:
 
 class EndScreen:
     def __init__(self):
-        self.score_x = display_width // 2
-        self.score_y = display_height // 2
-        self.game_x = display_width // 2
-        self.game_y = display_height // 4
-        self.time_x = display_width // 2
-        self.time_y = display_height - 100
+        self.center_x = display_width // 2
+        self.game_y = 100
+        self.score_y = 250
+        self.time_y = 325
         self.score = 0
         self.time_elapsed = 0  # Game time approximation, based on frames (slow)
         self.game_font = pygame.font.SysFont("Comic Sans MS", 120)
@@ -255,14 +253,18 @@ class EndScreen:
         self.time_font = pygame.font.SysFont("Comic Sans MS", 40)
         self.text_color = black
         self.play_button = Button(
-            (display_width // 3 - 100, display_height * 2 // 3),
-            message="Play", action="play", font_size=40, width=200, height=60)
+            (75, display_height - 300), message="Play", action="play",
+            font_size=40, width=200, height=60, color1=green,
+            color2=bright_green)
+        self.main_button = Button(
+            (325, display_height - 300), message="Main menu", action="main",
+            font_size=40, width=200, height=60, color1=yellow,
+            color2=bright_yellow)
         self.quit_button = Button(
-            (display_width * 2 // 3 - 100, display_height * 2 // 3),
-            message="Quit", action=quit, font_size=40, width=200, height=60,
-            color1=red, color2=bright_red)
+            (575, display_height - 300), message="Quit", action=quit,
+            font_size=40, width=200, height=60, color1=red, color2=bright_red)
 
-    def draw(self):
+    def draw(self, win_loss):
         # pygame.mixer.music.stop()
         # pygame.mixer.Sound.play(castle_falls)
 
@@ -276,22 +278,33 @@ class EndScreen:
 
             gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-            # Draw "Game Over!" text
-            self.set_text(self.game_x, self.game_y, "Game over!",
-                          self.game_font)
+            # Draw "Defeat/Victory" text
+            if win_loss == "lose":
+                self.set_text(self.center_x, self.game_y, "Defeat!",
+                              self.game_font)
+            if win_loss == "win":
+                self.set_text(self.center_x, self.game_y, "Victory!!",
+                              self.game_font)
+
             # Draw "Score" text
-            self.set_text(self.score_x, self.score_y,
+            self.set_text(self.center_x, self.score_y,
                           "score: {}".format(self.score), self.score_font)
+
             # Draw "Time elapsed" text
-            self.set_text(self.time_x, self.time_y, "Time: {0}:{1:02}".format(
+            self.set_text(self.center_x, self.time_y, "Time: {0}:{1:02}".format(
                     minutes_elapsed, remaining_seconds), self.time_font)
+
             # Draw quit button
             self.quit_button.draw()
             # Draw play button
             play = self.play_button.draw()
             if play == "play":
                 return play
-
+            # Draw main button
+            main = self.main_button.draw()
+            if main == "main":
+                return main
+            # Update game
             pygame.display.update()
             clock.tick(30)
 
@@ -308,6 +321,3 @@ class Settings:
         self.gold_generation = 1 * seconds
         self.starting_gold = 1000
         self.difficulty = 1
-
-# class TowerInfo:
-#     def __init__(self):

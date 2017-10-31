@@ -13,7 +13,7 @@ magedown9 = pygame.image.load('Enemies/mage/ryzeDOWN9.png')
 magedown10 = pygame.image.load('Enemies/mage/ryzeDOWN10.png')
 magedown11 = pygame.image.load('Enemies/mage/ryzeDOWN11.png')
 
-# mage down
+# mage speech
 magespeech1 = pygame.image.load('Enemies/mage/ryzeSPEACH1.png')
 magespeech2 = pygame.image.load('Enemies/mage/ryzeSPEACH2.png')
 magespeech3 = pygame.image.load('Enemies/mage/ryzeSPEACH3.png')

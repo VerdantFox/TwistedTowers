@@ -1,8 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Teddy">
     <words>
+      <w>clickable</w>
       <w>locs</w>
+      <w>mage</w>
       <w>respawn</w>
+      <w>unclickable</w>
+      <w>unpause</w>
     </words>
   </dictionary>
 </component>

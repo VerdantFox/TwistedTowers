@@ -3,7 +3,7 @@ import random
 import pygame
 import helpers
 
-from gameText import mage_speeches
+from gameText import mage_speech1, mage_speech2
 from Enemies.orc.orcPics import orc_list, orcdead
 from Enemies.spider.spiderPics import spider_list, spiderdead
 from Enemies.turtle.turtlePics import turtle_list, turtledead
@@ -650,7 +650,8 @@ class Mage:
         self.end_x, self.end_y = (340, 75)
 
         # Spell
-        self.cast = False
+        self.start_spell = False
+        self.spell_cast = False
         self.radius = 10
         self.spell_length = 5 * seconds
         self.spell_countdown = 0
@@ -668,15 +669,21 @@ class Mage:
         self.wait = False
         self.speech = False
         self.speech1 = False
+        self.speech2 = False
         self.wait_counter = 1 * seconds
-        self.speech_timer = 3 * seconds
+        self.speech_timer = 3.5 * seconds
         self.speech_counter = self.speech_timer
         self.speech_index = 0
         self.font = pygame.font.SysFont('Comic Sans MS', 16, bold=True)
+        self.crystal_show = False
+        self.crystal_away = False
+        self.fist_shake = False
 
     def draw(self, game_frames):
-        if game_frames > 2 * seconds:
+        # Sequence takes ~ 40 seconds until all enemies dead
+        if game_frames == 7.5 * minutes:  # 7.5 mins = medium difficulty?
             self.walking = True
+        if game_frames > 7.5 * minutes:
             gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                           self.y - self.image_height // 2))
 
@@ -696,6 +703,7 @@ class Mage:
             if self.y < self.end_y:
                 self.y += 1
             else:
+
                 self.walking = False
                 self.wait = True
                 # self.speech = True
@@ -706,14 +714,23 @@ class Mage:
             if self.wait_counter == 0:
                 self.wait = False
                 self.speech = True
+                self.frame = 0
 
         if self.speech:
             if self.speech_counter > 0:
                 self.speech_counter -= 1
             else:
-                if self.speech_index < len(mage_speeches) - 1:
+                if self.speech_index < len(mage_speech1) - 1:
                     self.speech_index += 1
                 self.speech_counter = self.speech_timer
+            if self.speech_index == 3 and self.speech_counter == 0.5 * seconds:
+                self.crystal_show = True
+            if self.speech_index == 7 and self.speech_counter == 0:
+                self.crystal_away = True
+            if self.speech_index == 9 and self.speech_counter == 0:
+                self.speech = False
+                self.start_spell = True
+                self.frame = 0
 
             # White talking bubble
             pygame.draw.polygon(gameDisplay, white, (
@@ -722,67 +739,94 @@ class Mage:
             pygame.draw.rect(gameDisplay, white,
                              (420, 5, 250, 52))
             # Text
-            helpers.blit_text(gameDisplay, mage_speeches[self.speech_index],
-                              (425, 6), self.font, margin=180)
+            helpers.blit_text(gameDisplay, mage_speech1[self.speech_index],
+                              (425, 6), self.font, margin=190)
 
+            if self.crystal_show:
+                if self.frame_counter > 0:
+                    self.frame_counter -= 1
+                else:
+                    self.image = mage_list[1][self.frame]
+                    self.frame += 1
+                    self.frame_counter = self.frames_to_picswap
+                    if self.frame > 6:
+                        self.crystal_show = False
 
+            if self.crystal_away:
+                if self.frame_counter > 0:
+                    self.frame_counter -= 1
+                else:
+                    self.image = mage_list[1][self.frame]
+                    self.frame += 1
+                    self.frame_counter = self.frames_to_picswap
+                    if self.frame > 18:
+                        self.crystal_away = False
+                        self.image = magestanding
 
+        if self.start_spell:
+            if self.frame_counter > 0:
+                self.frame_counter -= 1
+            else:
+                if self.frame < len(mage_list[2]) - 1:
+                    self.frame += 1
+                self.frame_counter = self.frames_to_picswap
+            self.image = mage_list[2][self.frame]
+            if self.image == mage_list[2][10]:
+                self.stop_spawn = True
+                self.spell_cast = True
+                self.start_spell = False
 
+        if self.radius < 1000 and self.spell_cast:
+            self.radius += 10
 
+            # Draw the expanding spell (4 circles of increasing thickness)
+            # thickness = 0
+            if self.radius > self.thickness:
+                pygame.draw.circle(gameDisplay, blue, (self.x, self.y),
+                                   self.radius, self.thickness)
+            # thickness = 1
+            if self.radius - self.thickness > self.thickness * 2:
+                pygame.draw.circle(
+                    gameDisplay, bright_blue, (self.x, self.y),
+                    self.radius-self.thickness, self.thickness * 2)
+            # thickness = 1 + 2 = 3
+            if self.radius - self.thickness * 3 > self.thickness * 3:
+                pygame.draw.circle(
+                    gameDisplay, teal, (self.x, self.y),
+                    self.radius - self.thickness * 3, self.thickness * 3)
+            # thickness = 1 + 2 + 3 = 6
+            if self.radius - self.thickness * 6 > self.thickness * 6:
+                pygame.draw.circle(
+                    gameDisplay, bright_teal, (self.x, self.y),
+                    self.radius - self.thickness * 6, self.thickness * 6)
+        if self.radius >= 1000:
+            self.spell_cast = False
+            self.speech2 = True
+            self.speech_counter = self.speech_timer
+            self.speech_index = 0
+            self.radius = 10
+            self.image = magestanding
 
+        if self.stop_spawn and self.pop_enemies_counter > 0:
+            self.pop_enemies_counter -= 1
 
+        if self.speech2:
+            if self.speech_counter > 0:
+                self.speech_counter -= 1
+            else:
+                if self.speech_index < len(mage_speech2) - 1:
+                    self.speech_index += 1
+                self.speech_counter = self.speech_timer
 
-        #     self.spell_cast_countdown = self.spell_cast_length
-        #     self.frame = 0
-        #     self.radius = 10
-        #
-        # if self.spell_cast_countdown > 0:
-        #     if self.frame_counter > 0:
-        #         self.frame_counter -= 1
-        #     else:
-        #         if self.frame < len(mage_list[2]) - 1:
-        #             self.frame += 1
-        #         self.frame_counter = self.frames_to_picswap
-        #
-        #     self.image = mage_list[2][self.frame]
-        #     self.spell_cast_countdown -= 1
-        # if self.image == mage_list[2][10]:
-        #     self.stop_spawn = True
-        #     self.cast = True
-        #
-        #     self.spell_countdown = self.spell_length
-        #
-        # gameDisplay.blit(self.image, (self.x - self.image_width // 2,
-        #                               self.y - self.image_height // 2))
-        #
-        # if 9 < self.radius < 1000 and self.cast:
-        #     self.radius += 10
-        #     # thickness = 0
-        #     if self.radius > self.thickness:
-        #         pygame.draw.circle(gameDisplay, blue, (self.x, self.y),
-        #                            self.radius, self.thickness)
-        #     # thickness = 1
-        #     if self.radius - self.thickness > self.thickness * 2:
-        #         pygame.draw.circle(
-        #             gameDisplay, bright_blue, (self.x, self.y),
-        #             self.radius-self.thickness, self.thickness * 2)
-        #     # thickness = 1 + 2 = 3
-        #     if self.radius - self.thickness * 3 > self.thickness * 3:
-        #         pygame.draw.circle(
-        #             gameDisplay, teal, (self.x, self.y),
-        #             self.radius - self.thickness * 3, self.thickness * 3)
-        #     # thickness = 1 + 2 + 3 = 6
-        #     if self.radius - self.thickness * 6 > self.thickness * 6:
-        #         pygame.draw.circle(
-        #             gameDisplay, bright_teal, (self.x, self.y),
-        #             self.radius - self.thickness * 6, self.thickness * 6)
-        #     self.spell_countdown -= 1
-        # else:
-        #     self.cast = False
-        #     self.radius = 10
-        #
-        # if self.stop_spawn and self.pop_enemies_counter > 0:
-        #     self.pop_enemies_counter -= 1
+            if self.speech_index == 9 and self.speech_counter == 1:
+                self.win = True
 
-
-
+            # White talking bubble
+            pygame.draw.polygon(gameDisplay, white, (
+                (self.x + 5, self.y - 15), (380, 5),
+                (420, 5), (420, 57), (410, 15), (380, 15)))
+            pygame.draw.rect(gameDisplay, white,
+                             (420, 5, 250, 52))
+            # Text
+            helpers.blit_text(gameDisplay, mage_speech2[self.speech_index],
+                              (425, 6), self.font, margin=190)

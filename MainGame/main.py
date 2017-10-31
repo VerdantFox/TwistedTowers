@@ -477,6 +477,8 @@ def game_loop():
     # Blank list
     enemies_list = []
 
+    # Fast enemies
+
     # # Single lizard
     # enemies_list = [enemies.Lizard(), enemies.Lizard(), enemies.Lizard()]
 
@@ -492,6 +494,13 @@ def game_loop():
 
     # # Single wolf
     # enemies_list = [enemies.Wolf()]
+
+    # # 10 wolves
+    # enemies_list = [enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+    #                 ]
 
     # # Single Dragon
     # enemies_list = [enemies.Dragon()]
@@ -514,50 +523,63 @@ def game_loop():
 
     # Actual game loop
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pause_game()
-            # print(event)
+        try:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pause_game()
+                # print(event)
 
-        # Draw background
-        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+            # Draw background
+            gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-        # add new enemies
-        if not mage.stop_spawn:
-            add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
-                        difficulty)
+            # add new enemies
+            if not mage.stop_spawn:
+                add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
+                            difficulty)
 
-        # Draw top towers
-        draw_towers(top_tower_list, top_missile_list, funds,
-                    score_board, enemies_list)
-        # Draw enemies
-        draw_enemies(enemies_list, castle)
-        # Draw bot towers
-        draw_towers(bot_tower_list, bot_missile_list, funds,
-                    score_board, enemies_list)
+            # Draw top towers
+            draw_towers(top_tower_list, top_missile_list, funds,
+                        score_board, enemies_list)
+            # Draw enemies
+            draw_enemies(enemies_list, castle)
+            # Draw bot towers
+            draw_towers(bot_tower_list, bot_missile_list, funds,
+                        score_board, enemies_list)
 
-        # Draw in mage
-        draw_mage(mage, game_clock, score_board, funds, enemies_list)
+            # Draw in mage
+            draw_mage(mage, game_clock, score_board, funds, enemies_list)
 
-        funds.draw()
-        castle.draw()
-        score_board.draw()
-        game_clock.draw()
-        pause_button.draw()
-        pygame.display.update()
-        clock.tick(60)
-        if castle.game_over:
-            end_screen.score = score_board.score
-            end_screen.time_elapsed = game_clock.frames
-            end = end_screen.draw()
-            if end == "play":
-                game_loop()
-        if game_clock.frames % passive_money_rate == 0:
-            funds.adjust(1)
+            funds.draw()
+            castle.draw()
+            score_board.draw()
+            game_clock.draw()
+            pause_button.draw()
+            pygame.display.update()
+            clock.tick(60)
+            if mage.win:
+                end_screen.score = score_board.score
+                end_screen.time_elapsed = game_clock.frames
+                end = end_screen.draw("win")
+                if end == "play":
+                    game_loop()
+                if end == "main":
+                    intro_loop()
+            if castle.game_over:
+                end_screen.score = score_board.score
+                end_screen.time_elapsed = game_clock.frames
+                end = end_screen.draw("lose")
+                if end == "play":
+                    game_loop()
+                if end == "main":
+                    intro_loop()
+            if game_clock.frames % passive_money_rate == 0:
+                funds.adjust(1)
+        except AttributeError:
+            print("Error")
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -744,7 +766,7 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                                 score_board.adjust(points)
                                 funds.adjust(cash)
                         except TypeError:
-                            print("kill error")
+                            print("kill error for enemy {}".format(enemy))
                     missile.adjust_counters()
 
 
@@ -788,7 +810,7 @@ def draw_mage(mage, game_clock, score_board, funds, enemies_list):
                 score_board.adjust(points)
                 funds.adjust(cash)
         except TypeError:
-            print("kill error")
+            print("kill error for enemy {}".format(enemy))
         if mage.pop_enemies_counter == 0:
             enemies_list.pop(enemies_list.index(enemy))
 

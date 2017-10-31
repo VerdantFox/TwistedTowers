@@ -412,7 +412,7 @@ class BasicMissile:
                                 self.destroy = False
                                 self.shoot_counter = self.shoot_rate
             except AttributeError:
-                print("error locking on")
+                print("error locking on for enemy {}".format(enemy))
         hit = self.shoot(enemy)
         return hit
 
@@ -580,7 +580,7 @@ class PoisonMissile2(BasicMissile):
                                         self.destroy = False
                                         self.shoot_counter = self.shoot_rate
             except AttributeError:  # Received this error in late game
-                print("error no poison_charges")
+                print("error no poison_charges for enemy {}".format(enemy))
         hit = self.shoot(enemy)
         return hit
 
