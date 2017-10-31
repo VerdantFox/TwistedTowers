@@ -403,16 +403,13 @@ class BasicMissile:
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
-            try:    # Had an error in late game ('orc' has not att. 'destroy')
-                if not enemy.destroy:
-                    if self.destroy is True:
-                        if self.lock_on is None:
-                            if helpers.collision(tower, enemy):
-                                self.lock_on = enemy
-                                self.destroy = False
-                                self.shoot_counter = self.shoot_rate
-            except AttributeError:
-                print("error locking on for enemy {}".format(enemy))
+            if not enemy.destroy:
+                if self.destroy is True:
+                    if self.lock_on is None:
+                        if helpers.collision(tower, enemy):
+                            self.lock_on = enemy
+                            self.destroy = False
+                            self.shoot_counter = self.shoot_rate
         hit = self.shoot(enemy)
         return hit
 
@@ -570,17 +567,15 @@ class PoisonMissile2(BasicMissile):
         # Then, if enemy in range of tower, un-destroy missile
         if self.shoot_counter < 1:
             # Only lock-on if not poisoned
-            try:
-                if enemy.poison_charges < 2 or not enemy.poison2:
-                    if not enemy.destroy:
-                            if self.destroy is True:
-                                if self.lock_on is None:
-                                    if helpers.collision(tower, enemy):
-                                        self.lock_on = enemy
-                                        self.destroy = False
-                                        self.shoot_counter = self.shoot_rate
-            except AttributeError:  # Received this error in late game
-                print("error no poison_charges for enemy {}".format(enemy))
+            if enemy.poison_charges < 2 or not enemy.poison2:
+                if not enemy.destroy:
+                        if self.destroy is True:
+                            if self.lock_on is None:
+                                if helpers.collision(tower, enemy):
+                                    self.lock_on = enemy
+                                    self.destroy = False
+                                    self.shoot_counter = self.shoot_rate
+
         hit = self.shoot(enemy)
         return hit
 

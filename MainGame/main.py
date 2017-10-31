@@ -523,63 +523,60 @@ def game_loop():
 
     # Actual game loop
     while True:
-        try:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pause_game()
-                # print(event)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pause_game()
+            # print(event)
 
-            # Draw background
-            gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+        # Draw background
+        gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
-            # add new enemies
-            if not mage.stop_spawn:
-                add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
-                            difficulty)
+        # add new enemies
+        if not mage.stop_spawn:
+            add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
+                        difficulty)
 
-            # Draw top towers
-            draw_towers(top_tower_list, top_missile_list, funds,
-                        score_board, enemies_list)
-            # Draw enemies
-            draw_enemies(enemies_list, castle)
-            # Draw bot towers
-            draw_towers(bot_tower_list, bot_missile_list, funds,
-                        score_board, enemies_list)
+        # Draw top towers
+        draw_towers(top_tower_list, top_missile_list, funds,
+                    score_board, enemies_list)
+        # Draw enemies
+        draw_enemies(enemies_list, castle)
+        # Draw bot towers
+        draw_towers(bot_tower_list, bot_missile_list, funds,
+                    score_board, enemies_list)
 
-            # Draw in mage
-            draw_mage(mage, game_clock, score_board, funds, enemies_list)
+        # Draw in mage
+        draw_mage(mage, game_clock, score_board, funds, enemies_list)
 
-            funds.draw()
-            castle.draw()
-            score_board.draw()
-            game_clock.draw()
-            pause_button.draw()
-            pygame.display.update()
-            clock.tick(60)
-            if mage.win:
-                end_screen.score = score_board.score
-                end_screen.time_elapsed = game_clock.frames
-                end = end_screen.draw("win")
-                if end == "play":
-                    game_loop()
-                if end == "main":
-                    intro_loop()
-            if castle.game_over:
-                end_screen.score = score_board.score
-                end_screen.time_elapsed = game_clock.frames
-                end = end_screen.draw("lose")
-                if end == "play":
-                    game_loop()
-                if end == "main":
-                    intro_loop()
-            if game_clock.frames % passive_money_rate == 0:
-                funds.adjust(1)
-        except AttributeError:
-            print("Error")
+        funds.draw()
+        castle.draw()
+        score_board.draw()
+        game_clock.draw()
+        pause_button.draw()
+        pygame.display.update()
+        clock.tick(60)
+        if mage.win:
+            end_screen.score = score_board.score
+            end_screen.time_elapsed = game_clock.frames
+            end = end_screen.draw("win")
+            if end == "play":
+                game_loop()
+            if end == "main":
+                intro_loop()
+        if castle.game_over:
+            end_screen.score = score_board.score
+            end_screen.time_elapsed = game_clock.frames
+            end = end_screen.draw("lose")
+            if end == "play":
+                game_loop()
+            if end == "main":
+                intro_loop()
+        if game_clock.frames % passive_money_rate == 0:
+            funds.adjust(1)
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -701,9 +698,11 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
                  enemies.Spider(), enemies.Spider(), enemies.Spider()])
         elif picker == 19:
             enemies_list.extend(
-                [enemies.Lizard(), enemies.Wolf(), enemies.Orc,
-                 enemies.Turtle, enemies.Spider(), enemies.Spider(),
-                 enemies.Spider()])
+                [enemies.Lizard(), enemies.Lizard(), enemies.Wolf(),
+                 enemies.Wolf(), enemies.Orc(), enemies.Orc(),
+                 enemies.Turtle(), enemies.Turtle(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider()])
         elif picker == 20:
             enemies_list.extend([enemies.Dragon(), enemies.Dragon()])
 
@@ -759,14 +758,11 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         if hit:
                             damage, specialty = hit
                             enemy.hit(damage, specialty)
-                        try:    # Crashed once here 7 mins in ("no self given")
-                            kill = enemy.check_death()
-                            if kill:
-                                points, cash = kill
-                                score_board.adjust(points)
-                                funds.adjust(cash)
-                        except TypeError:
-                            print("kill error for enemy {}".format(enemy))
+                        kill = enemy.check_death()
+                        if kill:
+                            points, cash = kill
+                            score_board.adjust(points)
+                            funds.adjust(cash)
                     missile.adjust_counters()
 
 
@@ -803,14 +799,11 @@ def draw_mage(mage, game_clock, score_board, funds, enemies_list):
         if helpers.collision(mage, enemy):
             if not enemy.destroy:
                 enemy.take_damage(3000, True)
-        try:  # Crashed once here 7 mins in ("no self given")
-            kill = enemy.check_death()
-            if kill:
-                points, cash = kill
-                score_board.adjust(points)
-                funds.adjust(cash)
-        except TypeError:
-            print("kill error for enemy {}".format(enemy))
+        kill = enemy.check_death()
+        if kill:
+            points, cash = kill
+            score_board.adjust(points)
+            funds.adjust(cash)
         if mage.pop_enemies_counter == 0:
             enemies_list.pop(enemies_list.index(enemy))
 

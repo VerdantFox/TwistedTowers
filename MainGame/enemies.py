@@ -681,9 +681,9 @@ class Mage:
 
     def draw(self, game_frames):
         # Sequence takes ~ 40 seconds until all enemies dead
-        if game_frames == 7.5 * minutes:  # 7.5 mins = medium difficulty?
+        if game_frames == int(7.25 * minutes):  # 7.25 mins = medium difficulty?
             self.walking = True
-        if game_frames > 7.5 * minutes:
+        if game_frames > 7.25 * minutes:
             gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                           self.y - self.image_height // 2))
 
