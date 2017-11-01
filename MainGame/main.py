@@ -7,6 +7,13 @@ import random
 from definitions import *
 from lists import *
 from gameParameters import backgroundImage, gameDisplay, display_height, clock
+from gameText import *
+
+
+def load_intro_music():
+    pygame.mixer.music.load('music/Anamalie.mp3')
+    pygame.mixer.music.play(-1)
+    intro_loop()
 
 
 def intro_loop():
@@ -29,16 +36,7 @@ def intro_loop():
         (100, display_height - 180),
         message="Settings", action=settings_loop, font_size=40,
         width=300, height=60, color1=orange, color2=bright_orange)
-    text = "The time to act is now! Lord Darken has set his armies of " \
-           "the damned upon the innocents within StoneBorn Castle. As " \
-           "general of the Resistance Army it is your duty to direct the " \
-           "building of our static tower defenses. Enlist the help of " \
-           "our builders and the magician, Jorah, to erect magical towers to" \
-           " keep our enemies at bay. Our fighters within the keep can " \
-           "hold off only a limited number of enemies before the " \
-           "castle falls. A raven has been sent to the Archmage Stormbender. " \
-           "If we can just hold long enough I know he can save us..."
-    title = "Teddy's Towers!"
+
     font = pygame.font.SysFont('Comic Sans MS', 20, bold=True)
     title_font = pygame.font.SysFont('Comic Sans MS', 72, bold=True)
 
@@ -52,7 +50,7 @@ def intro_loop():
         # Draw title and intro text
         helpers.blit_text(gameDisplay, title, (100, 25),
                           title_font, margin=50)
-        helpers.blit_text(gameDisplay, text, (100, 150), font, margin=100)
+        helpers.blit_text(gameDisplay, intro_text, (100, 150), font, margin=100)
         # Draw buttons
         play_button.draw()
         quit_button.draw()
@@ -76,72 +74,6 @@ def tower_info_loop():
         font_size=40, width=200, height=60, color1=green, color2=bright_green)
     # Texts
     font = pygame.font.SysFont('Comic Sans MS', 18, bold=True)
-    basic_tower_text = "Basic Tower (Tier 1 Tower):\n" \
-                       "\nTier 1 tower, does normal damage." \
-                       "\nDamage:            50 per hit" \
-                       "\nRate of fire:       every other second" \
-                       "\nCost: $100" \
-                       "\nSells for: $75" \
-                       "\nSpecial attributes: None"
-    ice1_text = "Rank 1 Ice Tower (Tier 2 Tower):\n" \
-                "\nDoes normal damage and slows 30%." \
-                "\nDamage:         37.5 damage per hit" \
-                "\nRate of fire:    Once per second" \
-                "\nCost:            Basic Tower + $125 ($225 total)" \
-                "\nSells for:        $170" \
-                "\nRecommend: Pair with dark towers for extra hits."
-    ice2_text = "Rank 2 Ice Tower (Tier 3 Tower):\n" \
-                "\n1.5x rank1 damage, double slow (60%)." \
-                "\nDamage:        56.25 damage per hit" \
-                "\nRate of fire:   Once per second" \
-                "\nCost:           Rank 1 + $150 ($375 total)" \
-                "\nSells for:       $280" \
-                "\nRecommend: Pair with dark towers for extra hits."
-    fire1_text = "Rank 1 Fire  (Tier 2 Tower):\n" \
-                 "\nDoes damage over time in area of effect." \
-                 "\nDamage:         75 damage over 3 seconds" \
-                 "\nRate of fire:    Once per 3 seconds" \
-                 "\nCost:            Basic Tower + $125 ($225 total)" \
-                 "\nSells for:        $170" \
-                 "\nRecommend: vs. bunched enemies (spiders)."
-    fire2_text = "Rank 2 Fire Tower (Tier3 tower):\n" \
-                 "\n1.5x rank1 damage, 1st target catches other enemies " \
-                 "aflame in larger area." \
-                 "\nDamage:        112.5 damage over 3 seconds" \
-                 "\nRate of fire:   Once per second" \
-                 "\nCost:           Rank 1 + $150 ($375 total)" \
-                 "\nSells for:       $280" \
-                 "\nRecommend: vs. bunched enemies (spiders)."
-    poison1_text = "Rank 1 Poison Tower (Tier2 tower) :\n" \
-                   "\nDoes % current hp over time, 50% armor shred, stuns" \
-                   "for 0.75 seconds at last damage tic." \
-                   "\nDamage:        ~22% current hp over 10 seconds" \
-                   "\nRate of fire:    Once per 3 seconds" \
-                   "\nCost:            Basic Tower + $125 ($225 total)" \
-                   "\nSells for:        $170" \
-                   "\nRecommend: vs high hp enemies (Orc, Dragon)."
-    poison2_text = "Rank 2 Poison Tower (Tier3 tower):\n" \
-                   "\n1.5x rank1 damage, double stun (1.5 seconds)." \
-                   "\nDamage:        ~41% current hp over 10 seconds" \
-                   "\nRate of fire:   Once per second" \
-                   "\nCost:           Rank 1 + $150 ($375 total)" \
-                   "\nSells for:       $280" \
-                   "\nRecommend: vs high hp enemies (Orc, Dragon)."
-    dark1_text = "Rank 1 Dark Tower (Tier2 tower) :\n" \
-                 "\nDoes damage on hit ignoring 50% of enemy armor" \
-                 "for 0.75 seconds at last damage tic." \
-                 "\nDamage:        75 damage per hit" \
-                 "\nRate of fire:    Every other second" \
-                 "\nCost:            Basic Tower + $125 ($225 total)" \
-                 "\nSells for:        $170" \
-                 "\nRecommend: vs. high armor enemies (Spiker, Dragon)."
-    dark2_text = "Rank 2 Dark Tower (Tier3 tower):\n" \
-                 "\n1.5x rank1 damage, double stun (1.5 seconds)." \
-                 "\nDamage:        ~41% current hp over 10 seconds" \
-                 "\nRate of fire:   Once per second" \
-                 "\nCost:           Rank 1 + $150 ($375 total)" \
-                 "\nSells for:       $280" \
-                 "\nRecommend: vs. high armor enemies (Spiker, Dragon)."
 
     basic = towerClass.BasicTower((160, 400), destroy=False)
     ice1 = towerClass.IceTower1((155, 250), destroy=False)
@@ -233,49 +165,6 @@ def enemy_info_loop():
         font_size=40, width=200, height=60, color1=green, color2=bright_green)
     # Texts
     font = pygame.font.SysFont('Comic Sans MS', 18, bold=True)
-    spider_text = "Spider\n" \
-                  "\nIndividually weak but forms large groups" \
-                  "\nHealth:     100" \
-                  "\nArmor:      0" \
-                  "\nSpeed:      1.2" \
-                  "\nKill value:   $8" \
-                  "\nRecommend: Fire towers most effective."
-    lizard_text = "Lizard Men\n" \
-                  "\nWell rounded foot soldier of medium difficulty" \
-                  "\nHealth:     300" \
-                  "\nArmor:      50 (50% reduced damage)" \
-                  "\nSpeed:      1.2" \
-                  "\nKill value:   $50" \
-                  "\nRecommend: All towers fairly equally effective."
-    wolf_text = "Demon Wolf\n" \
-                "\nNot particularly strong, but very fast" \
-                "\nHealth:     240" \
-                "\nArmor:      20 (20% reduced damage)" \
-                "\nSpeed:      2" \
-                "\nKill value:   $50" \
-                "\nRecommend: Numerous and well spaced towers."
-    turtle_text = "Spikers\n" \
-                  "\nSlow, but highly armored enemy with low health" \
-                  "\nHealth:     200" \
-                  "\nArmor:      90 (90% reduced damage)" \
-                  "\nSpeed:      0.8" \
-                  "\nKill value:   $75" \
-                  "\nRecommend: Dark towers most effective."
-    orc_text = "Orc\n" \
-               "\nFairly slow, low armor, but high health" \
-               "\nHealth:      800" \
-               "\nArmor:      20 (20% reduced damage)" \
-               "\nSpeed:      1" \
-               "\nKill value:   $75" \
-               "\nRecommend: Early poison towers."
-    dragon_text = "Dragon\n" \
-                  "\nThe big one! Slow, with HIGH health and armor" \
-                  "\nHealth:      2000" \
-                  "\nArmor:      75 (75% reduced damage)" \
-                  "\nSpeed:      0.6" \
-                  "\nKill value:   $750" \
-                  "\nRecommend: Early poison towers and dark towers " \
-                  "               paired with ice towers for extra hits."
 
     spider = enemies.Spider((180, 250), (190, 250), True, False)
     lizard = enemies.Lizard((180, 530), (190, 530), True, False)
@@ -362,11 +251,6 @@ def settings_loop():
     #     message="Hard", action=settings_loop, font_size=40,
     #     width=300, height=60, color1=orange, color2=bright_orange)
 
-    easy_text = "Enemies will spawn more slowly, passive gold generation up, " \
-                "higher starting gold."
-    medium_text = "Normal spawn, gold generation, and starting gold."
-    hard_text = "Fastest spawn rate, normal gold generation, " \
-                "lower starting gold."
     font = pygame.font.SysFont('Comic Sans MS', 24, bold=True)
 
     while True:
@@ -394,24 +278,24 @@ def settings_loop():
 
 
 def easy_settings():
-    settings.spawn_rate = 10 * seconds
+    settings.spawn_rate = 9 * seconds
     settings.starting_gold = 1600
     settings.gold_generation = 0.5 * seconds
     settings.difficulty = 2
 
 
 def medium_settings():
-    settings.spawn_rate = 7 * seconds
+    settings.spawn_rate = 6 * seconds
     settings.starting_gold = 1200
     settings.gold_generation = 1 * seconds
     settings.difficulty = 1
 
 
 def hard_settings():
-    settings.spawn_rate = 5 * seconds
+    settings.spawn_rate = 3 * seconds
     settings.starting_gold = 800
     settings.gold_generation = 2 * seconds
-    settings.difficulty = 1
+    settings.difficulty = 0.5
 
 
 pause = False
@@ -420,10 +304,12 @@ pause = False
 def unpause():
     global pause
     pause = False
+    pygame.mixer.music.unpause()
 
 
 def pause_game():
 
+    pygame.mixer.music.pause()
     resume_button = generalClass.Button(
         (20, 80), message="Resume", width=120, color1=green,
         color2=bright_green, action=unpause)
@@ -434,11 +320,10 @@ def pause_game():
 
     main_button = generalClass.Button(
         (20, 140), message="Main Menu", width=120, color1=yellow,
-        color2=bright_yellow, action=intro_loop)
+        color2=bright_yellow, action=load_intro_music)
 
     global pause
     pause = True
-    # pygame.mixer.music.pause()
     while pause:
 
         for event in pygame.event.get():
@@ -456,6 +341,21 @@ def pause_game():
 
 # Start game loop
 def game_loop():
+
+    # TODO # Need another song
+    main_songs = [
+        # Will start by moving first song to end after music_playlist called
+        'music/Video_Game_Soldiers.mp3',
+        'music/Evil_March2.wav',
+        'music/bensound-epic.mp3',
+        'music/Warrior_Strife.mp3',
+        'music/Action_Hero.mp3'
+    ]
+    # www.nerdparadise.com/programming/pygame/part3
+    song_end = pygame.USEREVENT + 1
+    next_song = music_playlist(main_songs)
+    main_songs = next_song
+
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", width=120,  color1=gray, color2=white,
@@ -523,6 +423,7 @@ def game_loop():
 
     # Actual game loop
     while True:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -530,6 +431,10 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
+            if event.type == song_end:
+                next_song = music_playlist(main_songs)
+                main_songs = next_song
+
             # print(event)
 
         # Draw background
@@ -552,6 +457,7 @@ def game_loop():
         # Draw in mage
         draw_mage(mage, game_clock, score_board, funds, enemies_list)
 
+        tower_costs_display()
         funds.draw()
         castle.draw()
         score_board.draw()
@@ -566,7 +472,7 @@ def game_loop():
             if end == "play":
                 game_loop()
             if end == "main":
-                intro_loop()
+                load_intro_music()
         if castle.game_over:
             end_screen.score = score_board.score
             end_screen.time_elapsed = game_clock.frames
@@ -574,9 +480,29 @@ def game_loop():
             if end == "play":
                 game_loop()
             if end == "main":
-                intro_loop()
+                load_intro_music()
         if game_clock.frames % passive_money_rate == 0:
             funds.adjust(1)
+
+
+def music_playlist(_songs):
+    # www.nerdparadise.com/programming/pygame/part3
+    _songs = _songs[1:] + [_songs[0]] # move current song to the back of the list
+    song_end = pygame.USEREVENT + 1
+    pygame.mixer.music.set_endevent(song_end)
+    pygame.mixer.music.load(_songs[0])
+    pygame.mixer.music.play()
+    return _songs
+
+
+def tower_costs_display():
+    font = pygame.font.SysFont('Comic Sans MS', 16, bold=False)
+    # Backdrop
+    pygame.draw.rect(gameDisplay, black,
+                     (275, display_height - 110, 175, 100))
+    # Text
+    helpers.blit_text(gameDisplay, tower_costs,
+                      (282, display_height - 106), font, color=white)
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -623,7 +549,7 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
             picker = random.randint(8, 12)
         if 2.8 * min_rate < frames <= 3.5 * min_rate:
             picker = -1
-        if frames == 3 * min_rate:
+        if frames == int(3 * min_rate):
             picker = 13
         if 3.5 * min_rate < frames <= 5 * min_rate:
             picker = random.randint(14, 18)
@@ -633,7 +559,7 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
             picker = random.randint(13, 19)
         if frames > 7 * min_rate:
             picker = random.randint(14, 20)
-        if frames == 7 * min_rate:
+        if frames == int(7 * min_rate):
             picker = 20
 
         # The picks
@@ -810,6 +736,6 @@ def draw_mage(mage, game_clock, score_board, funds, enemies_list):
 
 if __name__ == "__main__":
     settings = generalClass.Settings()
-    intro_loop()
+    load_intro_music()
     pygame.quit()
     quit()

@@ -61,5 +61,3 @@ actions = {
     "poison2": 8,
     "dark2": 9
 }
-
-

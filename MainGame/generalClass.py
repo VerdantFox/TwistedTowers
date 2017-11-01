@@ -31,9 +31,9 @@ class Button:
         self.selected = False
         self.selected_color = purple
         self.selected_text_color = white
-        self.clickable = True
+        self.clickable = False
         self.unclickable_timer = 0.3 * seconds
-        self.unclickable_countdown = 0
+        self.unclickable_countdown = 0.3 * seconds
 
     def draw(self, *args):
         self._mouse = pygame.mouse.get_pos()
@@ -253,20 +253,25 @@ class EndScreen:
         self.time_font = pygame.font.SysFont("Comic Sans MS", 40)
         self.text_color = black
         self.play_button = Button(
-            (75, display_height - 300), message="Play", action="play",
+            (75, display_height - 320), message="Play", action="play",
             font_size=40, width=200, height=60, color1=green,
             color2=bright_green)
+        self.quit_button = Button(
+            (325, display_height - 320), message="Quit", action=quit,
+            font_size=40, width=200, height=60, color1=red, color2=bright_red)
         self.main_button = Button(
-            (325, display_height - 300), message="Main menu", action="main",
+            (575, display_height - 320), message="Main menu", action="main",
             font_size=40, width=200, height=60, color1=yellow,
             color2=bright_yellow)
-        self.quit_button = Button(
-            (575, display_height - 300), message="Quit", action=quit,
-            font_size=40, width=200, height=60, color1=red, color2=bright_red)
 
     def draw(self, win_loss):
-        # pygame.mixer.music.stop()
-        # pygame.mixer.Sound.play(castle_falls)
+
+        if win_loss == "lose":
+            pygame.mixer.music.load('music/Hero_Down.mp3')
+            pygame.mixer.music.play(-1, start=1.5)
+        if win_loss == "win":
+            pygame.mixer.music.load('music/Amazing_Plan_Silent_Film_Dark.mp3')
+            pygame.mixer.music.play(-1)
 
         minutes_elapsed = self.time_elapsed // minutes
         remaining_seconds = (self.time_elapsed % minutes) // seconds
