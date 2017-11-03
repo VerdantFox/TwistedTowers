@@ -265,7 +265,7 @@ class EndScreen:
             color2=bright_yellow)
 
     def draw(self, win_loss):
-
+        pygame.mixer.music.fadeout(750)
         if win_loss == "lose":
             pygame.mixer.music.load('music/Hero_Down.mp3')
             pygame.mixer.music.play(-1, start=1.5)

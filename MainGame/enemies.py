@@ -16,11 +16,122 @@ from gameParameters import gameDisplay
 from lists import *
 from towers.towerPics import fire_pic, ice_pic, poison_list, stun_list
 from sounds import spider_death_sound, wolf_death_sound, turtle_death_sound, \
-    dragon_death_sound, orc_death_sound, lizard_death_sound, mage_spell_sound
+    dragon_death_sound, orc_death_sound, lizard_death_sound, mage_spell_sound, \
+    grumbling_sound
 
 
 class Orc:
-    """"""
+    """Orc enemy class, high health, low armor (base for other enemies)
+
+    Args:
+        location (tuple, default=path_nodes[0]): Defines (self.x, self.y)
+        next_node (tuple, default=path_nodes[0]): Defines self.next_node
+        stationary (bool, default=False): Defines self.stationary
+        destroy (bool, default=True): Defines self.destroy
+
+    Attributes:
+        # Position and movement
+        x, y (tuple): Gives location of enemy 
+        base_speed (float): Enemy move and image cycling speed, default: 1
+        speed: Actual speed used (adjusted by ice, reverts to base_speed)
+        right (bool): True if next node x greater than enemy x
+        left (bool): True if next node x less than enemy x
+        up (bool): True if next node y less than enemy y
+        down (bool): True if next node y greater than enemy y
+        next_node (tuple): The point on map enemy travels to next
+        node_index (int): Index used to get next node in 'enemy_nodes' list
+        stationary (bool): If True, stops x,y movement (default: False)
+
+        # Image manipulation
+        image (loaded Pygame image): The image displayed
+        image_width (int): Width of image
+        image_height (int): Height of image
+        default_frames_to_picswap (int): Default frames until image change
+        frames_to_picswap (int): Frames to change (reverts to default)
+        frame_counter (int): counts down, at zero changes image
+        direction_index (int): Changes image facing direction in list
+        frame (int): Index of current image frame in list of images
+
+        # Interaction with other objects
+        radius (int): Radius for collision detection with other objects
+        initial_fire_radius: Radius for fire1 detection
+        fire_radius: Radius for fire2 detection (reverts to initial)
+
+        # hp manipulation
+        max_hp (float): Maximum health of enemy (800 for orc)
+        hp (float): Actual health of enemy, decreases with damage
+        armor (float): Resistance to damage (0-100) (20 for orc)
+
+        # Death and destruction
+        death_sound: Sound object to play() on death (in sounds.py)
+        destroy (bool): Removes live body if False
+        dead (bool): Used to return cash and money
+        cash: Amount of money returned for kill
+        points: Amount of points returned for kill
+        spawn_timer (int): Time from dead (initially True) to spawning
+        spawn_countdown (int): Counts down from spawn_timer to zero
+        lives (int): Number of lives (need minimum of 2 b/c start dead)
+        dead_image: Image displayed after death
+        dead_image_timer (int):  Time dead_image is shown (4 * seconds)
+        dead_image_countdown: Counts down from dead_image_timer to 0
+        dead_x: x coordinate location of enemy at time of death
+        dead_y: y coordinate location of enemy at time of death
+        dead_font: Font used for cash display
+
+        # Ice specialties
+        ice_loc(tuple in tuple): Relative x, y adjustments for ice image
+        ice1 (bool): True for ice_counter secs if hit by tier 1 ice tower
+        ice2 (bool): True for ice_counter secs if hit by tier 2 ice tower
+        ice_counter (int): Duration of slow from ice tower strike
+        ice1_countdown (int): Counts down from ice_counter to 0
+        ice2_countdown (int): Counts down from ice_counter to 0
+
+        # Fire specialties
+        fire_loc (tuple): x, y offset for fire image relative to body
+        fireball1 (int): Counts down time enemy can flame other enemies
+        fireball2 (int): Counts down time enemy can flame other enemies
+        fire1 (float): Damage taken per second while on fire
+        fire2 (float): Damage taken per second while on fire
+        burned_counter (int): Each tick down damages enemy
+        fire_countdown (int): Frame count (time) between burn ticks
+
+        # Poison specialties
+        poison_loc (tuple in tuple): Relative x, y adjustments
+                                          for poison image
+        stun_loc: (tuple in tuple): Relative x, y adjustments
+                                          for stun image
+        poison1 (float): Poison damage per tick from tier 1 poison
+        poison2 (float): Poison damage per tick from tier 2 poison
+        poison_tick (int): Frames (time) until next poison tick damage
+        poison_charges (int): Remaining ticks of poison damage
+        stun (bool): True if stunned
+        stun_duration (int): frames (time) of stun duration
+        stun_duration_countdown (int): countdown from stun_duration to 0
+        stun_frameswap_rate (int): Game frames until next stun image frame
+        stun_frame (int): Index of stun image list
+        stun_framecounter (int): Counts frames from stun_frameswap_rate to 0
+        
+        Methods:
+            draw: Moves enemy unless stunned, changing image to show walking 
+                  motion. Checks for special (elemental) attributes and calls 
+                  associated functions if it find them. If enemy is dead, shows 
+                  corpse and cash loot and removes elemental effects.
+            walk: Changes image as enemy moves to animate movement
+            show: Shows enemy, health bar, and calls elemental effects functions
+            show_poison: Show poison cloud attached to enemy
+            show_stun: Shows poison cloud attached to enemy
+            show_fire: Shows fire attached to enemy
+            show_ice: Shows ice attached to enemy
+            take_damage: Reduces enemy's health as damage taken, 
+                         modified by armor
+            health_bar: Displays health bar as a visual of enemy percent health
+            iced: Slows enemy movement and animation, doubly so for rank 2
+            burning: Causes fire damage over time to enemy, prioritising rank 2
+            poisoned: Damages enemies as % hp or min damage, stuns toward end
+            check_death: Checks if enemy is dead, plays sound 
+                         and returns cash/points
+            hit: Expressed on tower shot hit, translates specialty and damage
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         # Position and movement
@@ -32,17 +143,17 @@ class Orc:
         self.up = False
         self.down = False
         self.next_node = next_node  # see lists.py
-        self.node = 0
+        self.node_index = 0
         self.stationary = stationary
 
         # Image manipulation
         self.image = orc_list[0][0]
         self.image_width = 60
         self.image_height = 60
-        self.initial_frames_to_picswap = 8
+        self.default_frames_to_picswap = 8
         self.frames_to_picswap = 8
         self.frame_counter = 0
-        self.direction = 2
+        self.direction_index = 2
         self.frame = 0
 
         # Interaction with other objects
@@ -55,16 +166,15 @@ class Orc:
         self.hp = 800
         self.armor = 20
 
-        # Death and destruction ;-)
+        # Death and destruction
         self.death_sound = orc_death_sound
         self.destroy = destroy  # Removes live body
         self.dead = False  # Used to return cash and money
         self.cash = 75
         self.points = self.cash // 3
-        self.respawn_timer = random.randint(5 * seconds, 6.75 * seconds)
-        self.respawn_countdown = self.respawn_timer
+        self.spawn_timer = random.randint(5 * seconds, 6.75 * seconds)
+        self.spawn_countdown = self.spawn_timer
         self.lives = 2  # start dead, need 1 more than that
-        self.added_to_list = False
         self.dead_image = orcdead
         self.dead_image_timer = 4 * seconds
         self.dead_image_countdown = 0
@@ -98,22 +208,27 @@ class Orc:
         self.poison1 = None
         self.poison2 = None
         self.poison_tick = 0
-        self.poison_countdown = 0
         self.poison_charges = 0
         self.stun = False
         self.stun_duration = 0.75 * seconds
-        self.stun_duration_countdown = 0.75 * seconds
+        self.stun_duration_countdown = 0 * seconds
         self.stun_frameswap_rate = 10
-        self.stun_frame = 0
         self.stun_framecounter = 0
+        self.stun_frame = 0
 
-        # Dark specialties
-        self.dark_loc = ()
-        self.dark = False
-        self.dark_timer = .5 * seconds
+    def draw(self):
+        """Calls manipulates enemy and calls associated functions
 
-    def move(self):
+        Moves enemy unless stunned, changing image to show walking motion.
+        Checks for special (elemental) attributes and calls associated
+        functions if it find them. If enemy is dead, shows corpse and
+        cash loot and removes elemental effects.
 
+        No args
+
+        Returns:
+            1 if enemy reaches last node (castle), else None
+        """
         if not self.destroy:
             if not self.stun:
                 if not self.stationary:
@@ -133,18 +248,18 @@ class Orc:
 
                 # Change walking frame if frame_counter reaches 0
                 if self.frame_counter < 1:
-                    # Determine direction
-                    self.direction = 2  # Default is right
+                    # Determine direction_index
+                    self.direction_index = 2  # Default is right
                     if self.down and not self.right:
-                        self.direction = 0
+                        self.direction_index = 0
                     if self.down and self.right:
-                        self.direction = 1
+                        self.direction_index = 1
                     if self.right and not (self.up or self.down):
-                        self.direction = 2
+                        self.direction_index = 2
                     if self.up and self.right:
-                        self.direction = 3
+                        self.direction_index = 3
                     if self.up and not self.right:
-                        self.direction = 4
+                        self.direction_index = 4
 
                     self.walk()
                     self.frame_counter = self.frames_to_picswap
@@ -179,9 +294,10 @@ class Orc:
             # Switch to next node in path if at current node goal
             if self.next_node[0] - 10 < self.x < self.next_node[0] + 10:
                 if self.next_node[1] - 10 < self.y < self.next_node[1] + 10:
-                    if self.node < len(path_nodes) - 2:
-                        self.node += 1
-                        node_x, node_y = path_nodes[self.node]  # see lists.py
+                    if self.node_index < len(path_nodes) - 2:
+                        self.node_index += 1
+                        # see lists.py
+                        node_x, node_y = path_nodes[self.node_index]
                         # Introduce some randomness to node locations
                         node_x += random.randrange(-10, 10)
                         node_y += random.randrange(-15, 15)
@@ -192,7 +308,6 @@ class Orc:
                         self.poison1 = None
                         self.poison2 = None
                         self.poison_tick = 0
-                        self.poison_countdown = 0
                         self.poison_charges = 0
                         self.ice1 = False
                         self.ice2 = False
@@ -201,7 +316,6 @@ class Orc:
                         self.fire2 = None
                         self.fireball1 = 0
                         self.fireball2 = 0
-                        self.dark = False
                         self.x, self.y = path_nodes[0]
                         # Return damage to castle
                         return 1
@@ -223,15 +337,14 @@ class Orc:
                 gameDisplay.blit(text_surface, text_rect)
 
             # Start respawn timer countdown
-            if self.respawn_countdown > 0:
-                self.respawn_countdown -= 1
+            if self.spawn_countdown > 0:
+                self.spawn_countdown -= 1
             # If respawn timer reaches 0, respawn enemy and reset timer
-            elif self.respawn_countdown <= 0:
+            elif self.spawn_countdown <= 0:
                 self.lives -= 1
                 self.poison1 = None
                 self.poison2 = None
                 self.poison_tick = 0
-                self.poison_countdown = 0
                 self.poison_charges = 0
                 self.fire1 = None
                 self.fire2 = None
@@ -241,13 +354,12 @@ class Orc:
                 self.ice1 = False
                 self.ice2 = False
                 self.speed = self.base_speed
-                self.dark = False
                 self.destroy = False
                 self.x, self.y = path_nodes[0]
-                self.node = 0
+                self.node_index = 0
                 self.next_node = path_nodes[0]
                 self.hp = self.max_hp
-                self.respawn_countdown = self.respawn_timer
+                self.spawn_countdown = self.spawn_timer
 
         self.right = False
         self.left = False
@@ -255,13 +367,14 @@ class Orc:
         self.down = False
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = orc_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = orc_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(orc_list[0]) - 1:
             self.frame = 0
 
     def show(self):
+        """Shows enemy, health bar, and calls elemental effects functions"""
         if not self.destroy:
             if self.poison1 or self.poison2:
                 self.show_poison()
@@ -277,16 +390,18 @@ class Orc:
             self.health_bar()
 
     def show_poison(self):
+        """Show poison cloud attached to enemy"""
         gameDisplay.blit(
-            poison_list[self.direction][0],
-            (self.x + self.poison_loc[self.direction][0],
-             self.y + self.poison_loc[self.direction][1]))
+            poison_list[self.direction_index][0],
+            (self.x + self.poison_loc[self.direction_index][0],
+             self.y + self.poison_loc[self.direction_index][1]))
 
     def show_stun(self):
+        """Shows stun attached to enemy"""
         gameDisplay.blit(
             stun_list[self.stun_frame][0],
-            (self.x + self.stun_loc[self.direction][0],
-             self.y + self.stun_loc[self.direction][1]))
+            (self.x + self.stun_loc[self.direction_index][0],
+             self.y + self.stun_loc[self.direction_index][1]))
 
         self.stun_framecounter -= 1
         if self.stun_framecounter < 1:
@@ -296,16 +411,24 @@ class Orc:
                 self.stun_frame = 0
 
     def show_fire(self):
+        """Shows fire attached to enemy"""
         gameDisplay.blit(
             fire_pic[0], (self.x + self.fire_loc[0],
                           self.y + self.fire_loc[1]))
 
     def show_ice(self):
+        """Shows ice attached to enemy"""
         gameDisplay.blit(
-            ice_pic[0], (self.x + self.ice_loc[self.direction][0],
-                         self.y + self.ice_loc[self.direction][1]))
+            ice_pic[0], (self.x + self.ice_loc[self.direction_index][0],
+                         self.y + self.ice_loc[self.direction_index][1]))
 
     def take_damage(self, damage, armor_shred=False):
+        """Reduces enemy's health as damage taken, modified by armor
+
+        Args:
+            damage (float): Enemy health reduced by damage taken
+            armor_shred (bool): If True, armor doesn't reduce damage
+        """
         if self.hp > 0:
             damage_reduced = (100 - self.armor) / 100
             if not armor_shred:
@@ -321,6 +444,7 @@ class Orc:
             self.destroy = True
 
     def health_bar(self):
+        """Displays health bar as a visual of enemy percent health"""
         max_width = self.image_width // 2
         if self.hp >= 0:
             damage_width = int(max_width * self.hp // self.max_hp)
@@ -339,6 +463,7 @@ class Orc:
                              (x, y, damage_width, height))
 
     def iced(self):
+        """Slows enemy movement and animation, doubly so for rank 2"""
         if self.ice1_countdown > 0:
             self.ice1_countdown -= 1
         else:
@@ -354,13 +479,14 @@ class Orc:
             multiplier = .7
         if not (self.ice1 or self.ice2):
             self.speed = self.base_speed
-            self.frames_to_picswap = self.initial_frames_to_picswap
+            self.frames_to_picswap = self.default_frames_to_picswap
         else:
             self.speed = self.base_speed * multiplier
             self.frames_to_picswap = int(
-                self.initial_frames_to_picswap * 1 / multiplier)
+                self.default_frames_to_picswap * 1 / multiplier)
 
     def burning(self):
+        """Causes fire damage over time to enemy, prioritising rank 2"""
         if self.burned_counter > 0:
             if self.fire_countdown == 0:
                 if self.fire2:
@@ -376,6 +502,11 @@ class Orc:
             self.fire2 = None
 
     def poisoned(self, percent_hp):
+        """Damages enemies as % hp or min damage, stuns toward end
+
+        Args:
+            percent_hp (float): Percentage of enemy health damaged per tick
+        """
         # Stun
         if self.poison_charges == 2 and self.poison_tick == 0:
             if self.poison2:
@@ -384,6 +515,7 @@ class Orc:
                 self.stun_duration_countdown = self.stun_duration
             self.stun = True
 
+        # Damage
         poison_damage = percent_hp * self.hp
         if self.poison1:
             if poison_damage < 15:
@@ -405,6 +537,12 @@ class Orc:
             self.poison2 = None
 
     def check_death(self):
+        """Checks if enemy is dead, plays sound and returns cash/points
+
+        Returns:
+            self.points (int), self.cash (int): a tuple to adjust game points
+                                                and funds
+        """
         if self.dead:
             self.death_sound.play()
             self.dead = False
@@ -413,6 +551,13 @@ class Orc:
             return None
 
     def hit(self, damage, specialty):
+        """Expressed on tower shot hit, translates specialty and damage
+
+        Args:
+            damage: Damage taken from tower shot (from missiles.damage),
+                    means different things for different damage types
+            specialty: Elemental type, to specialise damage and disabilities
+        """
         if specialty == "basic":
             self.take_damage(damage)
         if specialty == "ice1":
@@ -446,6 +591,11 @@ class Orc:
 
 
 class Spider(Orc):
+    """Spider enemy class, low health, no armor
+
+    Attributes and Methods:
+        See parent class, Orc, for details
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         super().__init__(location=location, next_node=next_node,
@@ -477,14 +627,19 @@ class Spider(Orc):
         self.death_sound = spider_death_sound
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = spider_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = spider_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(spider_list[0]) - 1:
             self.frame = 0
 
 
 class Wolf(Orc):
+    """Wolf enemy class, medium health, low armor, fast-moving
+
+    Attributes and Methods:
+        See parent class, Orc, for details
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         super().__init__(location=location, next_node=next_node,
@@ -515,14 +670,19 @@ class Wolf(Orc):
         self.death_sound = wolf_death_sound
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = wolf_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = wolf_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(wolf_list[0]) - 1:
             self.frame = 0
 
 
 class Turtle(Orc):
+    """Turtle (spiker) enemy class, low health, high armor, slow
+
+    Attributes and Methods:
+        See parent class, Orc, for details
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         super().__init__(location=location, next_node=next_node,
@@ -554,14 +714,19 @@ class Turtle(Orc):
         self.death_sound = turtle_death_sound
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = turtle_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = turtle_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(turtle_list[0]) - 1:
             self.frame = 0
 
 
 class Lizard(Orc):
+    """Lizard enemy class, medium health, medium armor
+
+    Attributes and Methods:
+        See parent class, Orc, for details
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         super().__init__(location=location, next_node=next_node,
@@ -595,14 +760,19 @@ class Lizard(Orc):
         self.death_sound = lizard_death_sound
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = lizard_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = lizard_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(lizard_list[0]) - 1:
             self.frame = 0
 
 
 class Dragon(Orc):
+    """Dragon enemy class (boss), high health, high armor, slow
+
+    Attributes and Methods:
+        See parent class, Orc, for details
+    """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         super().__init__(location=location, next_node=next_node,
@@ -636,14 +806,61 @@ class Dragon(Orc):
         self.death_sound = dragon_death_sound
 
     def walk(self):
-        # Change walking frame in direction
-        self.image = dragon_list[self.direction][self.frame]
+        """Changes image (in direction) as enemy moves to animate movement"""
+        self.image = dragon_list[self.direction_index][self.frame]
         self.frame += 1
         if self.frame > len(dragon_list[0]) - 1:
             self.frame = 0
 
 
 class Mage:
+    """Hero that runs scripted series of events to end the game (not enemy)
+
+    Attributes:
+        # Animation
+        image (loaded Pygame image): The mage image displayed
+        frame_counter (int): counts down, at zero changes image
+        frame (int): Index of current image frame in list of images
+        image_width (int): Width of image
+        image_height (int): Height of image
+        frames_to_picswap (int): Frames until image change
+
+        # Position
+        x, y (tuple): Gives location of mage
+        end_x, end_y (tuple): location mage runs to
+
+        # Spell
+        start_spell (bool): When True starts mage spell movement animation
+        spell_cast (bool): When True starts spell animation and sound
+        radius: radius of explosion spell (expands out from mage)
+        thickness (int): thickness of the circles expanding outward from mage
+
+        # Win
+        stop_spawn (bool): Used to stop the spawning of enemies
+        pop_enemies_counter (int): Counter that counts down, used to pop
+                                   enemies from the enemies_list, endgame
+        win (bool): When declared, the game will end and go to end_screen
+
+        # Walking
+        walking (bool): Mage walks down while True
+
+        # Speech
+        wait (bool): If True mage waits, does nothing
+        speech1 (bool): While True, mage gives his first speech
+        speech2 (bool): While True, mage gives his second speech
+        wait_counter (int): While counting down to 0, mage stands still
+        speech_timer (int): Number of game frames (time) for one chat bubble
+        speech_counter (int): Counts down from speech_timer to 0
+        speech_index (int): Index for which text from speech to display
+        font: Font used in speech chat bubble
+        crystal_show (bool): While True, animates mage pulling out crystal
+        crystal_away (bool): While True, animates mage putting back crystal
+
+    Methods:
+        draw: Goes through a series of pre-planned animations, sounds,
+         and texts, that result in the mage killing all living enemies,
+         stopping spawn of future enemies, and ending the game in victory.
+    """
     def __init__(self):
         # Animation
         self.image = magestanding
@@ -652,8 +869,6 @@ class Mage:
         self.image_width = 60
         self.image_height = 60
         self.frames_to_picswap = 4
-        self.spell_cast_length = len(mage_list[0]) * self.frames_to_picswap
-        self.spell_cast_countdown = 0
 
         # Position
         self.x, self.y = (340, -65)
@@ -663,8 +878,6 @@ class Mage:
         self.start_spell = False
         self.spell_cast = False
         self.radius = 0
-        self.spell_length = 5 * seconds
-        self.spell_countdown = 0
         self.thickness = 10
 
         # Win
@@ -677,7 +890,6 @@ class Mage:
 
         # Speech
         self.wait = False
-        self.speech = False
         self.speech1 = False
         self.speech2 = False
         self.wait_counter = 1 * seconds
@@ -687,7 +899,6 @@ class Mage:
         self.font = pygame.font.SysFont('Comic Sans MS', 16, bold=True)
         self.crystal_show = False
         self.crystal_away = False
-        self.fist_shake = False
 
     def draw(self, game_frames):
         # Sequence takes ~ 40 seconds until all enemies dead
@@ -716,17 +927,16 @@ class Mage:
 
                 self.walking = False
                 self.wait = True
-                # self.speech = True
                 self.image = magestanding
 
         if self.wait:
             self.wait_counter -= 1
             if self.wait_counter == 0:
                 self.wait = False
-                self.speech = True
+                self.speech1 = True
                 self.frame = 0
 
-        if self.speech:
+        if self.speech1:
             if self.speech_counter > 0:
                 self.speech_counter -= 1
             else:
@@ -735,12 +945,14 @@ class Mage:
                 self.speech_counter = self.speech_timer
             if self.speech_index == 3 and self.speech_counter == 0.5 * seconds:
                 self.crystal_show = True
+            if self.speech_index == 7 and self.speech_counter == 2 * seconds:
+                grumbling_sound.play()
             if self.speech_index == 7 and self.speech_counter == 0:
                 self.crystal_away = True
-            if self.speech_index == 9 and self.speech_counter == 2 * seconds:
+            if self.speech_index == 9 and self.speech_counter == 3.25 * seconds:
                 pygame.mixer.music.fadeout(2500)
             if self.speech_index == 9 and self.speech_counter == 0:
-                self.speech = False
+                self.speech1 = False
                 self.start_spell = True
                 self.frame = 0
 

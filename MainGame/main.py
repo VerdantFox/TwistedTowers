@@ -200,8 +200,8 @@ def enemy_info_loop():
             info_index = 2
         # Draw Tower and info
         if info_index == 0:
-            spider.move()
-            lizard.move()
+            spider.draw()
+            lizard.draw()
             helpers.blit_text(gameDisplay, spider_text, (275, 135),
                               font, margin=125)
             helpers.blit_text(gameDisplay, lizard_text, (275, 400),
@@ -209,8 +209,8 @@ def enemy_info_loop():
             pygame.draw.rect(gameDisplay, black,
                              (150, 385, 550, 5))
         if info_index == 1:
-            wolf.move()
-            turtle.move()
+            wolf.draw()
+            turtle.draw()
             helpers.blit_text(gameDisplay, wolf_text, (275, 135),
                               font, margin=125)
             helpers.blit_text(gameDisplay, turtle_text, (275, 400),
@@ -218,8 +218,8 @@ def enemy_info_loop():
             pygame.draw.rect(gameDisplay, black,
                              (150, 385, 550, 5))
         if info_index == 2:
-            orc.move()
-            dragon.move()
+            orc.draw()
+            dragon.draw()
             helpers.blit_text(gameDisplay, orc_text, (275, 135),
                               font, margin=125)
             helpers.blit_text(gameDisplay, dragon_text, (275, 400),
@@ -647,7 +647,7 @@ def draw_enemies(enemies_list, castle):
     for enemy in enemies_list:
         if enemy.lives == 0:
             enemies_list.pop(enemies_list.index(enemy))
-        castle_damage = enemy.move()
+        castle_damage = enemy.draw()
 
         # Fire stuff
         if enemy.fireball2:

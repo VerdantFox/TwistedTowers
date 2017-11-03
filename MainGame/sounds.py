@@ -16,6 +16,9 @@ sell_tower_sound.set_volume(0.8)
 mage_spell_sound = pygame.mixer.Sound('soundEffects/MageSpell.wav')
 mage_spell_sound.set_volume(0.75)
 
+grumbling_sound = pygame.mixer.Sound('soundEffects/OldManGrumbling2.wav')
+mage_spell_sound.set_volume(1)
+
 # Deaths
 spider_death_sound = pygame.mixer.Sound('soundEffects/Deaths/SpiderDeath.wav')
 spider_death_sound.set_volume(0.8)
