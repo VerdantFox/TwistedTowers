@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # mage down
 magedown1 = pygame.image.load('Enemies/mage/ryzeDOWN1.png')
 magedown2 = pygame.image.load('Enemies/mage/ryzeDOWN2.png')

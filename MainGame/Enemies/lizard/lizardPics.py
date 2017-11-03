@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # lizard dead
 lizarddead = pygame.image.load('Enemies/lizard/renDEAD.png')
 

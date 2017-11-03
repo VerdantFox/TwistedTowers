@@ -1,10 +1,5 @@
 # main_songs = [
-#     # Will start by moving first song to end after music_playlist called
-#     'music/Video_Game_Soldiers.mp3',
-#     'music/Evil_March2.wav',
-#     'music/bensound-epic.mp3',
-#     'music/Warrior_Strife.mp3',
-#     'music/Action_Hero.mp3'
+
 # ]
 # # www.nerdparadise.com/programming/pygame/part3
 # song_end = pygame.USEREVENT + 1
@@ -24,3 +19,35 @@
 #     pygame.mixer.music.load(_songs[0])
 #     pygame.mixer.music.play()
 #     return _songs
+
+
+
+# # Single lizard
+# enemies_list = [enemies.Lizard()]
+
+# # Single orc
+# enemies_list = [enemies.Orc()]
+
+# # Single spider
+# enemies_list = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
+#                 enemies.Spider(), enemies.Spider()]
+
+# # single turtle
+# enemies_list = [enemies.Turtle()]
+
+# # Single wolf
+# enemies_list = [enemies.Wolf()]
+
+# # 10 wolves
+# enemies_list = [enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+#                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+#                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+#                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
+#                 ]
+
+# # Single Dragon
+# enemies_list = [enemies.Dragon()]
+
+# # all enemies
+# enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
+#                 enemies.Turtle(), enemies.Lizard(), enemies.Dragon()]

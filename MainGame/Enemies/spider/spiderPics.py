@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # Spider dead
 spiderdead = pygame.image.load('Enemies/spider/eliseDEAD.png')
 

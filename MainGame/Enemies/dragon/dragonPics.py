@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # Dragon DEAD
 dragondead = pygame.image.load('Enemies/dragon/dragonDEAD.png')
 

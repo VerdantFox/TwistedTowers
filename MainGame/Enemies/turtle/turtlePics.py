@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # turtle dead
 turtledead = pygame.image.load('Enemies/turtle/ramDEAD.png')
 

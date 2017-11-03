@@ -20,6 +20,7 @@ from sounds import spider_death_sound, wolf_death_sound, turtle_death_sound, \
 
 
 class Orc:
+    """"""
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):
         # Position and movement

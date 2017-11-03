@@ -245,15 +245,6 @@ def settings_loop():
     hard_button = generalClass.Button(
         (50, 370), message="Hard", action=hard_settings, font_size=40,
         width=200, height=60, color1=red, color2=bright_red, permanent=True)
-    # sound_off_button = generalClass.Button(
-    #     (display_width * 2 // 3 - 100, display_height * 2 // 3),
-    #     message="Hard", action=settings_loop, font_size=40,
-    #     width=300, height=60, color1=orange, color2=bright_orange)
-    # Sound_on_button = generalClass.Button(
-    #     (display_width * 2 // 3 - 100, display_height * 2 // 3),
-    #     message="Hard", action=settings_loop, font_size=40,
-    #     width=300, height=60, color1=orange, color2=bright_orange)
-
     font = pygame.font.SysFont('Comic Sans MS', 24, bold=True)
 
     while True:
@@ -344,6 +335,7 @@ def pause_game():
 
 # Start game loop
 def game_loop():
+    # Start main game music
     pygame.mixer.music.fadeout(100)
     pygame.mixer.music.load('music/main_music_mesh2.wav')
     pygame.mixer.music.play(0)
@@ -366,45 +358,16 @@ def game_loop():
     castle = generalClass.Castle((20, display_height - 60))
     end_screen = generalClass.EndScreen()
 
-    # Blank list
+    # Set blank enemies list
     enemies_list = []
 
-    # # Single lizard
-    # enemies_list = [enemies.Lizard()]
-
-    # # Single orc
-    # enemies_list = [enemies.Orc()]
-
-    # # Single spider
-    # enemies_list = [enemies.Spider(), enemies.Spider(), enemies.Spider(),
-    #                 enemies.Spider(), enemies.Spider()]
-
-    # # single turtle
-    # enemies_list = [enemies.Turtle()]
-
-    # Single wolf
-    enemies_list = [enemies.Wolf()]
-
-    # # 10 wolves
-    # enemies_list = [enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
-    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
-    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
-    #                 enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
-    #                 ]
-
-    # # Single Dragon
-    # enemies_list = [enemies.Dragon()]
-
-    # # all enemies
-    # enemies_list = [enemies.Wolf(), enemies.Spider(), enemies.Orc(),
-    #                 enemies.Turtle(), enemies.Lizard(), enemies.Dragon()]
-
-    # Set towers and missiles
+    # Set towers' and missiles' lists
     bot_tower_list = []
     bot_missile_list = []
     top_tower_list = []
     top_missile_list = []
 
+    # Call function to set up towers and missiles
     set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
 
@@ -420,10 +383,13 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
-            # print(event)
 
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
+
+        # Periodically add money
+        if game_clock.frames % passive_money_rate == 0:
+            funds.adjust(1)
 
         # add new enemies
         if not mage.stop_spawn:
@@ -433,23 +399,30 @@ def game_loop():
         # Draw top towers
         draw_towers(top_tower_list, top_missile_list, funds,
                     score_board, enemies_list)
+
         # Draw enemies
         draw_enemies(enemies_list, castle)
-        # Draw bot towers
+
+        # Draw bottom towers
         draw_towers(bot_tower_list, bot_missile_list, funds,
                     score_board, enemies_list)
 
         # Draw in mage
         draw_mage(mage, game_clock, score_board, funds, enemies_list)
 
+        # Draw game info panels
         tower_costs_display()
         funds.draw()
         castle.draw()
         score_board.draw()
         game_clock.draw()
         pause_button.draw()
+
+        # Update game
         pygame.display.update()
         clock.tick(60)
+
+        # Set win/loss conditions
         if mage.win:
             end_screen.score = score_board.score
             end_screen.time_elapsed = game_clock.frames
@@ -466,18 +439,6 @@ def game_loop():
                 game_loop()
             if end == "main":
                 load_intro_music()
-        if game_clock.frames % passive_money_rate == 0:
-            funds.adjust(1)
-
-
-def tower_costs_display():
-    font = pygame.font.SysFont('Comic Sans MS', 16, bold=False)
-    # Backdrop
-    pygame.draw.rect(gameDisplay, black,
-                     (275, display_height - 110, 175, 100))
-    # Text
-    helpers.blit_text(gameDisplay, tower_costs,
-                      (282, display_height - 106), font, color=white)
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -615,6 +576,8 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
         for current_tower in tower_location:
             if current_tower.constructing:
                 current_tower.construct()
+            if current_tower.selling:
+                current_tower.sell()
             if not current_tower.destroy:
                 if current_tower.tier == 0:
                     if funds.cash < 100:
@@ -637,7 +600,10 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                 if selected:
                     new_tower = tower_location[new_tower_index]
                     if selected == "sell":
-                        new_tower.destroy = False
+                        new_tower.option_selected = None
+                        new_tower.selling = True
+                        new_tower.previous_sell_value = current_tower.sell
+                        new_tower.sell_countdown = new_tower.sell_timer
                         current_tower.destroy = True
                         current_tower.option_selected = None
                         funds.adjust(current_tower.sell)
@@ -716,6 +682,16 @@ def draw_mage(mage, game_clock, score_board, funds, enemies_list):
             funds.adjust(cash)
         if mage.pop_enemies_counter == 0:
             enemies_list.pop(enemies_list.index(enemy))
+
+
+def tower_costs_display():
+    font = pygame.font.SysFont('Comic Sans MS', 16, bold=False)
+    # Backdrop
+    pygame.draw.rect(gameDisplay, black,
+                     (275, display_height - 110, 175, 100))
+    # Text
+    helpers.blit_text(gameDisplay, tower_costs,
+                      (282, display_height - 106), font, color=white)
 
 
 if __name__ == "__main__":

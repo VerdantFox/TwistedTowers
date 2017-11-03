@@ -64,6 +64,14 @@ class TowerButton:
         self.frame = 0
         self.frames_to_picswap = 1
 
+        # Selling
+        self.selling = False
+        self.sell_timer = 0.5 * seconds
+        self.sell_countdown = self.sell_timer
+        self.sell_font = pygame.font.SysFont(
+            font, 20, bold=True)
+        self.previous_sell_value = None
+
         self.image = None
         self._button_radius = button_radius
         self._mouse = None
@@ -76,8 +84,7 @@ class TowerButton:
         self._options_countdown = 0
         self.set_options_timer = set_options_timer
         self.option_count = option_count
-        self.lockout = 20
-        self.lockout_timer = self.lockout
+        self.lockout_timer = 20
         self.option_lockout = self.lockout_timer
         self.gray_out = False
         self.tier = 0
@@ -148,14 +155,25 @@ class TowerButton:
             pygame.draw.rect(gameDisplay, front_color,
                              (x, y, construct_width, height))
 
+    def sell(self):
+        if self.sell_countdown > 0:
+            self.sell_countdown -= 1
+            text_surface = self.sell_font.render(
+                '$' + str(self.previous_sell_value), True, black)
+            text_rect = text_surface.get_rect()
+            text_rect.center = (self.x, self.y)
+            gameDisplay.blit(text_surface, text_rect)
+
+        else:
+            self.destroy = False
+            self.selling = False
+
     def draw(self):
         """Draw main and option circles, highlight color if hovered
         perform action if clicked,
         show options for a period of set_option_timer"""
         if self._options_countdown > 0:
             self._options_countdown -= 1
-        if self.lockout_timer > 0:
-            self.lockout_timer -= 1
 
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()
@@ -200,7 +218,6 @@ class TowerButton:
                             if action is not None:
                                 if hov_color != gray:
                                     self.option_selected = action
-                                    self.lockout_timer = self.lockout
 
             # If not hovering circle, draw inactive circle if possible
             else:

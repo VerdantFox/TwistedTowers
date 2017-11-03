@@ -1,5 +1,8 @@
 import pygame
 
+# Credit all images to Riot Games, League of Legends
+# https://na.leagueoflegends.com/en/
+
 # Wolf dead
 wolfdead = pygame.image.load('Enemies/wolf/wwDEAD.png')
 
