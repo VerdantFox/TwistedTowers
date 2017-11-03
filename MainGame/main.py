@@ -613,6 +613,8 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
     # Then drawing missiles to match appropriate tower
     for tower_location in tower_list:
         for current_tower in tower_location:
+            if current_tower.constructing:
+                current_tower.construct()
             if not current_tower.destroy:
                 if current_tower.tier == 0:
                     if funds.cash < 100:
@@ -642,7 +644,9 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         sell_tower_sound.play()
                     else:
                         if new_tower.buy <= funds.cash:
-                            new_tower.destroy = False
+                            new_tower.constructing = True
+                            new_tower.construct_countdown = \
+                                new_tower.construct_timer
                             current_tower.destroy = True
                             current_tower.option_selected = None
                             funds.adjust(-new_tower.buy)
@@ -653,21 +657,22 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
 
                 if current_tower_index != 0:
                     tower_position = tower_list.index(tower_location)
-                    missile = \
-                        missile_list[tower_position][current_tower_index]
-                    for enemy in enemies_list:
-                        hit = missile.lock_enemy(
-                            current_tower, enemy)
-                        if hit:
-                            damage, specialty, hit_sound = hit
-                            enemy.hit(damage, specialty)
-                            hit_sound.play()
-                        kill = enemy.check_death()
-                        if kill:
-                            points, cash = kill
-                            score_board.adjust(points)
-                            funds.adjust(cash)
-                    missile.adjust_counters()
+                    if not current_tower.constructing:
+                        missile = \
+                            missile_list[tower_position][current_tower_index]
+                        for enemy in enemies_list:
+                            hit = missile.lock_enemy(
+                                current_tower, enemy)
+                            if hit:
+                                damage, specialty, hit_sound = hit
+                                enemy.hit(damage, specialty)
+                                hit_sound.play()
+                            kill = enemy.check_death()
+                            if kill:
+                                points, cash = kill
+                                score_board.adjust(points)
+                                funds.adjust(cash)
+                        missile.adjust_counters()
 
 
 def draw_enemies(enemies_list, castle):

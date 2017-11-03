@@ -37,3 +37,15 @@ stun4 = pygame.image.load(
 
 stun_list = [stun1, stun2, stun3, stun4]
 
+hammer1 = pygame.image.load('towers/hammerstrike1.png'), 60, 60
+hammer2 = pygame.image.load('towers/hammerstrike2.png'), 60, 60
+hammer3 = pygame.image.load('towers/hammerstrike3.png'), 60, 60
+hammer4 = pygame.image.load('towers/hammerstrike4.png'), 60, 60
+hammer5 = pygame.image.load('towers/hammerstrike3.png'), 60, 60
+hammer6 = pygame.image.load('towers/hammerstrike2.png'), 60, 60
+hammer7 = pygame.image.load('towers/hammerstrike1.png'), 60, 60
+
+hammer_list = [hammer1, hammer2, hammer3, hammer4, hammer5, hammer6, hammer7]
+
+wood = pygame.image.load('towers/wood2.png'), 60, 60
+

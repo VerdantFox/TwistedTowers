@@ -4,7 +4,8 @@ import helpers
 from definitions import *
 from gameParameters import gameDisplay
 from towers.towerPics import basicTower1, iceTower1, iceTower2, fireTower1, \
-    fireTower2, poisonTower1, poisonTower2, darkTower1, darkTower2
+    fireTower2, poisonTower1, poisonTower2, darkTower1, darkTower2, \
+    hammer_list, wood
 from sounds import tower_shoot_sound, basic_hit_sound, ice_hit_sound, \
     fire_hit_sound, poison_hit_sound, dark_hit_sound
 
@@ -52,6 +53,17 @@ class TowerButton:
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
             opt5_msg_col=black, opt1_action="basic", opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
+        self.construct_image, self.construct_width, self.construct_height = \
+            hammer_list[0]
+
+        # Construction
+        self.constructing = False
+        self.construct_timer = 1.5 * seconds
+        self.construct_countdown = self.construct_timer
+        self.frame_counter = 0
+        self.frame = 0
+        self.frames_to_picswap = 1
+
         self.image = None
         self._button_radius = button_radius
         self._mouse = None
@@ -92,6 +104,50 @@ class TowerButton:
             else:
                 self.circle_list.append(option)
 
+    def construct(self):
+        if self.construct_countdown > 0:
+            self.construct_countdown -= 1
+            if self.frame_counter > 0:
+                self.frame_counter -= 1
+            else:
+                self.construct_image = hammer_list[self.frame][0]
+                self.frame += 1
+                if self.frame > len(hammer_list) - 1:
+                    self.frame = 0
+                self.frame_counter = self.frames_to_picswap
+            gameDisplay.blit(
+                wood[0],
+                (int(self.x - 0.5 * self.construct_width),
+                 int(self.y - .8 * self.construct_height)))
+            gameDisplay.blit(
+                self.construct_image,
+                (int(self.x - 0.3 * self.construct_width),
+                 int(self.y - 1 * self.construct_height)))
+            self.construction_bar()
+        else:
+            self.destroy = False
+            self.constructing = False
+
+    def construction_bar(self):
+        max_width = self.construct_width // 2
+        if self.construct_countdown >= 0:
+            construct_width = int(max_width
+                                  * (self.construct_timer
+                                     - self.construct_countdown)
+                                  // self.construct_timer)
+        else:
+            construct_width = 0
+        height = 4
+        back_color = white
+        front_color = bright_orange
+        x = self.x - self.construct_width // 4
+        y = self.y - self.construct_height * 1 // 4
+        pygame.draw.rect(gameDisplay, back_color,
+                         (x, y, max_width, height))
+        if construct_width:
+            pygame.draw.rect(gameDisplay, front_color,
+                             (x, y, construct_width, height))
+
     def draw(self):
         """Draw main and option circles, highlight color if hovered
         perform action if clicked,
@@ -100,10 +156,6 @@ class TowerButton:
             self._options_countdown -= 1
         if self.lockout_timer > 0:
             self.lockout_timer -= 1
-
-        # Parameter for killing tower (destroyed if replaced or sold)
-        if self.destroy or self.lockout_timer > 0:
-            return None
 
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()

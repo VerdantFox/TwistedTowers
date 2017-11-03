@@ -1,6 +1,7 @@
 # Colors
 black = (0, 0, 0)
 gray = (96, 96, 96)
+dark_gray = (64, 64, 64)
 white = (255, 255, 255)
 red = (150, 0, 0)
 bright_red = (250, 0, 0)

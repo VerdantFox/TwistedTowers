@@ -7,7 +7,7 @@ castle_hit.set_volume(.25)
 
 # Tower build/sell
 build_tower_sound = pygame.mixer.Sound('soundEffects/TowerConstruct.wav')
-build_tower_sound.set_volume(0.1)
+build_tower_sound.set_volume(0.2)
 
 sell_tower_sound = pygame.mixer.Sound('soundEffects/TowerSell.wav')
 sell_tower_sound.set_volume(0.8)
