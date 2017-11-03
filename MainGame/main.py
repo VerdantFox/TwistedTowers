@@ -344,20 +344,9 @@ def pause_game():
 
 # Start game loop
 def game_loop():
-
-    # TODO # Need another song
-    main_songs = [
-        # Will start by moving first song to end after music_playlist called
-        'music/Video_Game_Soldiers.mp3',
-        'music/Evil_March2.wav',
-        'music/bensound-epic.mp3',
-        'music/Warrior_Strife.mp3',
-        'music/Action_Hero.mp3'
-    ]
-    # www.nerdparadise.com/programming/pygame/part3
-    song_end = pygame.USEREVENT + 1
-    next_song = music_playlist(main_songs)
-    main_songs = next_song
+    pygame.mixer.music.fadeout(100)
+    pygame.mixer.music.load('music/main_music_mesh2.wav')
+    pygame.mixer.music.play(0)
 
     # Set static buttons
     pause_button = generalClass.Button(
@@ -424,7 +413,6 @@ def game_loop():
 
     # Actual game loop
     while True:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -432,10 +420,6 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
-            if event.type == song_end:
-                next_song = music_playlist(main_songs)
-                main_songs = next_song
-
             # print(event)
 
         # Draw background
@@ -484,16 +468,6 @@ def game_loop():
                 load_intro_music()
         if game_clock.frames % passive_money_rate == 0:
             funds.adjust(1)
-
-
-def music_playlist(_songs):
-    # www.nerdparadise.com/programming/pygame/part3
-    _songs = _songs[1:] + [_songs[0]] # move current song to the back of the list
-    song_end = pygame.USEREVENT + 1
-    pygame.mixer.music.set_endevent(song_end)
-    pygame.mixer.music.load(_songs[0])
-    pygame.mixer.music.play()
-    return _songs
 
 
 def tower_costs_display():
@@ -685,8 +659,9 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         hit = missile.lock_enemy(
                             current_tower, enemy)
                         if hit:
-                            damage, specialty = hit
+                            damage, specialty, hit_sound = hit
                             enemy.hit(damage, specialty)
+                            hit_sound.play()
                         kill = enemy.check_death()
                         if kill:
                             points, cash = kill

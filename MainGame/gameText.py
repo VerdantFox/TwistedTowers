@@ -41,7 +41,7 @@ intro_text = "The time to act is now! Lord Darken has set his armies of " \
              "hold off only a limited number of enemies before the " \
              "castle falls. A raven has been sent to the Archmage Stormbender. " \
              "If we can just hold long enough I know he can save us..."
-title = "Teddy's Towers!"
+title = "Twisted Towers!"
 
 # In tower_info_loop()
 basic_tower_text = "Basic Tower (Tier 1 Tower):\n" \

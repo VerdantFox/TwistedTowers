@@ -5,6 +5,8 @@ from definitions import *
 from gameParameters import gameDisplay
 from towers.towerPics import basicTower1, iceTower1, iceTower2, fireTower1, \
     fireTower2, poisonTower1, poisonTower2, darkTower1, darkTower2
+from sounds import tower_shoot_sound, basic_hit_sound, ice_hit_sound, \
+    fire_hit_sound, poison_hit_sound, dark_hit_sound
 
 
 class TowerButton:
@@ -398,6 +400,7 @@ class BasicMissile:
         self.missile_color = gray
         self.damage = 50
         self.specialty = "basic"
+        self.hit_sound = basic_hit_sound
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -407,6 +410,7 @@ class BasicMissile:
                 if self.destroy is True:
                     if self.lock_on is None:
                         if helpers.collision(tower, enemy):
+                            tower_shoot_sound.play()
                             self.lock_on = enemy
                             self.destroy = False
                             self.shoot_counter = self.shoot_rate
@@ -441,7 +445,7 @@ class BasicMissile:
             self.lock_on = None
             self.x, self.y = self._tower_location
             if not enemy.destroy:
-                return self.damage, self.specialty
+                return self.damage, self.specialty, self.hit_sound
 
     def adjust_counters(self):
         if self.shoot_counter > 0:
@@ -455,6 +459,7 @@ class IceMissile1(BasicMissile):
         self.damage = 37.5
         self.missile_color = bright_blue
         self.specialty = "ice1"
+        self.hit_sound = ice_hit_sound
 
 
 # Slows enemy and deals up-front damage reduced by armor
@@ -465,6 +470,7 @@ class IceMissile2(BasicMissile):
         self.missile_color = bright_teal
         self.specialty = "ice2"
         self.radius = 6
+        self.hit_sound = ice_hit_sound
 
 
 # Burns catches enemy on fire, dealing damage per second for 3 seconds
@@ -477,6 +483,7 @@ class FireMissile1(BasicMissile):
         self.missile_color = red
         self.specialty = "fire1"
         self.shoot_rate = 3 * seconds
+        self.hit_sound = fire_hit_sound
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -506,6 +513,7 @@ class FireMissile2(BasicMissile):
         self.specialty = "fire2"
         self.shoot_rate = 3 * seconds
         self.radius = 8
+        self.hit_sound = fire_hit_sound
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -533,6 +541,7 @@ class PoisonMissile1(BasicMissile):
         self.missile_color = green
         self.specialty = "poison1"
         self.shoot_rate = 3 * seconds
+        self.hit_sound = poison_hit_sound
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -561,6 +570,7 @@ class PoisonMissile2(BasicMissile):
         self.specialty = "poison2"
         self.shoot_rate = 3 * seconds
         self.radius = 6
+        self.hit_sound = poison_hit_sound
 
     def lock_enemy(self, tower, enemy):
         # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
@@ -587,6 +597,7 @@ class DarkMissile1(BasicMissile):
         self.damage = 37.5  # 75 / 2 (for 1/2 armor pen)
         self.missile_color = purple
         self.specialty = "dark1"
+        self.hit_sound = dark_hit_sound
 
 
 # Deals quadruple damage (3/4 as armor piercing)
@@ -597,4 +608,4 @@ class DarkMissile2(BasicMissile):
         self.missile_color = bright_purple
         self.specialty = "dark2"
         self.radius = 6
-
+        self.hit_sound = dark_hit_sound

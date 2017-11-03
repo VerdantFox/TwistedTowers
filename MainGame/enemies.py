@@ -16,7 +16,7 @@ from gameParameters import gameDisplay
 from lists import *
 from towers.towerPics import fire_pic, ice_pic, poison_list, stun_list
 from sounds import spider_death_sound, wolf_death_sound, turtle_death_sound, \
-    dragon_death_sound, orc_death_sound, lizard_death_sound
+    dragon_death_sound, orc_death_sound, lizard_death_sound, mage_spell_sound
 
 
 class Orc:
@@ -661,7 +661,7 @@ class Mage:
         # Spell
         self.start_spell = False
         self.spell_cast = False
-        self.radius = 10
+        self.radius = 0
         self.spell_length = 5 * seconds
         self.spell_countdown = 0
         self.thickness = 10
@@ -736,6 +736,8 @@ class Mage:
                 self.crystal_show = True
             if self.speech_index == 7 and self.speech_counter == 0:
                 self.crystal_away = True
+            if self.speech_index == 9 and self.speech_counter == 2 * seconds:
+                pygame.mixer.music.fadeout(2500)
             if self.speech_index == 9 and self.speech_counter == 0:
                 self.speech = False
                 self.start_spell = True
@@ -780,7 +782,11 @@ class Mage:
                     self.frame += 1
                 self.frame_counter = self.frames_to_picswap
             self.image = mage_list[2][self.frame]
+            if self.image == mage_list[2][5] and self.frame_counter == 1:
+                mage_spell_sound.play()
             if self.image == mage_list[2][10]:
+                pygame.mixer.music.load('music/Fall_of_the_Solar_King2.wav')
+                pygame.mixer.music.play()
                 self.stop_spawn = True
                 self.spell_cast = True
                 self.start_spell = False
@@ -813,7 +819,7 @@ class Mage:
             self.speech2 = True
             self.speech_counter = self.speech_timer
             self.speech_index = 0
-            self.radius = 10
+            self.radius = 0
             self.image = magestanding
 
         if self.stop_spawn and self.pop_enemies_counter > 0:
