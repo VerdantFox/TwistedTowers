@@ -1,13 +1,16 @@
-import pygame
-import generalClass
-import towerClass
-import enemies
-import helpers
 import random
+
+import pygame
+
+import enemies
+import generalClass
+import helpers
+import towerClass
 from definitions import *
-from lists import *
 from gameParameters import backgroundImage, gameDisplay, display_height, clock
 from gameText import *
+from lists import *
+from sounds import build_tower_sound, sell_tower_sound, castle_hit
 
 
 def load_intro_music():
@@ -377,10 +380,8 @@ def game_loop():
     # Blank list
     enemies_list = []
 
-    # Fast enemies
-
     # # Single lizard
-    # enemies_list = [enemies.Lizard(), enemies.Lizard(), enemies.Lizard()]
+    # enemies_list = [enemies.Lizard()]
 
     # # Single orc
     # enemies_list = [enemies.Orc()]
@@ -392,8 +393,8 @@ def game_loop():
     # # single turtle
     # enemies_list = [enemies.Turtle()]
 
-    # # Single wolf
-    # enemies_list = [enemies.Wolf()]
+    # Single wolf
+    enemies_list = [enemies.Wolf()]
 
     # # 10 wolves
     # enemies_list = [enemies.Wolf(), enemies.Wolf(), enemies.Wolf(),
@@ -664,12 +665,14 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         current_tower.destroy = True
                         current_tower.option_selected = None
                         funds.adjust(current_tower.sell)
+                        sell_tower_sound.play()
                     else:
                         if new_tower.buy <= funds.cash:
                             new_tower.destroy = False
                             current_tower.destroy = True
                             current_tower.option_selected = None
                             funds.adjust(-new_tower.buy)
+                            build_tower_sound.play()
                         else:
                             current_tower.option_selected = None
                 current_tower.draw()
@@ -717,6 +720,7 @@ def draw_enemies(enemies_list, castle):
         if castle_damage:
             if castle.hp > 0:
                 castle.adjust(-castle_damage)
+                castle_hit.play()
 
 
 def draw_mage(mage, game_clock, score_board, funds, enemies_list):

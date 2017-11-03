@@ -15,6 +15,8 @@ from definitions import *
 from gameParameters import gameDisplay
 from lists import *
 from towers.towerPics import fire_pic, ice_pic, poison_list, stun_list
+from sounds import spider_death_sound, wolf_death_sound, turtle_death_sound, \
+    dragon_death_sound, orc_death_sound, lizard_death_sound
 
 
 class Orc:
@@ -53,6 +55,7 @@ class Orc:
         self.armor = 20
 
         # Death and destruction ;-)
+        self.death_sound = orc_death_sound
         self.destroy = destroy  # Removes live body
         self.dead = False  # Used to return cash and money
         self.cash = 75
@@ -402,6 +405,7 @@ class Orc:
 
     def check_death(self):
         if self.dead:
+            self.death_sound.play()
             self.dead = False
             return self.points, self.cash
         else:
@@ -469,6 +473,7 @@ class Spider(Orc):
         self.cash = 8
         self.points = self.cash // 3
         self.dead_image = spiderdead
+        self.death_sound = spider_death_sound
 
     def walk(self):
         # Change walking frame in direction
@@ -506,6 +511,7 @@ class Wolf(Orc):
         self.cash = 50
         self.points = self.cash // 3
         self.dead_image = wolfdead
+        self.death_sound = wolf_death_sound
 
     def walk(self):
         # Change walking frame in direction
@@ -544,6 +550,7 @@ class Turtle(Orc):
         self.cash = 75
         self.points = self.cash // 3
         self.dead_image = turtledead
+        self.death_sound = turtle_death_sound
 
     def walk(self):
         # Change walking frame in direction
@@ -584,6 +591,7 @@ class Lizard(Orc):
         self.cash = 50
         self.points = self.cash // 3
         self.dead_image = lizarddead
+        self.death_sound = lizard_death_sound
 
     def walk(self):
         # Change walking frame in direction
@@ -624,6 +632,7 @@ class Dragon(Orc):
         self.cash = 750
         self.points = self.cash // 3
         self.dead_image = dragondead
+        self.death_sound = dragon_death_sound
 
     def walk(self):
         # Change walking frame in direction
