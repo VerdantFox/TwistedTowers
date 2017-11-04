@@ -14,12 +14,17 @@ from sounds import build_tower_sound, sell_tower_sound, castle_hit
 
 
 def load_intro_music():
+    """Loads and plays music for Intro, explanation and settings screens"""
     pygame.mixer.music.load('music/Anamalie.mp3')
     pygame.mixer.music.play(-1)
     intro_loop()
 
 
 def intro_loop():
+    """First loop seen, explains game story with links to other loops
+
+    Note: Texts stored in gameText.py
+    """
     play_button = generalClass.Button(
         (450, display_height - 250),
         message="Play", action=game_loop, font_size=40, width=300, height=60)
@@ -44,6 +49,7 @@ def intro_loop():
     title_font = pygame.font.SysFont('Comic Sans MS', 72, bold=True)
 
     while True:
+        # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -66,6 +72,11 @@ def intro_loop():
 
 
 def tower_info_loop():
+    """Shows and explains towers with buttons to navigate
+
+    Note: Texts located in gameText.py
+    """
+    # Set buttons
     return_button = generalClass.Button(
         (50, 50), message="Return", action=intro_loop, font_size=40,
         width=200, height=60, color1=orange, color2=bright_orange)
@@ -75,9 +86,9 @@ def tower_info_loop():
     next_button = generalClass.Button(
         (600, display_height - 100), message="Next", action="forward",
         font_size=40, width=200, height=60, color1=green, color2=bright_green)
-    # Texts
+    # Set font
     font = pygame.font.SysFont('Comic Sans MS', 18, bold=True)
-
+    # Set towers
     basic = towerClass.BasicTower((160, 400), destroy=False)
     ice1 = towerClass.IceTower1((155, 250), destroy=False)
     ice2 = towerClass.IceTower2((155, 530), destroy=False)
@@ -87,9 +98,10 @@ def tower_info_loop():
     poison2 = towerClass.PoisonTower2((155, 530), destroy=False)
     dark1 = towerClass.DarkTower1((155, 250), destroy=False)
     dark2 = towerClass.DarkTower2((155, 530), destroy=False)
-
+    # Define index for navigating pages
     info_index = 0
     while True:
+        # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -102,6 +114,7 @@ def tower_info_loop():
         return_button.draw()
         next_tower = next_button.draw()
         previous_tower = previous_button.draw()
+        # Define page navigation with index
         if next_tower:
             info_index += 1
         if previous_tower:
@@ -110,7 +123,7 @@ def tower_info_loop():
             info_index = 0
         if info_index < 0:
             info_index = 4
-        # Draw Tower and info
+        # Draw towers and tower info, pages indicated by index
         if info_index == 0:
             basic.draw()
             helpers.blit_text(gameDisplay, basic_tower_text, (225, 300),
@@ -157,6 +170,11 @@ def tower_info_loop():
 
 
 def enemy_info_loop():
+    """Show and explain enemies with buttons to navigate
+
+    Note: Texts located in gameText.py
+    """
+    # Set buttons for page navigation
     return_button = generalClass.Button(
         (50, 50), message="Return", action=intro_loop, font_size=40,
         width=200, height=60, color1=orange, color2=bright_orange)
@@ -166,18 +184,19 @@ def enemy_info_loop():
     next_button = generalClass.Button(
         (600, display_height - 100), message="Next", action="forward",
         font_size=40, width=200, height=60, color1=green, color2=bright_green)
-    # Texts
+    # Set font
     font = pygame.font.SysFont('Comic Sans MS', 18, bold=True)
-
+    # Set enemies, indicating stationary=True and destroy=False
     spider = enemies.Spider((180, 250), (190, 250), True, False)
     lizard = enemies.Lizard((180, 530), (190, 530), True, False)
     wolf = enemies.Wolf((180, 250), (190, 250), True, False)
     turtle = enemies.Turtle((180, 530), (190, 530), True, False)
     orc = enemies.Orc((180, 250), (190, 250), True, False)
     dragon = enemies.Dragon((180, 530), (190, 530), True, False)
-
+    # Define index for page navigation
     info_index = 0
     while True:
+        # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -190,6 +209,7 @@ def enemy_info_loop():
         return_button.draw()
         next_enemy = next_button.draw()
         previous_enemy = previous_button.draw()
+        # Define page navigation with index
         if next_enemy:
             info_index += 1
         if previous_enemy:
@@ -198,7 +218,7 @@ def enemy_info_loop():
             info_index = 0
         if info_index < 0:
             info_index = 2
-        # Draw Tower and info
+        # Draw enemies and enemy info, pages indicated by index
         if info_index == 0:
             spider.draw()
             lizard.draw()
@@ -232,6 +252,11 @@ def enemy_info_loop():
 
 
 def settings_loop():
+    """Allow user to adjust difficulty settings with buttons and explanations
+
+    Note: Texts located in gameText.py
+    """
+    # Set buttons for difficulty selection and return to into_loop
     return_button = generalClass.Button(
         (50, 50), message="Return", action=intro_loop, font_size=40,
         width=200, height=60, color1=orange, color2=bright_orange)
@@ -245,9 +270,11 @@ def settings_loop():
     hard_button = generalClass.Button(
         (50, 370), message="Hard", action=hard_settings, font_size=40,
         width=200, height=60, color1=red, color2=bright_red, linked=True)
+    # Set font for difficulty explanations
     font = pygame.font.SysFont('Comic Sans MS', 24, bold=True)
 
     while True:
+        # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -272,6 +299,7 @@ def settings_loop():
 
 
 def easy_settings():
+    """"Updates settings class to easy difficulty"""
     settings.spawn_rate = 9 * seconds
     settings.starting_gold = 1600
     settings.gold_generation = 0.5 * seconds
@@ -279,6 +307,7 @@ def easy_settings():
 
 
 def medium_settings():
+    """"Updates settings class to medium difficulty"""
     settings.spawn_rate = 6 * seconds
     settings.starting_gold = 1200
     settings.gold_generation = 1 * seconds
@@ -286,24 +315,23 @@ def medium_settings():
 
 
 def hard_settings():
+    """"Updates settings class to hard difficulty"""
     settings.spawn_rate = 3 * seconds
     settings.starting_gold = 800
     settings.gold_generation = 2 * seconds
     settings.difficulty = 0.5
 
 
-pause = False
-
-
 def unpause():
+    """Un-pauses game and resumes music"""
     global pause
     pause = False
     pygame.mixer.music.unpause()
 
 
 def pause_game():
-
-    pygame.mixer.music.pause()
+    """Pauses game and music"""
+    # Set navigation buttons
     resume_button = generalClass.Button(
         (20, 80), message="Resume", width=120, color1=green,
         color2=bright_green, action=unpause)
@@ -315,11 +343,14 @@ def pause_game():
     main_button = generalClass.Button(
         (20, 140), message="Main Menu", width=120, color1=yellow,
         color2=bright_yellow, action=load_intro_music)
-
+    # Pause music
+    pygame.mixer.music.pause()
+    # Set global pause variable to True
     global pause
     pause = True
-    while pause:
 
+    while pause:
+        # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -327,33 +358,36 @@ def pause_game():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     unpause()
+        # Draw buttons
         resume_button.draw()
         reset_button.draw()
         main_button.draw()
+        # Update game display
         pygame.display.update()
 
 
-# Start game loop
 def game_loop():
+    """Play the game
+
+    This function sets up several buttons and texts to give info for game,
+    then calls several other functions to run the game logic.
+    """
     # Game crashes if loading new music while music is paused
     pygame.mixer.music.unpause()
     # Start main game music
     pygame.mixer.music.fadeout(100)
     pygame.mixer.music.load('music/main_music_mesh2.wav')
     pygame.mixer.music.play(0)
-
     # Set static buttons
     pause_button = generalClass.Button(
         (20, 50), message="Pause", width=120,  color1=gray, color2=white,
         action=pause_game)
-
     # Set game settings
     start_cash = settings.starting_gold
     enemy_spawn_rate = settings.spawn_rate
     passive_money_rate = settings.gold_generation
     difficulty = settings.difficulty
-
-    # Set up game rules
+    # Set up game rules with several stat trackers
     score = generalClass.Tracker(
         (140, 20), start_stat=0, width=120, height=30, background_color=green,
         font="Comic Sans MS", font_size=20, text_color=black, prefix="Score: ")
@@ -368,26 +402,24 @@ def game_loop():
         (20, display_height - 60), start_stat=10, width=250, height=50,
         background_color=red, front_color=green, font="Comic Sans MS",
         font_size=30, text_color=white, special="castle")
+    # Set the end screen
     end_screen = generalClass.EndScreen()
-
     # Set blank enemies list
     enemies_list = []
-
     # Set towers' and missiles' lists
     bot_tower_list = []
     bot_missile_list = []
     top_tower_list = []
     top_missile_list = []
-
     # Call function to set up towers and missiles
     set_towers(bot_tower_locations, bot_tower_list, bot_missile_list)
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
-
-    # Set mage
+    # Set mage (for end game sequence)
     mage = enemies.Mage()
 
     # Actual game loop
     while True:
+        # Set quit button and pause game listeners
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -395,36 +427,27 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
-
         # Update game_clock by 1 per frame
         game_clock.stat += 1
-
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
-
         # Periodically add money
         if game_clock.stat % passive_money_rate == 0:
             funds.adjust(1)
-
-        # add new enemies
+        # Call function to add enemies
         if not mage.stop_spawn:
             add_enemies(game_clock.stat, enemies_list, enemy_spawn_rate,
                         difficulty)
-
-        # Draw top towers
+        # Call function to draw top-side towers
         draw_towers(top_tower_list, top_missile_list, funds,
                     score, enemies_list)
-
-        # Draw enemies
+        # Call function to draw enemies
         draw_enemies(enemies_list, castle)
-
-        # Draw bottom towers
+        # Call function to draw bottom-side towers
         draw_towers(bot_tower_list, bot_missile_list, funds,
                     score, enemies_list)
-
-        # Draw in mage
+        # Call function to draw mage (end of game sequence)
         draw_mage(mage, game_clock, score, funds, enemies_list)
-
         # Draw game info panels
         tower_costs_display()
         funds.draw()
@@ -432,35 +455,30 @@ def game_loop():
         score.draw()
         game_clock.draw()
         pause_button.draw()
-
+        # Check for win/lose conditions
+        win_lose(mage, end_screen, score, game_clock, castle)
         # Update game
         pygame.display.update()
         clock.tick(60)
 
-        # Set win/loss conditions
-        if mage.win:
-            end_screen.score = score.stat
-            end_screen.time_elapsed = game_clock.stat
-            end = end_screen.draw("win")
-            if end == "play":
-                game_loop()
-            if end == "main":
-                load_intro_music()
-        if castle.game_over:
-            end_screen.score = score.stat
-            end_screen.time_elapsed = game_clock.stat
-            end = end_screen.draw("lose")
-            if end == "play":
-                game_loop()
-            if end == "main":
-                load_intro_music()
-
 
 def set_towers(tower_locations, tower_list, missile_list):
+    """Sets one of each tower/missile type at each pre-defined location
+
+    Function sets one of each tower type object and one of each missile type
+    object at each location indicated by tower_list, and effectively links the
+    tower and missile lists by keeping consistent the index of each tower
+    type with its corresponding missile type at a given location.
+
+    Args:
+        tower_locations (list of int,int tuples):
+            A list of x, y coordinates for locations of tower placements
+        tower_list (list of obj): A list for storing towers added
+        missile_list (list of obj): A list for storing missiles added
+    """
     for tower_location in tower_locations:  # See lists.py
         tower_list.append([
-            towerClass.TowerButton(  # 0 = Button
-                tower_location, ),
+            towerClass.TowerButton(tower_location),
             towerClass.BasicTower(tower_location),
             towerClass.IceTower1(tower_location),
             towerClass.FireTower1(tower_location),
@@ -484,10 +502,32 @@ def set_towers(tower_locations, tower_list, missile_list):
 
 
 def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
+    """Adds enemies to enemies_list, ramping up difficulty over time.
+
+    Function adds an enemy object or group of enemy objects to the enemies_list
+    at intervals pre-defined by enemy_spawn_rate (from settings). It picks
+    which enemy or group of enemies to add with 'picker' variable which gets
+    set purposefully or randomly with random.randint to a number defined by
+    the game frames (time) in the game (modified through 'difficulty' setting).
+    Enemies are then appended/extended to enemies_list based on the 'picker'.
+
+    Args:
+        frames (int): The number of game frames since start of game
+                      (estimates time)
+        enemies_list (list of obj): A list for which to append/extend
+                                    enemy objects onto
+        enemy_spawn_rate (int): Difficulty setting that places interval
+                                of enemy spawn
+        difficulty (int): difficulty setting that defines how quickly
+                          difficulty of enemy spawns ramps up
+    """
+    # Define 'picker' variable
     picker = 0
+    # Change picker and add enemies at interval of enemy_spawn_rate
     if frames % enemy_spawn_rate == 0:
+        # Define rate of 'picker' ramp up based on difficulty
         min_rate = minutes * difficulty
-        # Setting the picker
+        # Set the 'picker' based on frames (time) past and difficulty
         if frames <= 0.33 * min_rate:
             picker = 0
         if 0.33 * min_rate < frames <= .66 * min_rate:
@@ -513,7 +553,7 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
         if frames == int(7 * min_rate):
             picker = 20
 
-        # The picks
+        # Append or extend list with enemies indicated by 'picker'
         if picker == -1:
             pass
         if picker == 0:
@@ -585,15 +625,36 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
 
 
 def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
-    # Go through list of towers, drawing towers if not destroyed
-    # Then drawing missiles to match appropriate tower
+    """Draw towers and associated missiles, and run their logic
+
+    Goes through list of towers, drawing towers if not destroyed, then drawing
+    missiles to match appropriate tower. Allows for buying new towers and
+    selling current towers. Missiles of associated towers detect enemies,
+    lock on, and hit enemies, transferring damage and associated effects to
+    enemies. Detects enemy deaths and records associated points and money.
+
+    Args:
+        tower_list (list of list of obj): List of towers locations
+                                          containing a list of tower objects
+        missile_list (list of list of obj):
+            List of missiles to draw (tied by first index to towers
+            location and second index to tower object types).
+        funds (obj): Players current amount of money object
+        score_board (obj): Players current score object
+        enemies_list (list of obj): List of enemies
+    """
+    # Iterate over all tower locations and towers at a given location
     for tower_location in tower_list:
         for current_tower in tower_location:
+            # Construct towers if just bought
             if current_tower.constructing:
                 current_tower.construct()
+            # Sell towers if just sold
             if current_tower.selling:
                 current_tower.sell()
+            # If tower is activated (not destroyed)
             if not current_tower.destroy:
+                # gray out and disallow purchase of towers above players moeny
                 if current_tower.tier == 0:
                     if funds.stat < 100:
                         current_tower.gray_out = True
@@ -609,62 +670,88 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         current_tower.gray_out = True
                     else:
                         current_tower.gray_out = False
+                # Get selection from towers options (listened for by tower)
                 selected = current_tower.option_selected
-                new_tower_index = actions.get(selected)  # See lists.py
+                # Turn selected tower option into an index (for tower list)
+                new_tower_index = tower_types.get(selected)  # See lists.py
+                # Get current tower's index in tower list
                 current_tower_index = tower_location.index(current_tower)
+                # Perform actions on current tower's selected option
                 if selected:
+                    # Get new tower at current location based on selected index
                     new_tower = tower_location[new_tower_index]
+                    # Sell tower if that option was selected
                     if selected == "sell":
                         new_tower.option_selected = None
                         new_tower.selling = True
                         new_tower.previous_sell_value = current_tower.sell
                         new_tower.sell_countdown = new_tower.sell_timer
-                        current_tower.destroy = True
                         current_tower.option_selected = None
+                        current_tower.destroy = True
                         funds.adjust(current_tower.sell)
                         sell_tower_sound.play()
+                    # Else option will be buy. Buy if player has enough money
                     else:
                         if new_tower.buy <= funds.stat:
                             new_tower.constructing = True
                             new_tower.construct_countdown = \
                                 new_tower.construct_timer
-                            current_tower.destroy = True
                             current_tower.option_selected = None
+                            current_tower.destroy = True
                             funds.adjust(-new_tower.buy)
                             build_tower_sound.play()
                         else:
                             current_tower.option_selected = None
+                # Draw tower on map
                 current_tower.draw()
-
+                # Run logic for missile associated with tower
                 if current_tower_index != 0:
                     tower_position = tower_list.index(tower_location)
+                    # Don't run logic while tower is building
                     if not current_tower.constructing:
+                        # Define missile for tower location and tower type
                         missile = \
                             missile_list[tower_position][current_tower_index]
+                        # Iterate over enemies, locking on and firing at them
                         for enemy in enemies_list:
+                            # If striking enemy return damage and special type
                             hit = missile.lock_enemy(
                                 current_tower, enemy)
                             if hit:
                                 damage, specialty, hit_sound = hit
                                 enemy.hit(damage, specialty)
                                 hit_sound.play()
+                            # If enemy dies due to shot give player money/points
                             kill = enemy.check_death()
                             if kill:
                                 points, cash = kill
                                 score_board.adjust(points)
                                 funds.adjust(cash)
+                        # Update counter associated with missile
                         missile.adjust_counters()
 
 
 def draw_enemies(enemies_list, castle):
-    # Draw and move enemies
-    # If enemies reach castle, damage castle
+    """Draw enemies, damage castle if appropriate and check enemy interactions
+
+    Enemies struck by fire tower will light other nearby enemies on fire.
+    Function will pop enemies from enemies_list once they die and have 0 lives.
+    Enemies will damage castle if they reach it.
+
+    Args:
+        enemies_list (list of obj): list of all enemies in play
+        castle (obj): Castle object determines game loss if too many hits
+    """
+    # Iterate over all enemies
     for enemy in enemies_list:
+        # Pop from list after last death
         if enemy.lives == 0:
             enemies_list.pop(enemies_list.index(enemy))
+        # Check for enemies damaging castle
         castle_damage = enemy.draw()
 
-        # Fire stuff
+        # Check for enemies lit on fire by fire tower
+        # Light other nearby enemies on fire if current enemy is aflame
         if enemy.fireball2:
             for adjacent in enemies_list:
                 if adjacent != enemy:
@@ -677,7 +764,7 @@ def draw_enemies(enemies_list, castle):
                     if helpers.collision(enemy, adjacent):
                         adjacent.fire1 = enemy.fire1
                         adjacent.burned_counter = 3
-
+        # Reduce castle health if enemy reaches castle
         if castle_damage:
             if castle.stat > 0:
                 castle.adjust(-castle_damage)
@@ -685,7 +772,18 @@ def draw_enemies(enemies_list, castle):
 
 
 def draw_mage(mage, game_clock, score_board, funds, enemies_list):
+    """Draw mage, kill enemies if spell hits them, pop enemies from enemies_list
+
+    Args:
+        mage (obj): The mage hero object to draw and interact with enemies
+        game_clock (obj): Game time to pass to mage
+        score_board (obj): Score to adjust when enemies die
+        funds (obj): Players money to adjust when enemies die
+        enemies_list (list of obj): List of enemies for mage to interact with
+    """
+    # Draw mage
     mage.draw(game_clock.stat)
+    # Kill enemies hit by mage spell and collect their points/money
     for enemy in enemies_list:
         if helpers.collision(mage, enemy):
             if not enemy.destroy:
@@ -695,11 +793,14 @@ def draw_mage(mage, game_clock, score_board, funds, enemies_list):
             points, cash = kill
             score_board.adjust(points)
             funds.adjust(cash)
+        # Pop enemies from from enemy_list when indicated by mage
         if mage.pop_enemies_counter == 0:
             enemies_list.pop(enemies_list.index(enemy))
 
 
 def tower_costs_display():
+    """Draws a display of tower costs"""
+    # Font
     font = pygame.font.SysFont('Comic Sans MS', 16, bold=False)
     # Backdrop
     pygame.draw.rect(gameDisplay, black,
@@ -709,7 +810,39 @@ def tower_costs_display():
                       (282, display_height - 106), font, color=white)
 
 
+def win_lose(mage, end_screen, score, game_clock, castle):
+    """Determines conditions for winning or losing and directs to end screen
+
+    Args:
+        mage (obj): Mage object determines win condition
+        end_screen (obj): End Screen object shows victory/defeat screen
+        score (obj): Players score to pass to end_screen
+        game_clock (obj): Games clock used to show end_screen game time
+        castle (obj): Castle object determines lose condition
+    """
+    # Set win condition
+    if mage.win:
+        end_screen.score = score.stat
+        end_screen.time_elapsed = game_clock.stat
+        end = end_screen.draw("win")
+        if end == "play":
+            game_loop()
+        if end == "main":
+            load_intro_music()
+    # Set lose condition
+    if castle.game_over:
+        end_screen.score = score.stat
+        end_screen.time_elapsed = game_clock.stat
+        end = end_screen.draw("lose")
+        if end == "play":
+            game_loop()
+        if end == "main":
+            load_intro_music()
+
+
 if __name__ == "__main__":
+    # Globally define pause for game pausing/un-pausing functions
+    pause = False
     settings = generalClass.Settings()
     load_intro_music()
     pygame.quit()

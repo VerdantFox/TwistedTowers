@@ -111,26 +111,25 @@ class Orc:
         stun_frame (int): Index of stun image list
         stun_framecounter (int): Counts frames from stun_frameswap_rate to 0
         
-        Methods:
-            draw: Moves enemy unless stunned, changing image to show walking 
-                  motion. Checks for special (elemental) attributes and calls 
-                  associated functions if it find them. If enemy is dead, shows 
-                  corpse and stat loot and removes elemental effects.
-            walk: Changes image as enemy moves to animate movement
-            show: Shows enemy, health bar, and calls elemental effects functions
-            show_poison: Show poison cloud attached to enemy
-            show_stun: Shows poison cloud attached to enemy
-            show_fire: Shows fire attached to enemy
-            show_ice: Shows ice attached to enemy
-            take_damage: Reduces enemy's health as damage taken, 
-                         modified by armor
-            health_bar: Displays health bar as a visual of enemy percent health
-            iced: Slows enemy movement and animation, doubly so for rank 2
-            burning: Causes fire damage over time to enemy, prioritising rank 2
-            poisoned: Damages enemies as % hp or min damage, stuns toward end
-            check_death: Checks if enemy is dead, plays sound 
-                         and returns stat/points
-            hit: Expressed on tower shot hit, translates specialty and damage
+    Methods:
+        draw: Moves enemy unless stunned, changing image to show walking
+              motion. Checks for special (elemental) attributes and calls
+              associated functions if it find them. If enemy is dead, shows
+              corpse and stat loot and removes elemental effects.
+        walk: Changes image as enemy moves to animate movement
+        show: Shows enemy, health bar, and calls elemental effects functions
+        show_poison: Show poison cloud attached to enemy
+        show_stun: Shows poison cloud attached to enemy
+        show_fire: Shows fire attached to enemy
+        show_ice: Shows ice attached to enemy
+        take_damage: Reduces enemy's health as damage taken, modified by armor
+        health_bar: Displays health bar as a visual of enemy percent health
+        iced: Slows enemy movement and animation, doubly so for rank 2
+        burning: Causes fire damage over time to enemy, prioritising rank 2
+        poisoned: Damages enemies as % hp or min damage, stuns toward end
+        check_death: Checks if enemy is dead, plays sound
+                     and returns stat/points
+        hit: Expressed on tower shot hit, translates specialty and damage
     """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
                  stationary=False, destroy=True):

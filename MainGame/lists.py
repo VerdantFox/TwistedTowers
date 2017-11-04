@@ -16,7 +16,6 @@ path_nodes = [
     (785, 170),
     (800, 170)]
 
-# Tower_locations are arranged bottom by y, top by y
 bot_tower_locations = [
     # Bottom (in order of ascending y)
     (777, 259),
@@ -49,7 +48,8 @@ top_tower_locations = [
     (604, 483),
 ]
 
-actions = {
+# Dict of tower tower_types for converting to other towers
+tower_types = {
     "sell": 0,
     "basic": 1,
     "ice1": 2,
