@@ -1005,7 +1005,6 @@ class Mage:
 
         if self.radius < 1000 and self.spell_cast:
             self.radius += 10
-
             # Draw the expanding spell (4 circles of increasing thickness)
             # thickness = 0
             if self.radius > self.thickness:

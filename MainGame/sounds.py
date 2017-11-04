@@ -4,13 +4,12 @@ import pygame
 castle_hit = pygame.mixer.Sound('soundEffects/CrowdCryOut.wav')
 castle_hit.set_volume(.5)
 
-
 # Tower build/sell
 build_tower_sound = pygame.mixer.Sound('soundEffects/TowerConstruct.wav')
 build_tower_sound.set_volume(0.2)
 
 sell_tower_sound = pygame.mixer.Sound('soundEffects/TowerSell.wav')
-sell_tower_sound.set_volume(0.8)
+sell_tower_sound.set_volume(1)
 
 # Mage
 mage_spell_sound = pygame.mixer.Sound('soundEffects/MageSpell.wav')

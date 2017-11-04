@@ -12,35 +12,127 @@ from sounds import tower_shoot_sound, basic_hit_sound, ice_hit_sound, \
 
 class TowerButton:
     """Base class for tower buttons (circular buttons)
+    
 
+    Define a button with x, y coordinates specified. Draws button options for
+    selling or buying other towers. Calls functions for drawing tower with
+    associated option buttons, constructing new tower, selling current tower.
+
+    Args:
+        location (tuple, int): Defines self.x, self.y
+        destroy (bool, default=False): Defines self.destroy
+        main_msg (str, default=None): Helps define self.circle_list
+        set_options_timer (int, default=30): Defines self.set_options_timer
+        main_color1 (tuple, int, default=light_brown): Helps define 
+                                                       self.circle_list
+        main_color2 (tuple, int, default=orange): Helps define self.circle_list 
+        font (str, default="Comic Sans MS"): Defines self._font
+        font_size (int, default=20): Defines self._font_size
+        message_color (tuple, int, default=black): Helps define self.circle_list
+        option_count (int, default=1): Defines self.option_count
+        opt1_col1 (tuple, int, default=yellow): Helps define self.options_list 
+        opt1_col2 (tuple, int, default=bright_yellow ): Helps define 
+                                                         self.options_list
+        opt2_col1 (tuple, int, default=teal): Helps define 
+                                               self.options_list
+        opt2_col2 (tuple, int, default=bright_teal): Helps define 
+                                                      self.options_list
+        opt3_col1 (tuple, int, default=red): Helps define self.options_list
+        opt3_col2 (tuple, int, default=bright_red): Helps define 
+                                                     self.options_list 
+        opt4_col1 (tuple, int, default=green): Helps define self.options_list
+        opt4_col2 (tuple, int, default=bright_green): Helps define 
+                                                       self.options_list 
+        opt5_col1 (tuple, int, default=purple): Helps define self.options_list
+        opt5_col2 (tuple, int, default=bright_purple): Helps define 
+                                                        self.options_list 
+        opt1_msg (str, default="Basic"): Helps define self.options_list
+        opt2_msg (str, default=None): Helps define self.options_list
+        opt3_msg (str, default=None): Helps define self.options_list
+        opt4_msg (str, default=None): Helps define self.options_list
+        opt5_msg (str, default=None): Helps define self.options_list
+        opt1_msg_col (tuple, int, default=black): Helps define self.options_list
+        opt2_msg_col (tuple, int, default=black): Helps define self.options_list
+        opt3_msg_col (tuple, int, default=black): Helps define self.options_list
+        opt4_msg_col (tuple, int, default=black): Helps define self.options_list
+        opt5_msg_col (tuple, int, default=black): Helps define self.options_list
+        opt1_action (str, default="basic"): Helps define self.options_list
+        opt2_action (str, default=None): Helps define self.options_list
+        opt3_action (str, default=None): Helps define self.options_list
+        opt4_action (str, default=None): Helps define self.options_list
+        opt5_action (str, default=None): Helps define self.options_list
+    
     Attributes:
-        location:       (Required) tuple(x, y), positions center of tower circle
-        button_ radius: radius of tower, defaults to 24 pixels
-        main_msg:       message to display on tower (optional)
-        main_color1:    color without mouse hover (default light_brown)
-        main_color2:    color on mouse hover (default orange)
-        font:           font for optional button message,
-                        default 'Comic Sans MS'
-        font_size:      font size of optional message, defaults to 20
-        message_color:  txt color of main button optional msg, defaults = black
-        option_count:   number of option buttons to create (default = 1)
-                        Note: can specify 0-5 options
-                        (numbers greater than 5 won't have button)
+        construct_image: Hammer image shown during construct()
+        construct_width: Hammer image width
+        construct_height: Hammer image height
 
-        The following entries will use # to designate an option number:
-        opt#_col1:      option's color while mouse not hovering button
-                        default different for each option
-        opt#_col2:      option's color while mouse is hovering button
-        opt#_msg:       that option's message (default is None)
-        opt#_msg_col:   that option's message color (default is black)
+        # Construction
+        constructing (bool): When True, game_loop will call construct()
+        construct_timer (int): Time for duration of tower construction
+        construct_countdown (int): Counts down from construct_timer to 0
+        frame_counter (int): Counts game frames until image frame swap
+        frame (int): The frame (image) index of the hammer currently shown
+        frames_to_picswap (int): Game frames to count down until image change
+        destroy (bool): If True, game_loop won't draw() tower
 
-    Usage:
-        Define a button with x, y coordinates specified, and optional kwargs
-        call draw in main loop to draw button and associated option buttons
+        # Selling
+        selling (bool): If True, game_loop will call sell()
+        sell_timer (int): Duration in game frames sell() will be called
+        sell_countdown (int): Counts down from sell_timer to 0
+        sell_font (obj): Font of sale shown while sell() is called
+        previous_sell_value (int): Taken from tower being sold in game_loop,
+                                   this is the sale towers .sell value
+        tier (int): The level of the tower (from 0 to 3)
+
+        # Map visuals
+        image (obj): Image of tower
+        _button_radius (int): Radius of main tower button
+        x, y (tuple, int): Coordinates for tower's location (circle's center)
+        
+        # Event detection
+        _mouse (tuple, int): The coordinates where user's mouse is hovering
+        _click (tuple int): Detection of user's mouse clicks
+                            (left, center, right)
+        
+        # Text
+        _font (str): Font used for buttons
+        _font_size (int): Font size used for buttons (adjusts automatically
+                          for options buttons)
+        
+        # Options
+        option_selected (str): The option for whichever circle_option is hovered
+        set_options_timer (int): The duration options will show after stopping
+                                 their hover before options will disappear
+        _options_countdown (int): Counts down from set_options_timer to 0
+        option_count (int): The number of options circles to display
+        option_lockout (bool): If True, options cannot be selected
+        gray_out (bool): If True, options color turn gray
+        
+        # List = x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
+        # Circle list index 0 refers to main circle (tower location)
+        self.circle_list (list of lists):
+            One list per option. Within each option's list are [x-coordinate
+            relative offset (int), y-coordinate relative offset (int),
+            color of button not highlighted (tuple, int), color of
+            button highlighted (tuple, int), button's text (str),
+            text's color (tuple, int), the action associated with
+            that button (str)]
+        self.options_list:
+            Same as circle list, used to append only the options used,
+            listed by option_count, to the circle list.
+        
+    Methods:
+        construct: Show's tower building animation, un-destroys tower
+        construction_bar: Show's animation of construction duration
+        sell: Shows money earned from tower sale, un-destroys tower
+        draw: Draws tower, associated buttons, and acts on buttons
+        gray_options (static): Returns True for grayed-out options
+        show_tower_image: Shows the tower image
+        set_text: Draw text inside of option circle if specified
     """
-
     def __init__(
-            self, location, button_radius=24, destroy=False,
+            self, location, destroy=False,
             main_msg=None, set_options_timer=30, main_color1=light_brown,
             main_color2=orange, font="Comic Sans MS", font_size=20,
             message_color=black, option_count=1, opt1_col1=yellow,
@@ -53,6 +145,7 @@ class TowerButton:
             opt2_msg_col=black, opt3_msg_col=black, opt4_msg_col=black,
             opt5_msg_col=black, opt1_action="basic", opt2_action=None,
             opt3_action=None, opt4_action=None, opt5_action=None):
+        
         self.construct_image, self.construct_width, self.construct_height = \
             hammer_list[0]
 
@@ -63,6 +156,7 @@ class TowerButton:
         self.frame_counter = 0
         self.frame = 0
         self.frames_to_picswap = 1
+        self.destroy = destroy
 
         # Selling
         self.selling = False
@@ -71,23 +165,29 @@ class TowerButton:
         self.sell_font = pygame.font.SysFont(
             font, 20, bold=True)
         self.previous_sell_value = None
+        self.tier = 0
 
+        # Map visuals
         self.image = None
-        self._button_radius = button_radius
+        self._button_radius = 24
+        self.x, self.y = location
+        
+        # Event detection
         self._mouse = None
         self._click = None
-        self.x, self.y = location
+        
+        # Text
         self._font = font
         self._font_size = font_size
-        self.destroy = destroy
+        
+        # Options
         self.option_selected = None
-        self._options_countdown = 0
         self.set_options_timer = set_options_timer
+        self._options_countdown = 0
         self.option_count = option_count
-        self.lockout_timer = 20
-        self.option_lockout = self.lockout_timer
+        self.option_lockout = False
         self.gray_out = False
-        self.tier = 0
+        
         # List == x_offset, y_offset, no_hover_color, hover_color, msg, msg_col
         # Circle list index 0 refers to main circle (tower location)
         self.circle_list = [
@@ -112,72 +212,87 @@ class TowerButton:
                 self.circle_list.append(option)
 
     def construct(self):
+        """Show's tower building animation, un-destroys tower"""
+        # Count down construction duration (in game frames)
         if self.construct_countdown > 0:
             self.construct_countdown -= 1
+            # Count down duration (in game frames) on current image of hammer
             if self.frame_counter > 0:
                 self.frame_counter -= 1
+            # Switch to next hammer image
             else:
                 self.construct_image = hammer_list[self.frame][0]
                 self.frame += 1
                 if self.frame > len(hammer_list) - 1:
                     self.frame = 0
                 self.frame_counter = self.frames_to_picswap
+            # Show wooden plank
             gameDisplay.blit(
                 wood[0],
                 (int(self.x - 0.5 * self.construct_width),
                  int(self.y - .8 * self.construct_height)))
+            # Show hammer image
             gameDisplay.blit(
                 self.construct_image,
                 (int(self.x - 0.3 * self.construct_width),
                  int(self.y - 1 * self.construct_height)))
+            # Call (show) construction_bar()
             self.construction_bar()
+        # Un-destroy tower and stop construction
         else:
             self.destroy = False
             self.constructing = False
 
     def construction_bar(self):
+        """Show's animation of construction duration"""
+        # Define maximum width of construction bar (back bar width)
         max_width = self.construct_width // 2
         if self.construct_countdown >= 0:
+            # Define current width of construction bar (front bar width)
             construct_width = int(max_width
                                   * (self.construct_timer
                                      - self.construct_countdown)
                                   // self.construct_timer)
         else:
             construct_width = 0
+        # Define height and colors of construction bars
         height = 4
         back_color = white
         front_color = bright_orange
+        # Define x, y coordinates of construction bar relative to tower location
         x = self.x - self.construct_width // 4
         y = self.y - self.construct_height * 1 // 4
+        # Draw back, then front construction bars
         pygame.draw.rect(gameDisplay, back_color,
                          (x, y, max_width, height))
         if construct_width:
             pygame.draw.rect(gameDisplay, front_color,
                              (x, y, construct_width, height))
-
+    
     def sell(self):
+        """Shows money earned from tower sale, un-destroys tower"""
+        # Counts down time of sale (from game frames)
         if self.sell_countdown > 0:
             self.sell_countdown -= 1
+            # Define and display sale text
             text_surface = self.sell_font.render(
                 '$' + str(self.previous_sell_value), True, black)
             text_rect = text_surface.get_rect()
             text_rect.center = (self.x, self.y)
             gameDisplay.blit(text_surface, text_rect)
-
+        # When sale ends, un-destroy tower and stop selling
         else:
             self.destroy = False
             self.selling = False
 
     def draw(self):
-        """Draw main and option circles, highlight color if hovered
-        perform action if clicked,
-        show options for a period of set_option_timer"""
+        """Draws tower, associated buttons, and acts on buttons"""
+        # Count down options
         if self._options_countdown > 0:
             self._options_countdown -= 1
-
+        # Get mouse position and click information
         self._mouse = pygame.mouse.get_pos()
         self._click = pygame.mouse.get_pressed()
-
         # define relevant variables
         for circle in self.circle_list:
             circle_number = self.circle_list.index(circle)
@@ -187,33 +302,38 @@ class TowerButton:
                 radius = self._button_radius
             else:
                 radius = int(self._button_radius * 0.7)
-                if self.option_lockout > 0:
+                if self.option_lockout:
                     action = None
                 if self.gray_out:
                     gray_out = self.gray_options(circle_number)
                     if gray_out is True:
                         no_hov_color = gray
                         hov_color = gray
-
             x = int(self.x + x_offset * radius)
             y = int(self.y + y_offset * radius)
-
+            
             # If hovering over a circle
             if (x - radius < self._mouse[0] < x + radius
                     and y - radius < self._mouse[1] < y + radius):
+                # Display main circle or hovered option circle (highlight color)
                 if circle_number == 0 or self._options_countdown > 0:
                     pygame.draw.circle(gameDisplay, hov_color, (x, y), radius)
+                    # Call show_tower_image()
                     if circle_number == 0:
                         self.show_tower_image()
+                    # Start countdown for stop showing options
                     if circle_number > 0:
                         self._options_countdown = self.set_options_timer
+                    # If left clicked
                     if self._click[0] == 1:
+                        # If main circle show options
                         if circle_number == 0:
                             self._options_countdown = int(
                                 self.set_options_timer * 1.5)
                             # Prevents accidentally clicking main and
                             # option_circles at same time
                             self.option_lockout = True
+                        # If option's circle and not grayed out, perform action
                         else:
                             if action is not None:
                                 if hov_color != gray:
@@ -232,27 +352,29 @@ class TowerButton:
                         gameDisplay, no_hov_color, (x, y), radius)
                     if circle_number == 0:
                         self.show_tower_image()
-
+            # If message exists, show message
             if msg and (circle_number == 0 or self._options_countdown > 0):
                 if circle_number == 0:
                     self.set_text(x, y, msg, msg_col, True)
                 else:
                     self.set_text(x, y, msg, msg_col, False)
-
+        # release from option_lockout (must be re-called each frame)
         self.option_lockout = False
 
     @staticmethod
     def gray_options(circle_number):
+        """Returns True for grayed-out options"""
         if circle_number > 0:
             return True
         else:
             return False
 
     def show_tower_image(self):
+        """Shows the tower image (except for tier 0 tower)"""
         pass
 
     def set_text(self, x, y, msg, msg_color, is_main):
-        """Draw text over main or option circles if specified"""
+        """Draw text inside of option circle if specified"""
         if is_main:
             font = pygame.font.SysFont(self._font, self._font_size, bold=True)
         else:
@@ -265,6 +387,22 @@ class TowerButton:
 
 
 class BasicTower(TowerButton):
+    """Base class for all towers (inherits from TowerButton)
+    
+
+    See Tower button for how buttons work and most arguments and attributes.
+    Here only non-inherited arguments attributes will be defined. No new 
+    methods are defined here (just slight augmentations of TowerButton methods).
+    
+    Args:
+        tower_range (int, default=125): Defines self.radius 
+    
+    Attributes:
+        radius (int): The distance at which a tower will detect and
+                     fire at an enemy
+        buy (int): The cost of the tower
+        sell (int): The price the tower will sell for
+    """
     def __init__(
             self, location, tower_range=125, destroy=True,
             option_count=5, opt1_msg="Sell", opt1_action="sell",
@@ -298,12 +436,14 @@ class BasicTower(TowerButton):
         self.tier = 1
 
     def show_tower_image(self):
+        """Shows the tower image"""
         gameDisplay.blit(
             self.image, (int(self.x - 0.5 * self.image_width),
                          int(self.y - .8 * self.image_height)))
 
     @staticmethod
     def gray_options(circle_number):
+        """Returns True for grayed-out options"""
         if circle_number > 1:
             return True
         else:
@@ -311,6 +451,11 @@ class BasicTower(TowerButton):
 
 
 class IceTower1(BasicTower):
+    """Tier 1 ice tower (inherits from BasicTower, and TowerButton)
+    
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
@@ -329,6 +474,11 @@ class IceTower1(BasicTower):
 
 
 class IceTower2(BasicTower):
+    """Tier 2 ice tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
@@ -345,6 +495,11 @@ class IceTower2(BasicTower):
 
 
 class FireTower1(BasicTower):
+    """Tier 1 fire tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
@@ -365,6 +520,11 @@ class FireTower1(BasicTower):
 
 
 class FireTower2(BasicTower):
+    """Tier 2 fire tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
@@ -381,6 +541,11 @@ class FireTower2(BasicTower):
 
 
 class PoisonTower1(BasicTower):
+    """Tier 1 poison tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
@@ -401,6 +566,11 @@ class PoisonTower1(BasicTower):
 
 
 class PoisonTower2(BasicTower):
+    """Tier 2 poison tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
@@ -417,6 +587,11 @@ class PoisonTower2(BasicTower):
 
 
 class DarkTower1(BasicTower):
+    """Tier 1 dark tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
@@ -437,6 +612,11 @@ class DarkTower1(BasicTower):
 
 
 class DarkTower2(BasicTower):
+    """Tier 2 dark tower (inherits from BasicTower, and TowerButton)
+
+    See BasicTower and TowerButton for explanations, arguments, attributes,
+    and method descriptions.
+    """
     def __init__(
             self, location, tower_range=125,
             option_count=1, opt1_msg="Sell", opt1_action="sell",
@@ -452,8 +632,37 @@ class DarkTower2(BasicTower):
         self.tier = 3
 
 
-# Deals up-front damage, reduced by armor
 class BasicMissile:
+    """Basic missile (fire from BasicTower) locks onto and hits enemy
+    
+    The basic missile locks onto enemy within associated tower's attack radius.
+    It will travel toward that enemy until enemy is hit or dies. If hit occurs,
+    that information will be returned to the function caller.
+    
+    Args:
+        location (tuple, int): Defines self.x, self.y
+        
+    Attributes:
+        x (int): The x-coordinate missile is currently at
+        y (int): The y-coordinate missile is currently at
+        _tower_location (tuple, int): Location of tower, missiles origin
+        speed (int): speed at which missile moves toward enemy
+        lock_on (obj): Enemy which missile is locked on to
+        destroy (bool): If True, missile deletes and returns to tower
+        radius (int): Defines size of missile picture and collision detection
+        shoot_rate (int): Game frames until next fire after destroyed
+        shoot_counter (int): Counts from shoot_rate to 0
+        missile_color (tuple, int): Color of the missile
+        damage (int): Damage given to enemy on hit (varies by specialty)
+        specialty (str): Defines special attributes of missile
+        hit_sound (obj): Object of sound to play on missile hit
+        
+    Methods:
+        lock_enemy: Locks missile onto enemy and calls shoot
+        shoot: Causes missile to travel toward locked enemy and call hit
+        hit: Determines if missile hit enemy
+        adjust_counters: Decrements shoot counter
+    """
     def __init__(self, location):
         self.x, self.y = location
         x, y = location
@@ -472,8 +681,19 @@ class BasicMissile:
         self.hit_sound = basic_hit_sound
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
-        # Then, if enemy in range of tower, un-destroy missile
+        """Locks missile onto enemy and calls shoot()
+
+        To lock on need shoot_counter at 0, enemy alive, no missile alive.
+        Then, if enemy in range of tower, un-destroy missile. Then call shoot
+        and listen for and return hit.
+
+        Args:
+            tower (obj): Tower associated with missile
+            enemy (obj): Enemy to try to lock on to
+
+        Returns:
+            hit (tuple, int, str, obj): The result passed returned by shoot()
+        """
         if self.shoot_counter < 1:
             if not enemy.destroy:
                 if self.destroy is True:
@@ -487,7 +707,17 @@ class BasicMissile:
         return hit
 
     def shoot(self, enemy):
-        # Move missile towards locked on enemy by self.speed and redraw.
+        """Causes missile to travel toward locked enemy and call hit
+
+        Move missile towards locked on enemy by self.speed and redraw. Call and
+        return hit.
+
+        Args:
+            enemy (obj): Enemy missiles is firing at
+
+        Returns:
+            hit (tuple, int, str, obj): the result of hit() function call
+        """
         if not self.destroy:
             if self.lock_on == enemy:
                 if self.x < enemy.x:
@@ -506,9 +736,21 @@ class BasicMissile:
                     return hit
 
     def hit(self, enemy):
-        # Check for collision between missile and enemy
-        # If collision to locked on target,
-        # destroy missile and set its location back to tower
+        """Determines if missile hit enemy
+
+        Check for collision between missile and enemy. If collision with locked
+        on target occurs, destroy missile and set its location back to tower.
+        If the enemy is not destroyed, return damage, specialty and hit_sound.
+
+        Args:
+            enemy: Locked on enemy to check missile collision against
+
+        Returns:
+            self.damage (int): Damage given to enemy on hit
+                               (varies by specialty)
+            self.specialty (str): Defines special attributes of missile
+            self.hit_sound (obj): Object of sound to play on missile hit
+        """
         if helpers.collision(self, enemy):
             self.destroy = True
             self.lock_on = None
@@ -521,8 +763,14 @@ class BasicMissile:
             self.shoot_counter -= 1
 
 
-# Slows enemy and deals up-front damage reduced by armor
 class IceMissile1(BasicMissile):
+    """T1 ice missile (from T1 ice tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'ice1' specialty slows enemy and deals up-front damage reduced by armor
+    """
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5
@@ -531,8 +779,14 @@ class IceMissile1(BasicMissile):
         self.hit_sound = ice_hit_sound
 
 
-# Slows enemy and deals up-front damage reduced by armor
 class IceMissile2(BasicMissile):
+    """T2 ice missile (from T2 ice tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'ice2' specialty slows enemy and deals up-front damage reduced by armor
+    """
     def __init__(self, location):
         super().__init__(location)
         self.damage = 56.25
@@ -542,10 +796,16 @@ class IceMissile2(BasicMissile):
         self.hit_sound = ice_hit_sound
 
 
-# Burns catches enemy on fire, dealing damage per second for 3 seconds
-# No up-front damage, DoT burn reduced by armor
-# Enemies on fire will catch other nearby enemies on fire
 class FireMissile1(BasicMissile):
+    """T1 fire missile (from T1 fire tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'fire1' burns catches enemy on fire, dealing damage per second for 3
+    seconds. Does no up-front damage, DoT burn reduced by armor.
+    Enemies on fire will catch other nearby enemies on fire.
+    """
     def __init__(self, location):
         super().__init__(location)
         self.damage = 25
@@ -555,8 +815,11 @@ class FireMissile1(BasicMissile):
         self.hit_sound = fire_hit_sound
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
-        # Then, if enemy in range of tower, un-destroy missile
+        """Locks missile onto enemy and calls shoot()
+
+        Difference with BasicMissile lock_enemy: Will not lock onto enemy
+        if burn just applied to that enemy.
+        """
         if self.shoot_counter < 1:
             # Only lock-on if not freshly burned
             if enemy.burned_counter < 2:
@@ -571,10 +834,15 @@ class FireMissile1(BasicMissile):
         return hit
 
 
-# Burns catches enemy on fire, dealing damage per second for 3 seconds
-# No up-front damage, DoT burn reduced by armor
-# Enemies on fire will catch other nearby enemies on fire
 class FireMissile2(BasicMissile):
+    """T2 fire missile (from T2 fire tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'fire2' burns catches enemy on fire, dealing damage per second for 3
+    seconds. Does no up-front damage, DoT burn reduced by armor.
+    Enemies on fire will catch other nearby enemies on fire."""
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5
@@ -585,8 +853,11 @@ class FireMissile2(BasicMissile):
         self.hit_sound = fire_hit_sound
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
-        # Then, if enemy in range of tower, un-destroy missile
+        """Locks missile onto enemy and calls shoot()
+
+        Difference with BasicMissile lock_enemy: Will not lock onto enemy
+        if burn just applied to that enemy.
+        """
         if self.shoot_counter < 1:
             # Only lock-on if not freshly burned
             if enemy.burned_counter < 2:
@@ -601,9 +872,15 @@ class FireMissile2(BasicMissile):
         return hit
 
 
-# Deals armor piercing DoT every 5 seconds (no up-front damage)
-# Poison lasts indefinitely
 class PoisonMissile1(BasicMissile):
+    """T1 poison missile (from T1 poison tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'poison1' deals armor piercing, percentage-current-health damage every
+    2 seconds for 10 seconds (no up-front damage), and stuns at end of
+    poison duration."""
     def __init__(self, location):
         super().__init__(location)
         self.damage = 0.05
@@ -613,10 +890,13 @@ class PoisonMissile1(BasicMissile):
         self.hit_sound = poison_hit_sound
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
-        # Then, if enemy in range of tower, un-destroy missile
+        """Locks missile onto enemy and calls shoot()
+
+        Difference with BasicMissile lock_enemy: Will not lock onto enemy
+        until poison off or nearly off.
+        """
         if self.shoot_counter < 1:
-            # Only lock-on if not poisoned
+            # Only lock-on if not poisoned (or about to be)
             if enemy.poison_charges < 2:
                 if not enemy.destroy:
                     if self.destroy is True:
@@ -629,9 +909,15 @@ class PoisonMissile1(BasicMissile):
         return hit
 
 
-# Deals armor piercing DoT every 5 seconds (no up-front damage)
-# Poison lasts indefinitely
 class PoisonMissile2(BasicMissile):
+    """T2 poison missile (from T2 poison tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'poison2' deals armor piercing, percentage-current-health damage every
+    2 seconds for 10 seconds (no up-front damage), and stuns at end of
+    poison duration."""
     def __init__(self, location):
         super().__init__(location)
         self.damage = 0.10
@@ -642,10 +928,13 @@ class PoisonMissile2(BasicMissile):
         self.hit_sound = poison_hit_sound
 
     def lock_enemy(self, tower, enemy):
-        # Checks, need: shoot_counter at 0, enemy alive, no missile alive,
-        # Then, if enemy in range of tower, un-destroy missile
+        """Locks missile onto enemy and calls shoot()
+
+        Difference with BasicMissile lock_enemy: Will not lock onto enemy
+        until poison off or nearly off.
+        """
         if self.shoot_counter < 1:
-            # Only lock-on if not poisoned
+            # Only lock-on if not poisoned (or nearly so)
             if enemy.poison_charges < 2 or not enemy.poison2:
                 if not enemy.destroy:
                         if self.destroy is True:
@@ -659,8 +948,13 @@ class PoisonMissile2(BasicMissile):
         return hit
 
 
-# Deals quadruple damage (3/4 as armor piercing)
 class DarkMissile1(BasicMissile):
+    """T1 dark missile (from T1 poison tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'dark1' deals armor piercing, up front damage."""
     def __init__(self, location):
         super().__init__(location)
         self.damage = 37.5  # 75 / 2 (for 1/2 armor pen)
@@ -669,8 +963,13 @@ class DarkMissile1(BasicMissile):
         self.hit_sound = dark_hit_sound
 
 
-# Deals quadruple damage (3/4 as armor piercing)
 class DarkMissile2(BasicMissile):
+    """T2 dark missile (from T2 poison tower), inherits from BasicMissile
+
+    See BasicMissile for explanations, arguments, attributes,
+    and method descriptions.
+
+    'dark2' deals armor piercing, up front damage."""
     def __init__(self, location):
         super().__init__(location)
         self.damage = 112.5

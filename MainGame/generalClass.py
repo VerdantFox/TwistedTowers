@@ -322,17 +322,18 @@ class EndScreen:
         if win_loss == "win":
             pygame.mixer.music.load('music/Amazing_Plan_Silent_Film_Dark.mp3')
             pygame.mixer.music.play(-1)
-
+        # Define time for display
         minutes_elapsed = self.time_elapsed // minutes
         remaining_seconds = (self.time_elapsed % minutes) // seconds
+
         while True:
+            # Check for quit
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-
+            # Show background
             gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
-
             # Draw "Defeat/Victory" text
             if win_loss == "lose":
                 self.set_text(self.center_x, self.game_y, "Defeat!",
@@ -340,15 +341,12 @@ class EndScreen:
             if win_loss == "win":
                 self.set_text(self.center_x, self.game_y, "Victory!!",
                               self.game_font)
-
             # Draw "Score" text
             self.set_text(self.center_x, self.score_y,
                           "score: {}".format(self.score), self.score_font)
-
             # Draw "Time elapsed" text
             self.set_text(self.center_x, self.time_y, "Time: {0}:{1:02}".format(
                     minutes_elapsed, remaining_seconds), self.time_font)
-
             # Draw quit button
             self.quit_button.draw()
             # Draw play button
