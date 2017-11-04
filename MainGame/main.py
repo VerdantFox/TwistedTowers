@@ -237,14 +237,14 @@ def settings_loop():
         width=200, height=60, color1=orange, color2=bright_orange)
     easy_button = generalClass.Button(
         (50, 200), message="Easy", action=easy_settings, font_size=40,
-        width=200, height=60, color1=green, color2=bright_green, permanent=True)
+        width=200, height=60, color1=green, color2=bright_green, linked=True)
     medium_button = generalClass.Button(
         (50, 285), message="Medium", action=medium_settings, font_size=40,
         width=200, height=60, color1=yellow, color2=bright_yellow,
-        permanent=True)
+        linked=True)
     hard_button = generalClass.Button(
         (50, 370), message="Hard", action=hard_settings, font_size=40,
-        width=200, height=60, color1=red, color2=bright_red, permanent=True)
+        width=200, height=60, color1=red, color2=bright_red, linked=True)
     font = pygame.font.SysFont('Comic Sans MS', 24, bold=True)
 
     while True:
@@ -352,10 +352,20 @@ def game_loop():
     difficulty = settings.difficulty
 
     # Set up game rules
-    score_board = generalClass.GameScore((140, 20))
-    game_clock = generalClass.GameClock((20, 20))
-    funds = generalClass.Money((20, display_height - 90), start_cash=start_cash)
-    castle = generalClass.Castle((20, display_height - 60))
+    score = generalClass.Tracker(
+        (140, 20), start_stat=0, width=120, height=30, background_color=green,
+        font="Comic Sans MS", font_size=20, text_color=black, prefix="Score: ")
+    game_clock = generalClass.Tracker(
+        (20, 20), start_stat=0, width=120, height=30, background_color=black,
+        font="Comic Sans MS", font_size=20, text_color=white, special="clock")
+    funds = generalClass.Tracker(
+        (20, display_height - 90), start_stat=start_cash, width=100, height=30,
+        background_color=black, font="Comic Sans MS", font_size=20,
+        text_color=white, prefix="$")
+    castle = generalClass.Tracker(
+        (20, display_height - 60), start_stat=10, width=250, height=50,
+        background_color=red, front_color=green, font="Comic Sans MS",
+        font_size=30, text_color=white, special="castle")
     end_screen = generalClass.EndScreen()
 
     # Set blank enemies list
@@ -384,37 +394,40 @@ def game_loop():
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
 
+        # Update game_clock by 1 per frame
+        game_clock.stat += 1
+
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
 
         # Periodically add money
-        if game_clock.frames % passive_money_rate == 0:
+        if game_clock.stat % passive_money_rate == 0:
             funds.adjust(1)
 
         # add new enemies
         if not mage.stop_spawn:
-            add_enemies(game_clock.frames, enemies_list, enemy_spawn_rate,
+            add_enemies(game_clock.stat, enemies_list, enemy_spawn_rate,
                         difficulty)
 
         # Draw top towers
         draw_towers(top_tower_list, top_missile_list, funds,
-                    score_board, enemies_list)
+                    score, enemies_list)
 
         # Draw enemies
         draw_enemies(enemies_list, castle)
 
         # Draw bottom towers
         draw_towers(bot_tower_list, bot_missile_list, funds,
-                    score_board, enemies_list)
+                    score, enemies_list)
 
         # Draw in mage
-        draw_mage(mage, game_clock, score_board, funds, enemies_list)
+        draw_mage(mage, game_clock, score, funds, enemies_list)
 
         # Draw game info panels
         tower_costs_display()
         funds.draw()
         castle.draw()
-        score_board.draw()
+        score.draw()
         game_clock.draw()
         pause_button.draw()
 
@@ -424,16 +437,16 @@ def game_loop():
 
         # Set win/loss conditions
         if mage.win:
-            end_screen.score = score_board.score
-            end_screen.time_elapsed = game_clock.frames
+            end_screen.score = score.stat
+            end_screen.time_elapsed = game_clock.stat
             end = end_screen.draw("win")
             if end == "play":
                 game_loop()
             if end == "main":
                 load_intro_music()
         if castle.game_over:
-            end_screen.score = score_board.score
-            end_screen.time_elapsed = game_clock.frames
+            end_screen.score = score.stat
+            end_screen.time_elapsed = game_clock.stat
             end = end_screen.draw("lose")
             if end == "play":
                 game_loop()
@@ -580,17 +593,17 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                 current_tower.sell()
             if not current_tower.destroy:
                 if current_tower.tier == 0:
-                    if funds.cash < 100:
+                    if funds.stat < 100:
                         current_tower.gray_out = True
                     else:
                         current_tower.gray_out = False
                 if current_tower.tier == 1:
-                    if funds.cash < 125:
+                    if funds.stat < 125:
                         current_tower.gray_out = True
                     else:
                         current_tower.gray_out = False
                 if current_tower.tier == 2:
-                    if funds.cash < 150:
+                    if funds.stat < 150:
                         current_tower.gray_out = True
                     else:
                         current_tower.gray_out = False
@@ -609,7 +622,7 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                         funds.adjust(current_tower.sell)
                         sell_tower_sound.play()
                     else:
-                        if new_tower.buy <= funds.cash:
+                        if new_tower.buy <= funds.stat:
                             new_tower.constructing = True
                             new_tower.construct_countdown = \
                                 new_tower.construct_timer
@@ -664,13 +677,13 @@ def draw_enemies(enemies_list, castle):
                         adjacent.burned_counter = 3
 
         if castle_damage:
-            if castle.hp > 0:
+            if castle.stat > 0:
                 castle.adjust(-castle_damage)
                 castle_hit.play()
 
 
 def draw_mage(mage, game_clock, score_board, funds, enemies_list):
-    mage.draw(game_clock.frames)
+    mage.draw(game_clock.stat)
     for enemy in enemies_list:
         if helpers.collision(mage, enemy):
             if not enemy.destroy:

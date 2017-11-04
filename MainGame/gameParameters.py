@@ -19,7 +19,7 @@ display_height = 760
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
-caption = pygame.display.set_caption('Tower Defense')
+caption = pygame.display.set_caption('Twisted Towers')
 icon = pygame.display.set_icon(pygame.image.load('gameBackDrop.png'))
 
 # Initialize and set clock

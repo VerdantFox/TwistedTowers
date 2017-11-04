@@ -31,14 +31,14 @@ class Orc:
 
     Attributes:
         # Position and movement
-        x, y (tuple): Gives location of enemy 
+        x, y (tuple, int): Gives location of enemy
         base_speed (float): Enemy move and image cycling speed, default: 1
         speed: Actual speed used (adjusted by ice, reverts to base_speed)
         right (bool): True if next node x greater than enemy x
         left (bool): True if next node x less than enemy x
         up (bool): True if next node y less than enemy y
         down (bool): True if next node y greater than enemy y
-        next_node (tuple): The point on map enemy travels to next
+        next_node (tuple, int): The point on map enemy travels to next
         node_index (int): Index used to get next node in 'enemy_nodes' list
         stationary (bool): If True, stops x,y movement (default: False)
 
@@ -65,7 +65,7 @@ class Orc:
         # Death and destruction
         death_sound: Sound object to play() on death (in sounds.py)
         destroy (bool): Removes live body if False
-        dead (bool): Used to return cash and money
+        dead (bool): Used to return stat and money
         cash: Amount of money returned for kill
         points: Amount of points returned for kill
         spawn_timer (int): Time from dead (initially True) to spawning
@@ -76,10 +76,10 @@ class Orc:
         dead_image_countdown: Counts down from dead_image_timer to 0
         dead_x: x coordinate location of enemy at time of death
         dead_y: y coordinate location of enemy at time of death
-        dead_font: Font used for cash display
+        dead_font: Font used for stat display
 
         # Ice specialties
-        ice_loc(tuple in tuple): Relative x, y adjustments for ice image
+        ice_loc(tuple in tuple, int): Relative x, y adjustments for ice image
         ice1 (bool): True for ice_counter secs if hit by tier 1 ice tower
         ice2 (bool): True for ice_counter secs if hit by tier 2 ice tower
         ice_counter (int): Duration of slow from ice tower strike
@@ -87,7 +87,7 @@ class Orc:
         ice2_countdown (int): Counts down from ice_counter to 0
 
         # Fire specialties
-        fire_loc (tuple): x, y offset for fire image relative to body
+        fire_loc (tuple, int): x, y offset for fire image relative to body
         fireball1 (int): Counts down time enemy can flame other enemies
         fireball2 (int): Counts down time enemy can flame other enemies
         fire1 (float): Damage taken per second while on fire
@@ -96,9 +96,9 @@ class Orc:
         fire_countdown (int): Frame count (time) between burn ticks
 
         # Poison specialties
-        poison_loc (tuple in tuple): Relative x, y adjustments
+        poison_loc (tuple in tuple, int): Relative x, y adjustments
                                           for poison image
-        stun_loc: (tuple in tuple): Relative x, y adjustments
+        stun_loc: (tuple in tuple, int): Relative x, y adjustments
                                           for stun image
         poison1 (float): Poison damage per tick from tier 1 poison
         poison2 (float): Poison damage per tick from tier 2 poison
@@ -115,7 +115,7 @@ class Orc:
             draw: Moves enemy unless stunned, changing image to show walking 
                   motion. Checks for special (elemental) attributes and calls 
                   associated functions if it find them. If enemy is dead, shows 
-                  corpse and cash loot and removes elemental effects.
+                  corpse and stat loot and removes elemental effects.
             walk: Changes image as enemy moves to animate movement
             show: Shows enemy, health bar, and calls elemental effects functions
             show_poison: Show poison cloud attached to enemy
@@ -129,7 +129,7 @@ class Orc:
             burning: Causes fire damage over time to enemy, prioritising rank 2
             poisoned: Damages enemies as % hp or min damage, stuns toward end
             check_death: Checks if enemy is dead, plays sound 
-                         and returns cash/points
+                         and returns stat/points
             hit: Expressed on tower shot hit, translates specialty and damage
     """
     def __init__(self, location=path_nodes[0], next_node=path_nodes[0],
@@ -169,7 +169,7 @@ class Orc:
         # Death and destruction
         self.death_sound = orc_death_sound
         self.destroy = destroy  # Removes live body
-        self.dead = False  # Used to return cash and money
+        self.dead = False  # Used to return stat and money
         self.cash = 75
         self.points = self.cash // 3
         self.spawn_timer = random.randint(5 * seconds, 6.75 * seconds)
@@ -222,7 +222,7 @@ class Orc:
         Moves enemy unless stunned, changing image to show walking motion.
         Checks for special (elemental) attributes and calls associated
         functions if it find them. If enemy is dead, shows corpse and
-        cash loot and removes elemental effects.
+        stat loot and removes elemental effects.
 
         No args
 
@@ -537,10 +537,10 @@ class Orc:
             self.poison2 = None
 
     def check_death(self):
-        """Checks if enemy is dead, plays sound and returns cash/points
+        """Checks if enemy is dead, plays sound and returns stat/points
 
         Returns:
-            self.points (int), self.cash (int): a tuple to adjust game points
+            self.points (int), self.stat (int): a tuple to adjust game points
                                                 and funds
         """
         if self.dead:
@@ -826,8 +826,8 @@ class Mage:
         frames_to_picswap (int): Frames until image change
 
         # Position
-        x, y (tuple): Gives location of mage
-        end_x, end_y (tuple): location mage runs to
+        x, y (tuple, int): Gives location of mage
+        end_x, end_y (tuple, int): location mage runs to
 
         # Spell
         start_spell (bool): When True starts mage spell movement animation

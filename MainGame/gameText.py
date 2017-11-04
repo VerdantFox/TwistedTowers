@@ -36,11 +36,12 @@ intro_text = "The time to act is now! Lord Darken has set his armies of " \
              "the damned upon the innocents within StoneBorn Castle. As " \
              "general of the Resistance Army it is your duty to direct the " \
              "building of our static tower defenses. Enlist the help of " \
-             "our builders and the magician, Jorah, to erect magical towers to" \
-             " keep our enemies at bay. Our fighters within the keep can " \
+             "our builders and the magician, Jorah, to erect magical towers " \
+             "to keep our enemies at bay. Our fighters within the keep can " \
              "hold off only a limited number of enemies before the " \
-             "castle falls. A raven has been sent to the Archmage Stormbender. " \
-             "If we can just hold long enough I know he can save us..."
+             "castle falls. A raven has been sent to the Archmage " \
+             "Stormbender. If we can just hold long enough I know he can " \
+             "save us..."
 title = "Twisted Towers!"
 
 # In tower_info_loop()
