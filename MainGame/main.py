@@ -335,6 +335,8 @@ def pause_game():
 
 # Start game loop
 def game_loop():
+    # Game crashes if loading new music while music is paused
+    pygame.mixer.music.unpause()
     # Start main game music
     pygame.mixer.music.fadeout(100)
     pygame.mixer.music.load('music/main_music_mesh2.wav')
