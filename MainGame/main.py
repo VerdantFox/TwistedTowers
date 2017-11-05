@@ -42,7 +42,7 @@ def intro_loop():
         width=300, height=60, color1=yellow, color2=bright_yellow)
     settings_button = generalClass.Button(
         (100, display_height - 180),
-        message="Settings", action=settings_loop, font_size=40,
+        message="Difficulty", action=settings_loop, font_size=40,
         width=300, height=60, color1=orange, color2=bright_orange)
 
     font = pygame.font.SysFont('Comic Sans MS', 20, bold=True)
@@ -301,25 +301,25 @@ def settings_loop():
 def easy_settings():
     """"Updates settings class to easy difficulty"""
     settings.spawn_rate = 9 * seconds
-    settings.starting_gold = 1600
+    settings.starting_gold = 1200
     settings.gold_generation = 0.5 * seconds
-    settings.difficulty = 2
+    settings.difficulty = 1.5
 
 
 def medium_settings():
     """"Updates settings class to medium difficulty"""
     settings.spawn_rate = 6 * seconds
-    settings.starting_gold = 1200
+    settings.starting_gold = 1000
     settings.gold_generation = 1 * seconds
     settings.difficulty = 1
 
 
 def hard_settings():
     """"Updates settings class to hard difficulty"""
-    settings.spawn_rate = 3 * seconds
+    settings.spawn_rate = 4 * seconds
     settings.starting_gold = 800
     settings.gold_generation = 2 * seconds
-    settings.difficulty = 0.5
+    settings.difficulty = (2/3)
 
 
 def unpause():
@@ -399,7 +399,7 @@ def game_loop():
         background_color=black, font="Comic Sans MS", font_size=20,
         text_color=white, prefix="$")
     castle = generalClass.Tracker(
-        (20, display_height - 60), start_stat=10, width=250, height=50,
+        (20, display_height - 60), start_stat=20, width=250, height=50,
         background_color=red, front_color=green, font="Comic Sans MS",
         font_size=30, text_color=white, special="castle")
     # Set the end screen
@@ -542,11 +542,11 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
             picker = -1
         if frames == int(3 * min_rate):
             picker = 13
-        if 3.5 * min_rate < frames <= 5 * min_rate:
+        if 3.75 * min_rate < frames <= 4.75 * min_rate:
             picker = random.randint(14, 18)
         if frames == 4 * min_rate:
             picker = 13
-        if 5 * min_rate < frames <= 7 * min_rate:
+        if 4.75 * min_rate < frames <= 7 * min_rate:
             picker = random.randint(13, 19)
         if frames > 7 * min_rate:
             picker = random.randint(14, 20)
@@ -844,6 +844,7 @@ if __name__ == "__main__":
     # Globally define pause for game pausing/un-pausing functions
     pause = False
     settings = generalClass.Settings()
+    medium_settings()
     load_intro_music()
     pygame.quit()
     quit()

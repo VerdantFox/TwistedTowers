@@ -39,10 +39,10 @@ lizard_death_sound.set_volume(0.7)
 
 # Tower shots
 tower_shoot_sound = pygame.mixer.Sound('soundEffects/TowerShots/Shooting.wav')
-tower_shoot_sound.set_volume(.1)
+tower_shoot_sound.set_volume(.2)
 
 basic_hit_sound = pygame.mixer.Sound('soundEffects/TowerShots/Basic.wav')
-basic_hit_sound.set_volume(.2)
+basic_hit_sound.set_volume(.5)
 
 ice_hit_sound = pygame.mixer.Sound('soundEffects/TowerShots/Ice.wav')
 ice_hit_sound.set_volume(.6)

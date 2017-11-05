@@ -459,7 +459,7 @@ class IceTower1(BasicTower):
     def __init__(
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
-            opt2_msg="Tier 2", opt2_action="ice2",
+            opt2_msg="Tier 3", opt2_action="ice2",
             main_color1=blue, main_color2=bright_blue, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
@@ -474,7 +474,7 @@ class IceTower1(BasicTower):
 
 
 class IceTower2(BasicTower):
-    """Tier 2 ice tower (inherits from BasicTower, and TowerButton)
+    """Tier 3 ice tower (inherits from BasicTower, and TowerButton)
 
     See BasicTower and TowerButton for explanations, arguments, attributes,
     and method descriptions.
@@ -504,7 +504,7 @@ class FireTower1(BasicTower):
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=red, main_color2=bright_red,
-            opt2_msg="Tier 2", opt2_action="fire2", opt2_col1=red,
+            opt2_msg="Tier 3", opt2_action="fire2", opt2_col1=red,
             opt2_col2=bright_red, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
@@ -520,7 +520,7 @@ class FireTower1(BasicTower):
 
 
 class FireTower2(BasicTower):
-    """Tier 2 fire tower (inherits from BasicTower, and TowerButton)
+    """Tier 3 fire tower (inherits from BasicTower, and TowerButton)
 
     See BasicTower and TowerButton for explanations, arguments, attributes,
     and method descriptions.
@@ -550,7 +550,7 @@ class PoisonTower1(BasicTower):
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=green, main_color2=bright_green,
-            opt2_msg="Tier 2", opt2_action="poison2", opt2_col1=green,
+            opt2_msg="Tier 3", opt2_action="poison2", opt2_col1=green,
             opt2_col2=bright_green, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
@@ -566,7 +566,7 @@ class PoisonTower1(BasicTower):
 
 
 class PoisonTower2(BasicTower):
-    """Tier 2 poison tower (inherits from BasicTower, and TowerButton)
+    """Tier 3 poison tower (inherits from BasicTower, and TowerButton)
 
     See BasicTower and TowerButton for explanations, arguments, attributes,
     and method descriptions.
@@ -596,7 +596,7 @@ class DarkTower1(BasicTower):
             self, location, tower_range=125,
             option_count=2, opt1_msg="Sell", opt1_action="sell",
             main_color1=purple, main_color2=bright_purple,
-            opt2_msg="Tier 2", opt2_action="dark2", opt2_col1=purple,
+            opt2_msg="Tier 3", opt2_action="dark2", opt2_col1=purple,
             opt2_col2=bright_purple, destroy=True):
         super().__init__(
             location, tower_range=tower_range,
@@ -612,7 +612,7 @@ class DarkTower1(BasicTower):
 
 
 class DarkTower2(BasicTower):
-    """Tier 2 dark tower (inherits from BasicTower, and TowerButton)
+    """Tier 3 dark tower (inherits from BasicTower, and TowerButton)
 
     See BasicTower and TowerButton for explanations, arguments, attributes,
     and method descriptions.

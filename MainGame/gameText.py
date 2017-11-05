@@ -77,12 +77,12 @@ fire2_text = "Rank 2 Fire Tower (Tier3 tower):\n" \
              "\n1.5x rank1 damage, 1st target catches other enemies " \
              "aflame in larger area." \
              "\nDamage:        112.5 damage over 3 seconds" \
-             "\nRate of fire:   Once per second" \
+             "\nRate of fire:   Once per 3 seconds" \
              "\nCost:           Rank 1 + $150 ($375 total)" \
              "\nSells for:       $280" \
              "\nRecommend: vs. bunched enemies (spiders)."
 poison1_text = "Rank 1 Poison Tower (Tier2 tower) :\n" \
-               "\nDoes % current hp over time, 50% armor shred, stuns" \
+               "\nDoes % current hp over time, 50% armor shred, stuns " \
                "for 0.75 seconds at last damage tic." \
                "\nDamage:        ~22% current hp over 10 seconds" \
                "\nRate of fire:    Once per 3 seconds" \
@@ -92,22 +92,21 @@ poison1_text = "Rank 1 Poison Tower (Tier2 tower) :\n" \
 poison2_text = "Rank 2 Poison Tower (Tier3 tower):\n" \
                "\n1.5x rank1 damage, double stun (1.5 seconds)." \
                "\nDamage:        ~41% current hp over 10 seconds" \
-               "\nRate of fire:   Once per second" \
+               "\nRate of fire:   Once per 3 seconds" \
                "\nCost:           Rank 1 + $150 ($375 total)" \
                "\nSells for:       $280" \
                "\nRecommend: vs high hp enemies (Orc, Dragon)."
 dark1_text = "Rank 1 Dark Tower (Tier2 tower) :\n" \
-             "\nDoes damage on hit ignoring 50% of enemy armor" \
-             "for 0.75 seconds at last damage tic." \
+             "\nDoes damage on hit, ignoring 50% of enemy armor." \
              "\nDamage:        75 damage per hit" \
              "\nRate of fire:    Every other second" \
              "\nCost:            Basic Tower + $125 ($225 total)" \
              "\nSells for:        $170" \
              "\nRecommend: vs. high armor enemies (Spiker, Dragon)."
 dark2_text = "Rank 2 Dark Tower (Tier3 tower):\n" \
-             "\n1.5x rank1 damage, double stun (1.5 seconds)." \
-             "\nDamage:        ~41% current hp over 10 seconds" \
-             "\nRate of fire:   Once per second" \
+             "\n1.5x rank1 damage, ignoring 100% of enemy armor." \
+             "\nDamage:        112.5 damage per hit" \
+             "\nRate of fire:   Every other second" \
              "\nCost:           Rank 1 + $150 ($375 total)" \
              "\nSells for:       $280" \
              "\nRecommend: vs. high armor enemies (Spiker, Dragon)."
@@ -116,9 +115,10 @@ dark2_text = "Rank 2 Dark Tower (Tier3 tower):\n" \
 spider_text = "Spider\n" \
               "\nIndividually weak but forms large groups" \
               "\nHealth:     100" \
-              "\nArmor:      0" \
+              "\nArmor:      0 (0% reduced damage)" \
               "\nSpeed:      1.2" \
               "\nKill value:   $8" \
+              "\nTower damage: 1" \
               "\nRecommend: Fire towers most effective."
 lizard_text = "Lizard Men\n" \
               "\nWell rounded foot soldier" \
@@ -126,6 +126,7 @@ lizard_text = "Lizard Men\n" \
               "\nArmor:      50 (50% reduced damage)" \
               "\nSpeed:      1.2" \
               "\nKill value:   $50" \
+              "\nTower damage: 2" \
               "\nRecommend: All towers fairly equally effective."
 wolf_text = "Demon Wolf\n" \
             "\nNot particularly strong, but very fast" \
@@ -133,6 +134,7 @@ wolf_text = "Demon Wolf\n" \
             "\nArmor:      20 (20% reduced damage)" \
             "\nSpeed:      2" \
             "\nKill value:   $50" \
+            "\nTower damage: 2" \
             "\nRecommend: Numerous and well spaced towers."
 turtle_text = "Spikers\n" \
               "\nSlow, but highly armored enemy with low health" \
@@ -140,6 +142,7 @@ turtle_text = "Spikers\n" \
               "\nArmor:      90 (90% reduced damage)" \
               "\nSpeed:      0.8" \
               "\nKill value:   $75" \
+              "\nTower damage: 3" \
               "\nRecommend: Dark towers most effective."
 orc_text = "Orc\n" \
            "\nFairly slow, low armor, but high health" \
@@ -147,6 +150,7 @@ orc_text = "Orc\n" \
            "\nArmor:      20 (20% reduced damage)" \
            "\nSpeed:      1" \
            "\nKill value:   $75" \
+           "\nTower damage: 3" \
            "\nRecommend: Early poison towers."
 dragon_text = "Dragon\n" \
               "\nThe big one! Slow, with HIGH health and armor" \
@@ -154,8 +158,8 @@ dragon_text = "Dragon\n" \
               "\nArmor:      75 (75% reduced damage)" \
               "\nSpeed:      0.6" \
               "\nKill value:   $750" \
-              "\nRecommend: Early poison towers and dark towers " \
-              "               paired with ice towers for extra hits."
+              "\nTower damage: 6" \
+              "\nRecommend: Poison, and dark + ice tower combos. "
 
 # Settings_loop
 easy_text = "Slower spawning, easier enemies, " \

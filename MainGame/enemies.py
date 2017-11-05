@@ -56,6 +56,7 @@ class Orc:
         radius (int): Radius for collision detection with other objects
         initial_fire_radius: Radius for fire1 detection
         fire_radius: Radius for fire2 detection (reverts to initial)
+        castle_damage: Damage dealt to tower on reaching it
 
         # hp manipulation
         max_hp (float): Maximum health of enemy (800 for orc)
@@ -159,6 +160,7 @@ class Orc:
         self.radius = 5
         self.initial_fire_radius = 30
         self.fire_radius = 30
+        self.castle_damage = 3
 
         # hp manipulation
         self.max_hp = 800
@@ -226,7 +228,8 @@ class Orc:
         No args
 
         Returns:
-            1 if enemy reaches last node (castle), else None
+            self.castle_damage(int): if enemy reaches last node (castle),
+                else None
         """
         if not self.destroy:
             if not self.stun:
@@ -317,7 +320,7 @@ class Orc:
                         self.fireball2 = 0
                         self.x, self.y = path_nodes[0]
                         # Return damage to castle
-                        return 1
+                        return self.castle_damage
 
         # If enemy is dead
         if self.destroy:
@@ -616,6 +619,8 @@ class Spider(Orc):
         self.max_hp = 100
         self.hp = 100
         self.armor = 0
+        # Object interaction
+        self.castle_damage = 1
         # Position and movement
         self.base_speed = 1.2
         self.speed = self.base_speed
@@ -659,6 +664,8 @@ class Wolf(Orc):
         self.max_hp = 240
         self.hp = 240
         self.armor = 20
+        # Object interaction
+        self.castle_damage = 2
         # Position and movement
         self.base_speed = 2
         self.speed = self.base_speed
@@ -703,6 +710,8 @@ class Turtle(Orc):
         self.max_hp = 200
         self.hp = 200
         self.armor = 90
+        # Object interaction
+        self.castle_damage = 3
         # Position and movement
         self.base_speed = .8
         self.speed = self.base_speed
@@ -735,7 +744,6 @@ class Lizard(Orc):
         self.image_width = 60
         self.image_height = 60
         self.frames_to_picswap = 8
-
         # Damage locations
         self.ice_loc = ((-25, 10), (-25, 10), (-25, 5),
                         (-22, 10), (-30, 10))
@@ -744,11 +752,12 @@ class Lizard(Orc):
         self.stun_loc = ((-15, -60), (-15, -60), (-10, -55),
                          (-15, -65), (-15, -60))
         self.fire_loc = (-20, -65)
-
         # hp manipulation
         self.max_hp = 300
         self.hp = 300
         self.armor = 50
+        # Object interaction
+        self.castle_damage = 2
         # Position and movement
         self.base_speed = 1.2
         self.speed = self.base_speed
@@ -795,6 +804,8 @@ class Dragon(Orc):
         self.max_hp = 2000
         self.hp = 2000
         self.armor = 75
+        # Object interaction
+        self.castle_damage = 6
         # Position and movement
         self.base_speed = .6
         self.speed = self.base_speed
