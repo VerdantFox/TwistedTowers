@@ -29,7 +29,7 @@ turtle_death_sound = pygame.mixer.Sound('soundEffects/Deaths/TurtleDeath.wav')
 turtle_death_sound.set_volume(1)
 
 dragon_death_sound = pygame.mixer.Sound('soundEffects/Deaths/DragonDeath.wav')
-dragon_death_sound.set_volume(0.7)
+dragon_death_sound.set_volume(.9)
 
 orc_death_sound = pygame.mixer.Sound('soundEffects/Deaths/OrcDeath.wav')
 orc_death_sound.set_volume(0.7)
