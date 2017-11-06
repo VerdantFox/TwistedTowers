@@ -8,7 +8,7 @@ fireTower2 = pygame.image.load('towers/fireTower2.png'), 50, 80
 poisonTower1 = pygame.image.load('towers/poisonTower1.png'), 50, 80
 poisonTower2 = pygame.image.load('towers/poisonTower2.png'), 50, 80
 darkTower1 = pygame.image.load('towers/darkTower1.png'), 50, 80
-darkTower2 = pygame.image.load('towers/darkTower2.png'), 50, 80
+darkTower2 = pygame.image.load('towers/darkTower2.png'), 60, 90
 
 fire_pic = pygame.image.load('effects/fire.png'), 32, 40
 ice_pic = pygame.image.load('effects/ice.png'), 50, 20
