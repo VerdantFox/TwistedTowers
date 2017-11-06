@@ -300,17 +300,17 @@ def settings_loop():
 
 def easy_settings():
     """"Updates settings class to easy difficulty"""
-    settings.spawn_rate = 9 * seconds
+    settings.spawn_rate = 8 * seconds
     settings.starting_gold = 1200
-    settings.gold_generation = 0.5 * seconds
-    settings.difficulty = 1.5
+    settings.gold_generation = 0.1 * seconds
+    settings.difficulty = 1.25
 
 
 def medium_settings():
     """"Updates settings class to medium difficulty"""
     settings.spawn_rate = 6 * seconds
     settings.starting_gold = 1000
-    settings.gold_generation = 1 * seconds
+    settings.gold_generation = 0.5 * seconds
     settings.difficulty = 1
 
 
@@ -522,36 +522,45 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
                           difficulty of enemy spawns ramps up
     """
     # Define 'picker' variable
-    picker = 0
+    picker = -1
     # Change picker and add enemies at interval of enemy_spawn_rate
     if frames % enemy_spawn_rate == 0:
         # Define rate of 'picker' ramp up based on difficulty
         min_rate = minutes * difficulty
         # Set the 'picker' based on frames (time) past and difficulty
-        if frames <= 0.33 * min_rate:
+        if frames <= 0.2 * min_rate:
             picker = 0
-        if 0.33 * min_rate < frames <= .66 * min_rate:
+        if 0.2 * min_rate < frames <= .5 * min_rate:
             picker = 1
-        if 0.66 * min_rate < frames <= 1 * min_rate:
+        if 0.5 * min_rate < frames <= 1 * min_rate:
             picker = random.randint(2, 3)
         if 1 * min_rate < frames <= 2 * min_rate:
             picker = random.randint(3, 7)
-        if 2 * min_rate < frames <= 2.8 * min_rate:
+        if 2 * min_rate < frames <= 2.9 * min_rate:
             picker = random.randint(8, 12)
-        if 2.8 * min_rate < frames <= 3.5 * min_rate:
-            picker = -1
-        if frames == int(3 * min_rate):
+        if 2.9 * min_rate < frames <= 3.5 * min_rate:
+            pass
+        if int((3 * min_rate) - (2 * seconds)) < frames <= \
+                int((3 * min_rate) + (2 * seconds)):
             picker = 13
-        if 3.75 * min_rate < frames <= 4.75 * min_rate:
+        if 3.5 * min_rate < frames <= 3.75 * min_rate:
+            picker = random.randint(8, 12)
+        if 3.75 * min_rate < frames <= 4.5 * min_rate:
             picker = random.randint(14, 18)
-        if frames == 4 * min_rate:
+        if int((4 * min_rate) - (2 * seconds)) < frames <= \
+                int((4 * min_rate) + (2 * seconds)):
             picker = 13
-        if 4.75 * min_rate < frames <= 7 * min_rate:
-            picker = random.randint(13, 19)
-        if frames > 7 * min_rate:
-            picker = random.randint(14, 20)
-        if frames == int(7 * min_rate):
+        if 4.5 * min_rate < frames <= 5 * min_rate:
+            picker = random.randint(15, 19)
+        if int((4.5 * min_rate) - (2 * seconds)) < frames <= \
+                int((4.5 * min_rate) + (2 * seconds)):
             picker = 20
+        if 5 * min_rate < frames <= 5.75 * min_rate:
+            picker = random.randint(15, 20)
+        if 5.75 * min_rate < frames <= 6.5 * min_rate:
+            picker = random.randint(20, 24)
+        if frames > 6.5 * min_rate:
+            picker = random.randint(20, 24)
 
         # Append or extend list with enemies indicated by 'picker'
         if picker == -1:
@@ -593,17 +602,6 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
         elif picker == 13:
             enemies_list.append(enemies.Dragon())
         elif picker == 14:
-            enemies_list.extend([enemies.Lizard(), enemies.Lizard(),
-                                 enemies.Lizard()])
-        elif picker == 15:
-            enemies_list.extend([enemies.Wolf(), enemies.Wolf(),
-                                 enemies.Wolf()])
-        elif picker == 16:
-            enemies_list.extend([enemies.Orc(), enemies.Orc(), enemies.Orc()])
-        elif picker == 17:
-            enemies_list.extend([enemies.Turtle(), enemies.Turtle(),
-                                 enemies.Turtle()])
-        elif picker == 18:
             enemies_list.extend(
                 [enemies.Spider(), enemies.Spider(), enemies.Spider(),
                  enemies.Spider(), enemies.Spider(), enemies.Spider(),
@@ -613,6 +611,17 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
                  enemies.Spider(), enemies.Spider(), enemies.Spider(),
                  enemies.Spider(), enemies.Spider(), enemies.Spider(),
                  enemies.Spider(), enemies.Spider(), enemies.Spider()])
+        elif picker == 15:
+            enemies_list.extend([enemies.Lizard(), enemies.Lizard(),
+                                 enemies.Lizard()])
+        elif picker == 16:
+            enemies_list.extend([enemies.Wolf(), enemies.Wolf(),
+                                 enemies.Wolf()])
+        elif picker == 17:
+            enemies_list.extend([enemies.Orc(), enemies.Orc(), enemies.Orc()])
+        elif picker == 18:
+            enemies_list.extend([enemies.Turtle(), enemies.Turtle(),
+                                 enemies.Turtle()])
         elif picker == 19:
             enemies_list.extend(
                 [enemies.Lizard(), enemies.Lizard(), enemies.Wolf(),
@@ -622,6 +631,44 @@ def add_enemies(frames, enemies_list, enemy_spawn_rate, difficulty):
                  enemies.Spider(), enemies.Spider()])
         elif picker == 20:
             enemies_list.extend([enemies.Dragon(), enemies.Dragon()])
+        elif picker == 21:
+            enemies_list.extend([enemies.Lizard(), enemies.Lizard(),
+                                 enemies.Lizard(), enemies.Lizard()])
+        elif picker == 22:
+            enemies_list.extend([enemies.Wolf(), enemies.Wolf(),
+                                 enemies.Wolf(), enemies.Wolf()])
+        elif picker == 23:
+            enemies_list.extend([enemies.Orc(), enemies.Orc(),
+                                 enemies.Orc(), enemies.Orc()])
+        elif picker == 24:
+            enemies_list.extend([enemies.Turtle(), enemies.Turtle(),
+                                 enemies.Turtle(), enemies.Turtle()])
+        elif picker == 25:
+            enemies_list.extend(
+                [enemies.Lizard(), enemies.Lizard(), enemies.Wolf(),
+                 enemies.Wolf(), enemies.Orc(), enemies.Orc(),
+                 enemies.Turtle(), enemies.Turtle(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider(), enemies.Spider(),
+                 enemies.Spider(), enemies.Spider()])
+        elif picker == 26:
+            enemies_list.extend([enemies.Dragon(), enemies.Dragon(),
+                                 enemies.Dragon()])
+        elif picker == 27:
+            enemies_list.extend([enemies.Lizard(), enemies.Lizard(),
+                                 enemies.Lizard(), enemies.Lizard(),
+                                 enemies.Wolf(), enemies.Wolf()])
+        elif picker == 28:
+            enemies_list.extend([enemies.Wolf(), enemies.Wolf(),
+                                 enemies.Wolf(), enemies.Wolf(),
+                                 enemies.Orc(), enemies.Orc()])
+        elif picker == 29:
+            enemies_list.extend([enemies.Orc(), enemies.Orc(),
+                                 enemies.Orc(), enemies.Orc(),
+                                 enemies.Turtle(), enemies.Turtle()])
+        elif picker == 30:
+            enemies_list.extend([enemies.Turtle(), enemies.Turtle(),
+                                 enemies.Turtle(), enemies.Turtle(),
+                                 enemies.Lizard(), enemies.Lizard()])
 
 
 def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
@@ -649,9 +696,13 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
             # Construct towers if just bought
             if current_tower.constructing:
                 current_tower.construct()
+                current_tower.option_selected = None
+                current_tower.option_lockout = True
             # Sell towers if just sold
             if current_tower.selling:
                 current_tower.sell()
+                current_tower.option_selected = None
+                current_tower.option_lockout = True
             # If tower is activated (not destroyed)
             if not current_tower.destroy:
                 # gray out and disallow purchase of towers above players moeny
@@ -683,10 +734,12 @@ def draw_towers(tower_list, missile_list, funds, score_board, enemies_list):
                     # Sell tower if that option was selected
                     if selected == "sell":
                         new_tower.option_selected = None
+                        new_tower.option_lockout = True
                         new_tower.selling = True
                         new_tower.previous_sell_value = current_tower.sell
                         new_tower.sell_countdown = new_tower.sell_timer
                         current_tower.option_selected = None
+                        current_tower.option_lockout = True
                         current_tower.destroy = True
                         funds.adjust(current_tower.sell)
                         sell_tower_sound.play()

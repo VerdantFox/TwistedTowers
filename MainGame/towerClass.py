@@ -160,7 +160,7 @@ class TowerButton:
 
         # Selling
         self.selling = False
-        self.sell_timer = 0.5 * seconds
+        self.sell_timer = 0.75 * seconds
         self.sell_countdown = self.sell_timer
         self.sell_font = pygame.font.SysFont(
             font, 20, bold=True)

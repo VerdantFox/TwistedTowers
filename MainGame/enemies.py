@@ -903,7 +903,7 @@ class Mage:
         self.speech1 = False
         self.speech2 = False
         self.wait_counter = 1 * seconds
-        self.speech_timer = 3.5 * seconds
+        self.speech_timer = 2.5 * seconds
         self.speech_counter = self.speech_timer
         self.speech_index = 0
         self.font = pygame.font.SysFont('Comic Sans MS', 16, bold=True)
@@ -911,10 +911,11 @@ class Mage:
         self.crystal_away = False
 
     def draw(self, game_frames):
-        # Sequence takes ~ 40 seconds until all enemies dead
-        if game_frames == int(6.74 * minutes):
+        # Sequence takes ~ 31 seconds until all enemies dead
+        # Sequence takes ~ 55 seconds until game end
+        if game_frames == int((5 * minutes) + (4 * seconds)):
             self.walking = True
-        if game_frames > int(6.74 * minutes):
+        if game_frames > int((5 * minutes) + (4 * seconds)):
             gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                           self.y - self.image_height // 2))
 
