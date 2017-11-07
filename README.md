@@ -56,7 +56,7 @@ To start the game from source, launch main.py. Python 3, and Pygame 1.9.3 requir
 
 In game, enemies will travel along dirt path toward the castle. The player can 
 defend against enemies by building towers. Towers are constructed by left-clicking
-circles on the ground. The game is lost if enough enemies reach the tower.
+circles on the ground. The game is lost if enough enemies reach the castle.
 The game is won if the player survives long enough for the hero mage to come to the
 rescue. Information on enemies and towers can be found in tabs in the main menu.
 
