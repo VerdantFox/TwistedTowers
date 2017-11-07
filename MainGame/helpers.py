@@ -1,6 +1,4 @@
 import pygame
-import generalClass
-from definitions import *
 
 
 # Taken from pygame library and altered

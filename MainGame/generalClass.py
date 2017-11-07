@@ -2,7 +2,6 @@ import pygame
 from definitions import *
 from gameParameters import backgroundImage, gameDisplay, display_width, \
     display_height, clock
-# import main
 
 
 class Button:

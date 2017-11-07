@@ -1,5 +1,4 @@
 import pygame
-# from generalClass import Background
 
 
 # https://stackoverflow.com/questions/28005641
