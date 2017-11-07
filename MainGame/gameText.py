@@ -116,7 +116,7 @@ spider_text = "Spider\n" \
               "\nIndividually weak but forms large groups" \
               "\nHealth:     100" \
               "\nArmor:      0 (0% reduced damage)" \
-              "\nSpeed:      1.2" \
+              "\nSpeed:      1.8" \
               "\nKill value:   $8" \
               "\nTower damage: 1" \
               "\nRecommend: Fire towers most effective."
@@ -124,7 +124,7 @@ lizard_text = "Lizard Men\n" \
               "\nWell rounded foot soldier" \
               "\nHealth:     300" \
               "\nArmor:      50 (50% reduced damage)" \
-              "\nSpeed:      1.2" \
+              "\nSpeed:      2" \
               "\nKill value:   $50" \
               "\nTower damage: 2" \
               "\nRecommend: All towers fairly equally effective."
@@ -132,7 +132,7 @@ wolf_text = "Demon Wolf\n" \
             "\nNot particularly strong, but very fast" \
             "\nHealth:     240" \
             "\nArmor:      20 (20% reduced damage)" \
-            "\nSpeed:      2" \
+            "\nSpeed:      3.5" \
             "\nKill value:   $50" \
             "\nTower damage: 2" \
             "\nRecommend: Numerous and well spaced towers."
@@ -140,7 +140,7 @@ turtle_text = "Spikers\n" \
               "\nSlow, but highly armored enemy with low health" \
               "\nHealth:     200" \
               "\nArmor:      90 (90% reduced damage)" \
-              "\nSpeed:      0.8" \
+              "\nSpeed:      1.4" \
               "\nKill value:   $75" \
               "\nTower damage: 3" \
               "\nRecommend: Dark towers most effective."
@@ -148,7 +148,7 @@ orc_text = "Orc\n" \
            "\nFairly slow, low armor, but high health" \
            "\nHealth:      800" \
            "\nArmor:      20 (20% reduced damage)" \
-           "\nSpeed:      1" \
+           "\nSpeed:      1.6" \
            "\nKill value:   $75" \
            "\nTower damage: 3" \
            "\nRecommend: Early poison towers."
@@ -156,7 +156,7 @@ dragon_text = "Dragon\n" \
               "\nThe big one! Slow, with HIGH health and armor" \
               "\nHealth:      2000" \
               "\nArmor:      75 (75% reduced damage)" \
-              "\nSpeed:      0.6" \
+              "\nSpeed:      1" \
               "\nKill value:   $750" \
               "\nTower damage: 6" \
               "\nRecommend: Poison, and dark + ice tower combos. "
@@ -167,4 +167,5 @@ easy_text = "Slower spawning, easier enemies, " \
 medium_text = "Normal enemy spawn rate and difficulty, gold generation, " \
               "and starting gold."
 hard_text = "Fastest spawn rate and difficulty ramp up, reduced gold " \
-            "generation, lower starting gold."
+            "generation, lower starting gold. Hint: Achieve tower diversity, " \
+            "and always keep damage over time elements up."

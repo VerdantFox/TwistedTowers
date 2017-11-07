@@ -20,7 +20,7 @@ mage_spell_sound.set_volume(1)
 
 # Deaths
 spider_death_sound = pygame.mixer.Sound('soundEffects/Deaths/SpiderDeath.wav')
-spider_death_sound.set_volume(0.8)
+spider_death_sound.set_volume(0.9)
 
 wolf_death_sound = pygame.mixer.Sound('soundEffects/Deaths/WolfDeath.wav')
 wolf_death_sound.set_volume(0.7)

@@ -136,7 +136,7 @@ class Orc:
                  stationary=False, destroy=True):
         # Position and movement
         self.x, self.y = location
-        self.base_speed = 2
+        self.base_speed = 1.6
         self.speed = self.base_speed
         self.right = False
         self.left = False
@@ -199,7 +199,7 @@ class Orc:
         self.fire1 = None
         self.fire2 = None
         self.burned_counter = 0
-        self.fire_countdown = 1 * seconds
+        self.fire_countdown = int(1 * seconds)
 
         # Poison specialties
         self.poison_loc = ((-27, -45), (-36, -57), (-51, -40),
@@ -571,7 +571,7 @@ class Orc:
             self.ice2 = True
             self.ice2_countdown = self.ice_counter
         if specialty == "fire1":
-            self.fireball1 = int(0.05 * seconds)
+            self.fireball1 = int(0.1 * seconds)
             self.fire1 = damage
             self.burned_counter = 3
         if specialty == "fire2":
@@ -622,7 +622,7 @@ class Spider(Orc):
         # Object interaction
         self.castle_damage = 1
         # Position and movement
-        self.base_speed = 2.4
+        self.base_speed = 1.8
         self.speed = self.base_speed
         # Death
         self.cash = 8
@@ -667,7 +667,7 @@ class Wolf(Orc):
         # Object interaction
         self.castle_damage = 2
         # Position and movement
-        self.base_speed = 4
+        self.base_speed = 3.5
         self.speed = self.base_speed
         # Death
         self.cash = 50
@@ -713,7 +713,7 @@ class Turtle(Orc):
         # Object interaction
         self.castle_damage = 3
         # Position and movement
-        self.base_speed = 1.6
+        self.base_speed = 1.4
         self.speed = self.base_speed
         # Death
         self.cash = 75
@@ -759,7 +759,7 @@ class Lizard(Orc):
         # Object interaction
         self.castle_damage = 2
         # Position and movement
-        self.base_speed = 2.4
+        self.base_speed = 2
         self.speed = self.base_speed
         # Death
         self.cash = 50
@@ -807,7 +807,7 @@ class Dragon(Orc):
         # Object interaction
         self.castle_damage = 6
         # Position and movement
-        self.base_speed = 1.2
+        self.base_speed = 1
         self.speed = self.base_speed
         # Death
         self.cash = 750
@@ -1017,7 +1017,7 @@ class Mage:
                 self.start_spell = False
 
         if self.radius < 1000 and self.spell_cast:
-            self.radius += 10
+            self.radius += 20
             # Draw the expanding spell (4 circles of increasing thickness)
             # thickness = 0
             if self.radius > self.thickness:

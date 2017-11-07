@@ -1,5 +1,4 @@
 import random
-import time  # TODO
 
 import pygame
 
@@ -425,10 +424,6 @@ def game_loop():
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
     # Set mage (for end game sequence)
     mage = enemies.Mage()
-
-    global start_time
-    # TODO
-    start_time = time.time()
 
     # Actual game loop
     while True:
@@ -888,12 +883,6 @@ def win_lose(mage, end_screen, score, game_clock, castle):
     """
     # Set win condition
     if mage.win:
-        global end_time  # TODO
-        end_time = time.time()  # TODO
-
-        print(end_time - start_time)  # TODO
-        print(game_clock.stat / seconds)  # TODO
-
         end_screen.score = score.stat
         end_screen.time_elapsed = game_clock.stat
         end = end_screen.draw("win")
@@ -920,6 +909,3 @@ if __name__ == "__main__":
     load_intro_music()
     pygame.quit()
     quit()
-
-    end_time = 0  # TODO
-    start_time = 0  # TODO
