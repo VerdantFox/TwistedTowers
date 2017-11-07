@@ -878,7 +878,7 @@ class Mage:
         self.frame = 0
         self.image_width = 60
         self.image_height = 60
-        self.frames_to_picswap = 4
+        self.frames_to_picswap = 2
 
         # Position
         self.x, self.y = (340, -65)
@@ -911,11 +911,11 @@ class Mage:
         self.crystal_away = False
 
     def draw(self, game_frames):
-        # Sequence takes ~ 31 seconds until all enemies dead
-        # Sequence takes ~ 55 seconds until game end
-        if game_frames == int((4 * minutes) + (59 * seconds)):
+        # Sequence takes ~ 32 seconds until all enemies dead
+        # Sequence takes ~ 58 seconds until game end
+        if game_frames == int((5 * minutes) + (2 * seconds)):
             self.walking = True
-        if game_frames > int((4 * minutes) + (59 * seconds)):
+        if game_frames > int((5 * minutes) + (2 * seconds)):
             gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                           self.y - self.image_height // 2))
 
