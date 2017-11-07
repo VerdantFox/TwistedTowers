@@ -73,8 +73,8 @@ class Button:
         self.selected_color = purple
         self.selected_text_color = white
         self.clickable = False
-        self.unclickable_timer = 0.3 * seconds
-        self.unclickable_countdown = 0.3 * seconds
+        self.unclickable_timer = int(0.3 * seconds)
+        self.unclickable_countdown = int(0.3 * seconds)
 
     def draw(self, *args):
         """Draws the buttons and accepts hover and click input to perform tasks
@@ -379,7 +379,7 @@ class Settings:
         difficulty (int): Affects how quickly enemy difficulty ramps (default=1)
     """
     def __init__(self):
-        self.spawn_rate = 6 * seconds
+        self.spawn_rate = int(6 * seconds)
         self.starting_gold = 1200
-        self.gold_generation = 1 * seconds
+        self.gold_generation = int(1 * seconds)
         self.difficulty = 1

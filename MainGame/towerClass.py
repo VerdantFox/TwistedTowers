@@ -151,7 +151,7 @@ class TowerButton:
 
         # Construction
         self.constructing = False
-        self.construct_timer = 1.5 * seconds
+        self.construct_timer = int(1.5 * seconds)
         self.construct_countdown = self.construct_timer
         self.frame_counter = 0
         self.frame = 0
@@ -160,7 +160,7 @@ class TowerButton:
 
         # Selling
         self.selling = False
-        self.sell_timer = 0.75 * seconds
+        self.sell_timer = int(0.75 * seconds)
         self.sell_countdown = self.sell_timer
         self.sell_font = pygame.font.SysFont(
             font, 20, bold=True)
@@ -669,11 +669,11 @@ class BasicMissile:
         self.x = x
         self.y = y - 50
         self._tower_location = self.x, self.y
-        self.speed = 4
+        self.speed = 8
         self.lock_on = None
         self.destroy = True
         self.radius = 5
-        self.shoot_rate = 2 * seconds
+        self.shoot_rate = int(2 * seconds)
         self.shoot_counter = 0
         self.missile_color = gray
         self.damage = 50
@@ -811,7 +811,7 @@ class FireMissile1(BasicMissile):
         self.damage = 25
         self.missile_color = red
         self.specialty = "fire1"
-        self.shoot_rate = 3 * seconds
+        self.shoot_rate = int(3 * seconds)
         self.hit_sound = fire_hit_sound
 
     def lock_enemy(self, tower, enemy):
@@ -848,7 +848,7 @@ class FireMissile2(BasicMissile):
         self.damage = 37.5
         self.missile_color = bright_red
         self.specialty = "fire2"
-        self.shoot_rate = 3 * seconds
+        self.shoot_rate = int(3 * seconds)
         self.radius = 8
         self.hit_sound = fire_hit_sound
 
@@ -886,7 +886,7 @@ class PoisonMissile1(BasicMissile):
         self.damage = 0.05
         self.missile_color = green
         self.specialty = "poison1"
-        self.shoot_rate = 3 * seconds
+        self.shoot_rate = int(3 * seconds)
         self.hit_sound = poison_hit_sound
 
     def lock_enemy(self, tower, enemy):
@@ -923,7 +923,7 @@ class PoisonMissile2(BasicMissile):
         self.damage = 0.10
         self.missile_color = bright_green
         self.specialty = "poison2"
-        self.shoot_rate = 3 * seconds
+        self.shoot_rate = int(3 * seconds)
         self.radius = 6
         self.hit_sound = poison_hit_sound
 
