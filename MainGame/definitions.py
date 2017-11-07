@@ -24,6 +24,6 @@ orange = (255, 110, 0)
 bright_orange = (255, 153, 51)
 
 # Time
-seconds = 60
-minutes = 3600
+seconds = 30
+minutes = (60 * seconds)
 infinite = 1000000

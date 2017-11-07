@@ -1,4 +1,5 @@
 import random
+import time  # TODO
 
 import pygame
 
@@ -68,7 +69,7 @@ def intro_loop():
         settings_button.draw()
         # Update game display
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def tower_info_loop():
@@ -166,7 +167,7 @@ def tower_info_loop():
                              (150, 385, 550, 5))
         # Update game display
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def enemy_info_loop():
@@ -248,7 +249,7 @@ def enemy_info_loop():
                              (150, 385, 550, 5))
         # Update game display
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def settings_loop():
@@ -295,20 +296,20 @@ def settings_loop():
         hard_button.draw(easy_button, medium_button)
         # Update game display
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def easy_settings():
     """"Updates settings class to easy difficulty"""
-    settings.spawn_rate = 8 * seconds
+    settings.spawn_rate = int(8 * seconds)
     settings.starting_gold = 1200
-    settings.gold_generation = 0.1 * seconds
+    settings.gold_generation = int(0.1 * seconds)
     settings.difficulty = 1.25
 
 
 def medium_settings():
     """"Updates settings class to medium difficulty"""
-    settings.spawn_rate = 6 * seconds
+    settings.spawn_rate = int(6 * seconds)
     settings.starting_gold = 1000
     settings.gold_generation = 0.5 * seconds
     settings.difficulty = 1
@@ -316,9 +317,9 @@ def medium_settings():
 
 def hard_settings():
     """"Updates settings class to hard difficulty"""
-    settings.spawn_rate = 4 * seconds
+    settings.spawn_rate = int(4 * seconds)
     settings.starting_gold = 800
-    settings.gold_generation = 2 * seconds
+    settings.gold_generation = int(2 * seconds)
     settings.difficulty = (2/3)
 
 
@@ -331,6 +332,7 @@ def unpause():
 
 def pause_game():
     """Pauses game and music"""
+
     # Set navigation buttons
     resume_button = generalClass.Button(
         (20, 80), message="Resume", width=120, color1=green,
@@ -406,6 +408,13 @@ def game_loop():
     end_screen = generalClass.EndScreen()
     # Set blank enemies list
     enemies_list = []
+    #
+    # enemies_list.extend(
+    #     [enemies.Lizard(), enemies.Lizard(), enemies.Wolf(),
+    #      enemies.Wolf(), enemies.Orc(), enemies.Orc(),
+    #      enemies.Turtle(), enemies.Turtle(), enemies.Spider(),
+    #      enemies.Spider(), enemies.Spider(), enemies.Spider(),
+    #      enemies.Spider(), enemies.Spider()])
     # Set towers' and missiles' lists
     bot_tower_list = []
     bot_missile_list = []
@@ -416,6 +425,10 @@ def game_loop():
     set_towers(top_tower_locations, top_tower_list, top_missile_list)
     # Set mage (for end game sequence)
     mage = enemies.Mage()
+
+    global start_time
+    # TODO
+    start_time = time.time()
 
     # Actual game loop
     while True:
@@ -459,7 +472,7 @@ def game_loop():
         win_lose(mage, end_screen, score, game_clock, castle)
         # Update game
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 def set_towers(tower_locations, tower_list, missile_list):
@@ -875,6 +888,12 @@ def win_lose(mage, end_screen, score, game_clock, castle):
     """
     # Set win condition
     if mage.win:
+        global end_time  # TODO
+        end_time = time.time()  # TODO
+
+        print(end_time - start_time)  # TODO
+        print(game_clock.stat / seconds)  # TODO
+
         end_screen.score = score.stat
         end_screen.time_elapsed = game_clock.stat
         end = end_screen.draw("win")
@@ -901,3 +920,6 @@ if __name__ == "__main__":
     load_intro_music()
     pygame.quit()
     quit()
+
+    end_time = 0  # TODO
+    start_time = 0  # TODO

@@ -136,7 +136,7 @@ class Orc:
                  stationary=False, destroy=True):
         # Position and movement
         self.x, self.y = location
-        self.base_speed = 1
+        self.base_speed = 2
         self.speed = self.base_speed
         self.right = False
         self.left = False
@@ -173,7 +173,7 @@ class Orc:
         self.dead = False  # Used to return stat and money
         self.cash = 75
         self.points = self.cash // 3
-        self.spawn_timer = random.randint(5 * seconds, 6.75 * seconds)
+        self.spawn_timer = random.randint(int(5 * seconds), int(6.75 * seconds))
         self.spawn_countdown = self.spawn_timer
         self.lives = 2  # start dead, need 1 more than that
         self.dead_image = orcdead
@@ -188,7 +188,7 @@ class Orc:
                         (-18, 10), (-18, 3))
         self.ice1 = False
         self.ice2 = False
-        self.ice_counter = 2.5 * seconds
+        self.ice_counter = int(2.5 * seconds)
         self.ice1_countdown = self.ice_counter
         self.ice2_countdown = self.ice_counter
 
@@ -211,7 +211,7 @@ class Orc:
         self.poison_tick = 0
         self.poison_charges = 0
         self.stun = False
-        self.stun_duration = 0.75 * seconds
+        self.stun_duration = int(0.75 * seconds)
         self.stun_duration_countdown = 0 * seconds
         self.stun_frameswap_rate = 10
         self.stun_framecounter = 0
@@ -622,7 +622,7 @@ class Spider(Orc):
         # Object interaction
         self.castle_damage = 1
         # Position and movement
-        self.base_speed = 1.2
+        self.base_speed = 2.4
         self.speed = self.base_speed
         # Death
         self.cash = 8
@@ -667,7 +667,7 @@ class Wolf(Orc):
         # Object interaction
         self.castle_damage = 2
         # Position and movement
-        self.base_speed = 2
+        self.base_speed = 4
         self.speed = self.base_speed
         # Death
         self.cash = 50
@@ -713,7 +713,7 @@ class Turtle(Orc):
         # Object interaction
         self.castle_damage = 3
         # Position and movement
-        self.base_speed = .8
+        self.base_speed = 1.6
         self.speed = self.base_speed
         # Death
         self.cash = 75
@@ -759,7 +759,7 @@ class Lizard(Orc):
         # Object interaction
         self.castle_damage = 2
         # Position and movement
-        self.base_speed = 1.2
+        self.base_speed = 2.4
         self.speed = self.base_speed
         # Death
         self.cash = 50
@@ -807,7 +807,7 @@ class Dragon(Orc):
         # Object interaction
         self.castle_damage = 6
         # Position and movement
-        self.base_speed = .6
+        self.base_speed = 1.2
         self.speed = self.base_speed
         # Death
         self.cash = 750
@@ -903,7 +903,7 @@ class Mage:
         self.speech1 = False
         self.speech2 = False
         self.wait_counter = 1 * seconds
-        self.speech_timer = 2.5 * seconds
+        self.speech_timer = int(2.5 * seconds)
         self.speech_counter = self.speech_timer
         self.speech_index = 0
         self.font = pygame.font.SysFont('Comic Sans MS', 16, bold=True)
@@ -913,9 +913,9 @@ class Mage:
     def draw(self, game_frames):
         # Sequence takes ~ 31 seconds until all enemies dead
         # Sequence takes ~ 55 seconds until game end
-        if game_frames == int((5 * minutes) + (4 * seconds)):
+        if game_frames == int((4 * minutes) + (59 * seconds)):
             self.walking = True
-        if game_frames > int((5 * minutes) + (4 * seconds)):
+        if game_frames > int((4 * minutes) + (59 * seconds)):
             gameDisplay.blit(self.image, (self.x - self.image_width // 2,
                                           self.y - self.image_height // 2))
 
@@ -960,7 +960,8 @@ class Mage:
                 grumbling_sound.play()
             if self.speech_index == 7 and self.speech_counter == 0:
                 self.crystal_away = True
-            if self.speech_index == 9 and self.speech_counter == 3.25 * seconds:
+            if self.speech_index == 9 and \
+                    self.speech_counter == int(3.25 * seconds):
                 pygame.mixer.music.fadeout(2500)
             if self.speech_index == 9 and self.speech_counter == 0:
                 self.speech1 = False
