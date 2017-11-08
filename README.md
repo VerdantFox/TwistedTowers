@@ -2,6 +2,22 @@
 A tower defense game built in python's Pygame.
 
 
+To start the game from source, launch main.py. 
+Python 3, and Pygame 1.9.3 required.
+
+In game, enemies will travel along the dirt path toward the castle. The player 
+can defend against enemies by building towers. Towers are constructed by 
+left-clicking circles on the ground, and then clicking the adjacent circles
+that appear next to the first circle clicked. The game is lost if enough 
+enemies reach the castle. The game is won if the player survives long enough 
+for the hero mage to come to the rescue. Information on enemies and towers can 
+be found in tabs in the main menu.
+
+Have fun :-)
+
+- VerdantFox
+
+
 Code  by Theodore Williams
 
 
@@ -54,18 +70,3 @@ Action Hero by Jingle Punks
 Bensound-epic - Bensound.com
 
 Bensound-instinct - Bensound.com
-
-
-To start the game from source, launch main.py. 
-Python 3, and Pygame 1.9.3 required.
-
-In game, enemies will travel along the dirt path toward the castle. The player 
-can defend against enemies by building towers. Towers are constructed by 
-left-clicking circles on the ground. The game is lost if enough enemies reach 
-the castle. The game is won if the player survives long enough for the hero 
-mage to come to the rescue. Information on enemies and towers can be found in 
-tabs in the main menu.
-
-Have fun :-)
-
-- VerdantFox
