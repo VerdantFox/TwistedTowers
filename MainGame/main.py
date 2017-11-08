@@ -1,4 +1,5 @@
 import random
+import sys
 
 import pygame
 
@@ -30,7 +31,7 @@ def intro_loop():
         message="Play", action=game_loop, font_size=40, width=300, height=60)
     quit_button = generalClass.Button(
         (450, display_height - 180),
-        message="Quit", action=quit, font_size=40, width=300, height=60,
+        message="Quit", action=sys.exit, font_size=40, width=300, height=60,
         color1=red, color2=bright_red)
     tower_info_button = generalClass.Button(
         (100, display_height - 320),
@@ -52,8 +53,7 @@ def intro_loop():
         # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
         # Draw title and intro text
@@ -104,8 +104,7 @@ def tower_info_loop():
         # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
         pygame.draw.rect(gameDisplay, white,
@@ -199,8 +198,7 @@ def enemy_info_loop():
         # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
         pygame.draw.rect(gameDisplay, white,
@@ -277,8 +275,7 @@ def settings_loop():
         # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
         # Draw background
         gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
         # Draw setting descriptions
@@ -354,8 +351,7 @@ def pause_game():
         # Activate quit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     unpause()
@@ -430,8 +426,7 @@ def game_loop():
         # Set quit button and pause game listeners
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_game()
@@ -907,5 +902,4 @@ if __name__ == "__main__":
     settings = generalClass.Settings()
     medium_settings()
     load_intro_music()
-    pygame.quit()
-    quit()
+    sys.exit()

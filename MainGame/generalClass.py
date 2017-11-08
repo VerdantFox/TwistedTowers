@@ -1,4 +1,5 @@
 import pygame
+import sys
 from definitions import *
 from gameParameters import backgroundImage, gameDisplay, display_width, \
     display_height, clock
@@ -305,7 +306,7 @@ class EndScreen:
             font_size=40, width=200, height=60, color1=green,
             color2=bright_green)
         self.quit_button = Button(
-            (325, display_height - 320), message="Quit", action=quit,
+            (325, display_height - 320), message="Quit", action=sys.exit,
             font_size=40, width=200, height=60, color1=red, color2=bright_red)
         self.main_button = Button(
             (575, display_height - 320), message="Main menu", action="main",
@@ -329,8 +330,7 @@ class EndScreen:
             # Check for quit
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+                    sys.exit()
             # Show background
             gameDisplay.blit(backgroundImage.image, backgroundImage.rect)
             # Draw "Defeat/Victory" text
