@@ -1,5 +1,5 @@
 # TwistedTowers
-A tower defense game built in python's Pygame.
+A tower defense game built in python's Pygame library.
 
 
 To start the game from source, launch main.py. 
