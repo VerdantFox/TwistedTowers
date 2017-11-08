@@ -4,13 +4,17 @@ A tower defense game built in python's Pygame.
 
 Code  by Theodore Williams
 
+
 Visuals:
  
 Background by Theodore Williams
 
-All enemy images from League of Legends, Riot Games, edited by Theodore Williams
+All enemy images obtained from League of Legends, Riot Games, 
+and edited by Theodore Williams
 
-Towers from pieced together open source paint3D objects and edited by Theodore Williams
+Towers from pieced together from open source paint3D objects 
+and edited by Theodore Williams
+
 
 Music:
 
@@ -52,14 +56,16 @@ Bensound-epic - Bensound.com
 Bensound-instinct - Bensound.com
 
 
-To start the game from source, launch main.py. Python 3, and Pygame 1.9.3 required.
+To start the game from source, launch main.py. 
+Python 3, and Pygame 1.9.3 required.
 
-In game, enemies will travel along dirt path toward the castle. The player can 
-defend against enemies by building towers. Towers are constructed by left-clicking
-circles on the ground. The game is lost if enough enemies reach the castle.
-The game is won if the player survives long enough for the hero mage to come to the
-rescue. Information on enemies and towers can be found in tabs in the main menu.
+In game, enemies will travel along the dirt path toward the castle. The player 
+can defend against enemies by building towers. Towers are constructed by 
+left-clicking circles on the ground. The game is lost if enough enemies reach 
+the castle. The game is won if the player survives long enough for the hero 
+mage to come to the rescue. Information on enemies and towers can be found in 
+tabs in the main menu.
 
-Have fun :)
+Have fun :-)
 
 - VerdantFox
