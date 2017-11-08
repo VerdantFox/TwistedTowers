@@ -50,7 +50,7 @@ cx_Freeze.setup(
                      "soundEffects.TowerShots",
                      "towers"
                      ],
-        "include_files":   ["acknowledgements.txt",
+        "include_files":   ["README.md",
                             "definitions.py",
                             "enemies.py",
                             "gameBackDrop.png",
